@@ -127,6 +127,9 @@
         .acc>summary::after{ content:'⌄'; font-size:1.1rem; transition:transform .2s; }
         .acc[open]>summary::after{ transform:rotate(180deg); }
         .acc-body{ padding:.9rem; }
+        .autosave-bar{ display:flex; align-items:center; justify-content:space-between; gap:.4rem; flex-wrap:wrap; background:#ecfdf5; border:1px solid #a7f3d0; border-radius:9px; padding:.4rem .6rem; margin-bottom:.7rem; font-size:.72rem; }
+        .autosave-bar label{ display:flex; align-items:center; gap:.4rem; font-weight:700; color:#065f46; cursor:pointer; }
+        #saveStatus{ color:#059669; font-size:.66rem; }
 
         @media (prefers-reduced-motion: reduce){ *,*::before,*::after{transition:none!important;animation:none!important} }
         :focus-visible { outline:2px solid #10b981; outline-offset:2px; }
@@ -173,6 +176,12 @@
         <div class="drawer-head">
             <h1 class="text-lg font-bold text-emerald-800">وثيقة إثبات سَماع</h1>
             <button type="button" id="drawerClose" class="opt-btn" aria-label="إغلاق">✕</button>
+        </div>
+
+        <div class="autosave-bar no-print">
+            <label><input type="checkbox" id="autoSave" checked> الحفظ التلقائي</label>
+            <span id="saveStatus"></span>
+            <button type="button" id="clearSaved" class="opt-btn">مسح المحفوظ</button>
         </div>
 
         <!-- مظهر الوثيقة -->
@@ -650,7 +659,8 @@
 
     // ===== Sheikhs (one / two / many) =====
     const sheikhList=$('sheikhList');
-    function addSheikhRow(name, gender){
+    function addSheikhRow(d){
+        d=d||{};
         const row=document.createElement('div');
         row.className='sheikh-row border border-gray-200 rounded-md p-2.5 space-y-2 bg-white';
         row.innerHTML='<div class="flex gap-2 items-center">'
@@ -665,8 +675,13 @@
             +'<label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-works" checked> بمؤلفاته خاصة</label>'
             +'</div>'
             +'<textarea class="sh-isnad hidden w-full px-3 py-2 border border-gray-300 rounded-md text-sm leading-relaxed" rows="2" placeholder="سند هذا الشيخ (اختياري)..."></textarea>';
-        row.querySelector('.sheikh-name').value=name||'';
-        row.querySelector('.sheikh-gender').value=gender||'male';
+        row.querySelector('.sheikh-name').value=d.name||'';
+        row.querySelector('.sheikh-gender').value=d.gender||'male';
+        if(d.khassa===false) row.querySelector('.sh-khassa').checked=false;
+        if(d.amma===false)   row.querySelector('.sh-amma').checked=false;
+        if(d.family===true)  row.querySelector('.sh-family').checked=true;
+        if(d.works===false)  row.querySelector('.sh-works').checked=false;
+        row.querySelector('.sh-isnad').value=d.isnad||'';
         row.querySelector('.sh-isnad').classList.toggle('hidden', fields.isnadMode.value!=='per');
         sheikhList.appendChild(row);
     }
@@ -844,13 +859,24 @@
         return t;
     }
 
+    function legacyCopy(text){
+        const ta=document.createElement('textarea');
+        ta.value=text; ta.readOnly=false; ta.contentEditable='true';
+        ta.style.position='fixed'; ta.style.top='0'; ta.style.left='0'; ta.style.opacity='0';
+        document.body.appendChild(ta);
+        const range=document.createRange(); range.selectNodeContents(ta);
+        const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+        try{ ta.setSelectionRange(0, text.length); }catch(_){ }
+        let ok=false; try{ ok=document.execCommand('copy'); }catch(_){ }
+        document.body.removeChild(ta); return ok;
+    }
     async function copyText(){
         const text=plainText();
         try{
-            if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); }
-            else{ const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
-            showToast('تم نسخ نص الوثيقة');
-        }catch(e){ showToast('تعذّر النسخ — حدّد النص يدوياً', false); }
+            if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); showToast('تم نسخ نص الوثيقة'); return; }
+        }catch(e){ /* fall back */ }
+        if(legacyCopy(text)) showToast('تم نسخ نص الوثيقة');
+        else showToast('تعذّر النسخ — حدّد النص يدوياً', false);
     }
 
     function printIjaza(){ window.print(); }
@@ -863,6 +889,7 @@
         updateIsnadMode();
         updateMethodLabel(); fields.issueDate.value=hijriToday();
         render(); fields.studentName.focus(); showToast('تم تفريغ النموذج');
+        if(typeof scheduleSave==='function') scheduleSave();
     }
 
     function updateMethodLabel(){
@@ -877,16 +904,16 @@
     function posOf(e){ const r=sigPad.getBoundingClientRect(); const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left; const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top; return {x:cx*(sigPad.width/r.width), y:cy*(sigPad.height/r.height)}; }
     function dStart(e){ drawing=true; const p=posOf(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); }
     function dMove(e){ if(!drawing)return; const p=posOf(e); ctx.lineTo(p.x,p.y); ctx.stroke(); e.preventDefault(); }
-    function dEnd(){ if(!drawing)return; drawing=false; signatureDataUrl=sigPad.toDataURL('image/png'); render(); }
+    function dEnd(){ if(!drawing)return; drawing=false; signatureDataUrl=sigPad.toDataURL('image/png'); render(); if(typeof scheduleSave==='function') scheduleSave(); }
     function clearPad(){ ctx.clearRect(0,0,sigPad.width,sigPad.height); }
     sigPad.addEventListener('mousedown',dStart); sigPad.addEventListener('mousemove',dMove); window.addEventListener('mouseup',dEnd);
     sigPad.addEventListener('touchstart',dStart,{passive:false}); sigPad.addEventListener('touchmove',dMove,{passive:false}); sigPad.addEventListener('touchend',dEnd);
 
     $('sigUploadBtn').addEventListener('click', ()=>sigFile.click());
     $('sigDrawBtn').addEventListener('click', ()=>sigPadWrap.classList.toggle('hidden'));
-    $('sigClearBtn').addEventListener('click', ()=>{ signatureDataUrl=null; sigFile.value=''; clearPad(); render(); showToast('تم إزالة التوقيع'); });
-    $('sigPadClear').addEventListener('click', ()=>{ clearPad(); signatureDataUrl=null; render(); });
-    sigFile.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ signatureDataUrl=r.result; render(); showToast('تمت إضافة الصورة'); }; r.readAsDataURL(f); });
+    $('sigClearBtn').addEventListener('click', ()=>{ signatureDataUrl=null; sigFile.value=''; clearPad(); render(); showToast('تم إزالة التوقيع'); if(typeof scheduleSave==='function') scheduleSave(); });
+    $('sigPadClear').addEventListener('click', ()=>{ clearPad(); signatureDataUrl=null; render(); if(typeof scheduleSave==='function') scheduleSave(); });
+    sigFile.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ signatureDataUrl=r.result; render(); showToast('تمت إضافة الصورة'); if(typeof scheduleSave==='function') scheduleSave(); }; r.readAsDataURL(f); });
 
     // ===== Appearance =====
     document.querySelectorAll('.opt-group').forEach(group=>{
@@ -897,6 +924,7 @@
             if(opt==='font'){ ijazaBox.style.setProperty('--ijaza-font', btn.dataset.val); }
             else if(opt==='color'){ ['theme-emerald','theme-brown','theme-navy','theme-burgundy'].forEach(c=>ijazaBox.classList.remove(c)); ijazaBox.classList.add('theme-'+btn.dataset.theme); }
             else if(opt==='border'){ ['brd-ornate','brd-double','brd-simple','brd-none'].forEach(c=>ijazaBox.classList.remove(c)); ijazaBox.classList.add('brd-'+btn.dataset.brd); }
+            if(typeof scheduleSave==='function') scheduleSave();
         });
     });
 
@@ -904,8 +932,8 @@
     const basmalaColor=$('basmalaColor'), titleColor=$('titleColor');
     basmalaColor.addEventListener('input', ()=>ijazaBox.style.setProperty('--basmala-color', basmalaColor.value));
     titleColor.addEventListener('input', ()=>ijazaBox.style.setProperty('--title-color', titleColor.value));
-    $('basmalaAuto').addEventListener('click', ()=>ijazaBox.style.removeProperty('--basmala-color'));
-    $('titleAuto').addEventListener('click', ()=>ijazaBox.style.removeProperty('--title-color'));
+    $('basmalaAuto').addEventListener('click', ()=>{ ijazaBox.style.removeProperty('--basmala-color'); if(typeof scheduleSave==='function') scheduleSave(); });
+    $('titleAuto').addEventListener('click', ()=>{ ijazaBox.style.removeProperty('--title-color'); if(typeof scheduleSave==='function') scheduleSave(); });
 
     // Font size & line spacing
     const fontSize=$('fontSize'), lineHeight=$('lineHeight');
@@ -932,16 +960,34 @@
         if(on) window.scrollTo({top:0, behavior:'smooth'});
     });
 
-    // Export as image (PNG)
+    // Export as image (PNG) — works on desktop & mobile (share sheet on phones)
+    function saveCanvas(canvas){
+        canvas.toBlob((blob)=>{
+            if(!blob){ showToast('تعذّر إنشاء الصورة', false); return; }
+            const file=new File([blob], 'ijaza.png', {type:'image/png'});
+            if(navigator.canShare && navigator.canShare({files:[file]})){
+                navigator.share({ files:[file], title:'وثيقة إثبات سماع' })
+                    .then(()=>showToast('تم'))
+                    .catch(()=>fallbackDownload(blob));
+            } else {
+                fallbackDownload(blob);
+            }
+        }, 'image/png');
+    }
+    function fallbackDownload(blob){
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a'); a.href=url; a.download='ijaza.png';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url), 5000);
+        showToast('تم تصدير الصورة');
+    }
     $('imageBtn').addEventListener('click', async ()=>{
         if(typeof html2canvas!=='function'){ showToast('تعذّر تحميل أداة الصورة (تحقّق من الإنترنت)', false); return; }
         showToast('جارٍ إنشاء الصورة…');
         ijazaBox.classList.add('exporting');   // disable box-shadows (fixes html2canvas color block)
         try{
             const canvas=await html2canvas(ijazaBox, { scale:2, backgroundColor:'#ffffff', useCORS:true, logging:false });
-            const a=document.createElement('a');
-            a.download='ijaza.png'; a.href=canvas.toDataURL('image/png'); a.click();
-            showToast('تم تصدير الصورة');
+            saveCanvas(canvas);
         }catch(e){ showToast('تعذّر إنشاء الصورة', false); }
         finally{ ijazaBox.classList.remove('exporting'); }
     });
@@ -989,7 +1035,7 @@
     let resizing=false;
     resizeHandle.addEventListener('pointerdown', e=>{ resizing=true; document.body.classList.add('resizing'); try{resizeHandle.setPointerCapture(e.pointerId);}catch(_){ } e.preventDefault(); });
     resizeHandle.addEventListener('pointermove', e=>{ if(!resizing) return; applyDrawerWidth(window.innerWidth - e.clientX); });
-    const stopResize=(e)=>{ if(!resizing) return; resizing=false; document.body.classList.remove('resizing'); try{resizeHandle.releasePointerCapture(e.pointerId);}catch(_){ } };
+    const stopResize=(e)=>{ if(!resizing) return; resizing=false; document.body.classList.remove('resizing'); try{resizeHandle.releasePointerCapture(e.pointerId);}catch(_){ } if(typeof scheduleSave==='function') scheduleSave(); };
     resizeHandle.addEventListener('pointerup', stopResize);
     resizeHandle.addEventListener('pointercancel', stopResize);
     window.addEventListener('resize', ()=>applyDrawerWidth(drawerWidth));
@@ -1014,13 +1060,13 @@
 
     // ===== Wire up =====
     addSheikhRow();  // start with one sheikh
-    $('addSheikh').addEventListener('click', ()=>{ addSheikhRow(); render(); });
+    $('addSheikh').addEventListener('click', ()=>{ addSheikhRow(); render(); if(typeof scheduleSave==='function') scheduleSave(); });
     sheikhList.addEventListener('click', e=>{
         const del=e.target.closest('.sheikh-del'); if(!del) return;
         const rows=sheikhList.querySelectorAll('.sheikh-row');
         if(rows.length<=1){ del.closest('.sheikh-row').querySelector('.sheikh-name').value=''; }
         else del.closest('.sheikh-row').remove();
-        render();
+        render(); if(typeof scheduleSave==='function') scheduleSave();
     });
 
     fields.startHD.innerHTML=Array.from({length:30},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
@@ -1042,9 +1088,71 @@
     $('copyBtn').addEventListener('click', copyText);
     $('resetBtn').addEventListener('click', resetForm);
 
+    // ===== Auto-save (localStorage) =====
+    const SAVE_KEY='ijaza_autosave_v1';
+    let saveTimer;
+    function collectState(){
+        const v={}; for(const k in fields){ const el=fields[k]; v[k]= el.type==='checkbox'?el.checked:el.value; }
+        const sheikhs=Array.from(sheikhList.querySelectorAll('.sheikh-row')).map(r=>({
+            name:r.querySelector('.sheikh-name').value, gender:r.querySelector('.sheikh-gender').value,
+            khassa:r.querySelector('.sh-khassa').checked, amma:r.querySelector('.sh-amma').checked,
+            family:r.querySelector('.sh-family').checked, works:r.querySelector('.sh-works').checked,
+            isnad:r.querySelector('.sh-isnad').value
+        }));
+        const theme=(ijazaBox.className.match(/theme-[a-z]+/)||['theme-emerald'])[0];
+        const border=(ijazaBox.className.match(/brd-[a-z]+/)||['brd-ornate'])[0];
+        const app={ font:ijazaBox.style.getPropertyValue('--ijaza-font'), theme, border,
+            basmala:ijazaBox.style.getPropertyValue('--basmala-color'), title:ijazaBox.style.getPropertyValue('--title-color'),
+            fs:fontSize.value, lh:lineHeight.value, dw:drawerWidth };
+        return { v, sheikhs, app, sig:signatureDataUrl, auto:$('autoSave').checked };
+    }
+    function saveState(){
+        if(!$('autoSave').checked) return;
+        try{ localStorage.setItem(SAVE_KEY, JSON.stringify(collectState()));
+            const s=$('saveStatus'); if(s) s.textContent='حُفظ '+new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+        }catch(e){}
+    }
+    function scheduleSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(saveState, 500); }
+    function syncAppearanceUI(a){
+        if(a.font) document.querySelectorAll('[data-opt=font] button').forEach(b=>b.classList.toggle('active', b.dataset.val===a.font));
+        document.querySelectorAll('[data-opt=color] button').forEach(b=>b.classList.toggle('active', a.theme==='theme-'+b.dataset.theme));
+        document.querySelectorAll('[data-opt=border] button').forEach(b=>b.classList.toggle('active', a.border==='brd-'+b.dataset.brd));
+        if(a.basmala) $('basmalaColor').value=a.basmala;
+        if(a.title) $('titleColor').value=a.title;
+    }
+    function loadState(){
+        let data; try{ const raw=localStorage.getItem(SAVE_KEY); if(!raw) return false; data=JSON.parse(raw); }catch(e){ return false; }
+        if(!data||typeof data!=='object') return false;
+        if(typeof data.auto==='boolean') $('autoSave').checked=data.auto;
+        if(data.v) for(const k in data.v){ const el=fields[k]; if(!el) continue; if(el.type==='checkbox') el.checked=!!data.v[k]; else el.value=data.v[k]; }
+        if(Array.isArray(data.sheikhs)){ sheikhList.innerHTML=''; (data.sheikhs.length?data.sheikhs:[{}]).forEach(sd=>addSheikhRow(sd)); }
+        if(data.app){ const a=data.app;
+            if(a.font) ijazaBox.style.setProperty('--ijaza-font',a.font);
+            if(a.theme){ ['theme-emerald','theme-brown','theme-navy','theme-burgundy'].forEach(c=>ijazaBox.classList.remove(c)); ijazaBox.classList.add(a.theme); }
+            if(a.border){ ['brd-ornate','brd-double','brd-simple','brd-none'].forEach(c=>ijazaBox.classList.remove(c)); ijazaBox.classList.add(a.border); }
+            if(a.basmala) ijazaBox.style.setProperty('--basmala-color',a.basmala);
+            if(a.title) ijazaBox.style.setProperty('--title-color',a.title);
+            if(a.fs) fontSize.value=a.fs; if(a.lh) lineHeight.value=a.lh; applyType();
+            if(a.dw) applyDrawerWidth(parseInt(a.dw,10)||drawerWidth);
+            syncAppearanceUI(a);
+        }
+        if(data.sig) signatureDataUrl=data.sig;
+        return true;
+    }
+    $('autoSave').addEventListener('change', ()=>{ if($('autoSave').checked) saveState(); });
+    $('clearSaved').addEventListener('click', ()=>{ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} const s=$('saveStatus'); if(s) s.textContent=''; showToast('تم مسح المحفوظ'); });
+    window.addEventListener('beforeunload', saveState);
+
+    // ===== Initialize (with restore) =====
     fields.issueDate.value=hijriToday();
+    loadState();
+    updateIsnadMode();
     updateMethodLabel();
     render();
+
+    // attach broad auto-save listeners AFTER restore
+    document.addEventListener('input', scheduleSave);
+    document.addEventListener('change', scheduleSave);
 })();
 </script>
 </body>
