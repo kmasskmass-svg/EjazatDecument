@@ -294,10 +294,12 @@
                             </select>
                         </div>
                     </div>
+                    <div>
+                        <label for="bookEdition" class="block text-sm font-medium text-gray-700 mb-1">النسخة المعتمدة من الكتاب عند القراءة (اختياري)</label>
+                        <input type="text" id="bookEdition" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: طبعة دار كذا بتحقيق فلان">
+                    </div>
                 </div>
             </details>
-
-            <!-- العنوان والجهة المُصدِرة -->
             <details class="acc">
                 <summary class="acc-h">العنوان والجهة المُصدِرة والشعار</summary>
                 <div class="acc-body space-y-3">
@@ -364,11 +366,15 @@
                     </div>
                     <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
                         <input type="checkbox" id="thirdPerson" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
-                        صيغة الغائب (صادرة من جهة): «حضر فلان» بدل «حضرتُ أنا»
+                        صيغة الغائب (صادرة من جهة): «حضر فلان» بدل «حضرتُ أنا»، و«وكتبه: اسم الجهة»
                     </label>
+                    <div>
+                        <label for="officialName" class="block text-sm font-medium text-gray-700 mb-1">اسم المسؤول وتوقيعه (يظهر عند الإصدار من جهة)</label>
+                        <input type="text" id="officialName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: المشرف العام: فلان بن فلان">
+                    </div>
                     <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
                         <input type="checkbox" id="blankStudent" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
-                        ترك اسم الطالب فارغاً (نسخة للتوزيع يكتب الطالب اسمه)
+                        نسخة للتوزيع: ترك اسم الطالب وحالة السماع وعدد المجالس والوسيلة فارغة ليملأها الطالب
                     </label>
                 </div>
             </details>
@@ -623,7 +629,7 @@
                     <div class="sig">
                         <div><span class="sig-h" id="sigSheikhLabel">المجيز</span><span class="sig-v accent" id="sigSheikh"></span></div>
                         <div><span class="sig-h">تاريخ الإصدار</span><span class="sig-v" id="sigDate"></span></div>
-                        <div><span class="sig-h" id="sigWroteLabel">وكتبه</span><span class="sig-v accent" id="sigWrote"></span><img id="sigImg" class="sig-img hidden" alt="توقيع الطالب"></div>
+                        <div><span class="sig-h" id="sigWroteLabel">وكتبه</span><span class="sig-v accent" id="sigWrote"></span><span class="sig-v" id="officialLine"></span><img id="sigImg" class="sig-img hidden" alt="توقيع"></div>
                     </div>
                 </div>
             </div>
@@ -642,6 +648,9 @@
         <h3>دليل الاستخدام <button type="button" class="x" aria-label="إغلاق">✕</button></h3>
         <div class="guide-video">
             <iframe src="https://www.youtube.com/embed/W3QDpAVAVTM" title="دليل استخدام وثيقة إثبات السماع" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="guide-video">
+            <iframe src="https://www.youtube.com/embed/S4TQ4jOVLAg" title="شرح إضافي لوثيقة إثبات السماع" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
         <div class="guide-steps">
             <div class="gstep" style="--c:#0ea5e9"><div class="gstep-ic">☰</div><div class="gstep-tx"><b>القائمة والأقسام</b>افتحها من زرّ الخطوط الثلاثة أعلى اليمين؛ أقسامها قابلة للطيّ، ويمكن سحب حافّتها لتوسيعها أو تصغيرها.</div></div>
@@ -688,6 +697,7 @@
         completeness:$('completeness'), uptoText:$('uptoText'), sessionMode:$('sessionMode'), sessionNum:$('sessionNum'),
         attendedSome:$('attendedSome'), attendedNum:$('attendedNum'),
         customTitle:$('customTitle'), orgEntity:$('orgEntity'), thirdPerson:$('thirdPerson'), blankStudent:$('blankStudent'),
+        bookEdition:$('bookEdition'), officialName:$('officialName'),
         startGregPicker:$('startGregPicker'), startHD:$('startHD'), startHM:$('startHM'), startHY:$('startHY'), startDay:$('startDay'), startTime:$('startTime'),
         endGregPicker:$('endGregPicker'), endHD:$('endHD'), endHM:$('endHM'), endHY:$('endHY'), endDay:$('endDay'), endTime:$('endTime'),
         attendanceType:$('attendanceType'), method:$('method'),
@@ -700,7 +710,7 @@
     const sigSheikh=$('sigSheikh'), sigDate=$('sigDate'), sigWrote=$('sigWrote'), sigImg=$('sigImg');
     const docLogo=$('docLogo'), orgName=$('orgName');
     const orgLogoInline=$('orgLogoInline');
-    const stampImg=$('stampImg');
+    const stampImg=$('stampImg'), officialLine=$('officialLine');
     function applyOrgLogo(){
         if(orgColorAuto) ijazaBox.style.removeProperty('--org-color');
         else ijazaBox.style.setProperty('--org-color', $('orgColor').value);
@@ -895,9 +905,12 @@
             dateClause=`يوم <b>${esc(v.startDay)}</b> الموافق <b>${esc(sd.hij)}</b>، <b>${esc(sd.greg)}</b> الساعة <b>${esc(v.startTime)}</b>`;
         }
 
+        const BL = v.blankStudent;
+        const BLANK = '<span class="blank-name">&nbsp;&nbsp;&nbsp;</span>';
+        const platform = BL ? BLANK : `<b>${esc(v.method)}</b>`;
         const method = v.attendanceType==='عن بعد'
-            ? `عن طريق البثِّ المباشر عبر <b>${esc(v.method)}</b>`
-            : `حضورياً في <b>${esc(v.method)}</b>`;
+            ? `عن طريق البثِّ المباشر عبر ${platform}`
+            : `حضورياً في ${platform}`;
 
         let orgReader='';
         if(v.organizer) orgReader+=`، ورتَّب اللقاءَ ونظَّمه: <b>${esc(v.organizer)}</b>`;
@@ -925,21 +938,26 @@
 
         const SF = v.studentGender==='female';
         const TP = v.thirdPerson;
-        const studentDisp = v.blankStudent ? '<span class="blank-name">&nbsp;&nbsp;&nbsp;</span>' : `<b>${esc(v.studentName)}</b>`;
+        const studentDisp = BL ? BLANK : `<b>${esc(v.studentName)}</b>`;
         const hadara = TP ? (SF?'حضرتْ':'حضر') : 'حضرتُ أنا';
         const samiaa = TP ? (SF?'وسمعتْه':'وسمعه') : 'وسمعتُه';
         let statusPhrase;
-        if(v.completeness==='upto') statusPhrase = `إلى نهاية قوله: «<b>${esc(v.uptoText)}</b>» مع الإجازةِ لباقيه`;
+        if(BL) statusPhrase = BLANK;
+        else if(v.completeness==='upto') statusPhrase = `إلى نهاية قوله: «<b>${esc(v.uptoText)}</b>» مع الإجازةِ لباقيه`;
         else statusPhrase = `<b>${esc(v.completeness)}</b>`;
-        let attended='';
-        if(v.attendedSome){ const an=Math.max(1, parseInt(v.attendedNum,10)||1); const av=TP?(SF?'وحضرتْ':'وحضر'):'وحضرتُ'; attended=`، ${av} منها <b>${majlisSpelled(an)}</b>`; }
+        let countPart;
+        if(BL) countPart = BLANK;
+        else { let attended=''; if(v.attendedSome){ const an=Math.max(1, parseInt(v.attendedNum,10)||1); const av=TP?(SF?'وحضرتْ':'وحضر'):'وحضرتُ'; attended=`، ${av} منها <b>${majlisSpelled(an)}</b>`; } countPart = countClause()+attended; }
+
+        let editionP='';
+        if(v.bookEdition){ const aE = TP ? (SF?'اعتمدت':'اعتمد') : 'اعتمدتُ'; editionP = `<p class="text-right mb-4">وقد ${aE} النسخةَ التاليةَ من الكتاب عند القراءة: <b>${esc(v.bookEdition)}</b>.</p>`; }
 
         const introP = `<p class="text-right indent-8 mb-4">الحمدُ لله ربِّ العالمين، والصلاةُ والسلامُ على نبيِّنا محمدٍ وعلى آلِه وصحبِه أجمعين، أمَّا بعد:</p>`;
-        const hearingP = `<p class="text-right mb-4">فقد ${hadara} ${studentDisp} مجلسَ سَماعِ كتابِ «<b>${esc(v.bookName)}</b>» على ${sf.honor} ${namesBold}، ${samiaa} ${statusPhrase} ${countClause()}${attended}، ${dateClause}، ${method}${orgReader}.</p>`;
+        const hearingP = `<p class="text-right mb-4">فقد ${hadara} ${studentDisp} مجلسَ سَماعِ كتابِ «<b>${esc(v.bookName)}</b>» على ${sf.honor} ${namesBold}، ${samiaa} ${statusPhrase} ${countPart}، ${dateClause}، ${method}${orgReader}.</p>`;
         const duaP = `<p class="text-center mb-4">غفر اللهُ ل${hu} ولوالدي${hu} وأهل${hu} وذريت${hu} ومشايخ${hu}.</p>`;
         const closeP = `<p class="closing text-center font-bold mt-8 text-2xl">واللهُ خيرُ الشاهدين.</p>`;
 
-        const mainHtml = introP + hearingP + ijazaPara + duaP + closeP;
+        const mainHtml = introP + hearingP + editionP + ijazaPara + duaP + closeP;
 
         if(v.onePageText){
             // Main text kept together on page one; isnad pushed to a separate page
@@ -947,7 +965,7 @@
                 + (isnadBlock ? `<div id="isnadSection" style="break-before:page" class="mt-6">${isnadBlock}</div>` : '');
         }
         // Normal flow: isnad inline after the ijaza paragraph
-        return introP + hearingP + ijazaPara + isnadBlock + duaP + closeP;
+        return introP + hearingP + editionP + ijazaPara + isnadBlock + duaP + closeP;
     }
 
     let signatureDataUrl=null;
@@ -983,14 +1001,17 @@
 
         const TG=v.studentGender==='female';
         const sheikhs=getSheikhs(); const sf=sheikhForms(sheikhs);
+        const entity=v.thirdPerson;
         sigSheikhLabel.textContent = v.includeIjaza ? sf.mujiz : sf.musammi;
-        sigWroteLabel.textContent = TG ? 'وكتبته' : 'وكتبه';
+        sigWroteLabel.textContent = entity ? 'وكتبه' : (TG ? 'وكتبته' : 'وكتبه');
 
         // Always render the document (no completion gate)
         ijazaOutput.innerHTML=buildHtml(v);
         signatureArea.classList.remove('hidden');
         sigSheikh.textContent=sheikhs.map(s=>s.name).join(' و');
-        sigWrote.textContent=v.studentName;
+        sigWrote.textContent = entity ? (v.orgEntity||'') : (v.blankStudent ? '............' : v.studentName);
+        if(entity && v.officialName){ officialLine.textContent='المسؤول وتوقيعه: '+v.officialName; officialLine.classList.remove('hidden'); }
+        else officialLine.classList.add('hidden');
         sigDate.textContent=v.issueDate||hijriToday();
         if(signatureDataUrl){ sigImg.src=signatureDataUrl; sigImg.classList.remove('hidden'); }
         else sigImg.classList.add('hidden');
@@ -1016,6 +1037,7 @@
         t+=`\n\n${sigSheikhLabel.textContent}: ${sigSheikh.textContent}`;
         t+=`\nتاريخ الإصدار: ${sigDate.textContent}`;
         t+=`\n${sigWroteLabel.textContent}: ${sigWrote.textContent}`;
+        if(!officialLine.classList.contains('hidden')) t+=`\n${officialLine.textContent}`;
         return t;
     }
 
