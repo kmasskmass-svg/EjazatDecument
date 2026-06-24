@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وثيقة إثبات سَماع شخصية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #f3f4f6; }
+
+        .ijaza-box {
+            --accent:#047857; --accent-strong:#065f46; --border-c:#10b981; --gold:#b8860b;
+            --ijaza-font:'Amiri', serif;
+            background-color:#fff; position:relative; color:#1c2b26;
+        }
+        .ijaza-box.theme-emerald  { --accent:#047857; --accent-strong:#065f46; --border-c:#10b981; --gold:#b8860b; }
+        .ijaza-box.theme-brown    { --accent:#92400e; --accent-strong:#78350f; --border-c:#b45309; --gold:#a16207; }
+        .ijaza-box.theme-navy     { --accent:#1d4ed8; --accent-strong:#1e3a8a; --border-c:#3b82f6; --gold:#b8860b; }
+        .ijaza-box.theme-burgundy { --accent:#9f1239; --accent-strong:#881337; --border-c:#be123c; --gold:#a16207; }
+
+        .ijaza-box.brd-ornate {
+            border:3px double var(--border-c); box-shadow:0 0 0 1px var(--gold) inset;
+            background-image:url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="d" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="%23eef3f0"/></pattern></defs><rect width="100%" height="100%" fill="url(%23d)"/></svg>');
+        }
+        .ijaza-box.brd-double { border:4px double var(--border-c); }
+        .ijaza-box.brd-simple { border:2px solid var(--border-c); }
+        .ijaza-box.brd-none   { border:none; box-shadow:none; }
+
+        .corner { position:absolute; width:30px; height:30px; border:2px solid var(--accent); pointer-events:none; display:none; }
+        .ijaza-box.brd-ornate .corner { display:block; }
+        .corner-tl{top:10px;right:10px;border-bottom:none;border-left:none}
+        .corner-tr{top:10px;left:10px;border-bottom:none;border-right:none}
+        .corner-bl{bottom:10px;right:10px;border-top:none;border-left:none}
+        .corner-br{bottom:10px;left:10px;border-top:none;border-right:none}
+
+        /* Per-page print frame (repeats on every printed page) */
+        .print-frame { display:none; }
+
+        .ijaza-content { font-family:var(--ijaza-font); line-height:var(--ijaza-lh,2.1); font-size:var(--ijaza-fs,1.2rem); }
+        .ijaza-content b { color:var(--accent); font-weight:700; }
+        .hd { font-family:var(--ijaza-font); color:var(--accent-strong); }
+        #basmala { color: var(--basmala-color, var(--accent-strong)); }
+        #docTitle { color: var(--title-color, var(--accent-strong)); }
+        .closing { color:var(--accent-strong); font-family:var(--ijaza-font); }
+        .isnad-key { color:var(--accent-strong); font-weight:700; }
+        .isnad-card { margin:1rem 0; padding:1rem; background:#f8faf9; border-right:4px solid var(--accent); border-radius:6px; box-shadow:inset 0 1px 3px rgba(0,0,0,.05); text-align:right; }
+        .isnad-title { display:block; font-family:'Tajawal',sans-serif; font-weight:700; font-size:.9rem; color:#374151; margin-bottom:.5rem; }
+        .isnad-body { font-family:var(--ijaza-font); font-style:italic; line-height:2; }
+
+        .ornament { display:flex; align-items:center; justify-content:center; gap:10px; color:var(--gold); }
+        .ornament::before,.ornament::after { content:""; height:1px; width:56px; background:linear-gradient(to var(--dir,left), transparent, var(--gold)); }
+        .ornament::after { --dir:right; }
+
+        .sig { margin-top:3rem; display:flex; justify-content:space-between; gap:.5rem; text-align:center; font-family:var(--ijaza-font); align-items:flex-start; }
+        .sig > div { flex:1; }
+        .sig-h { display:block; font-weight:700; font-size:.85rem; color:var(--accent-strong); border-bottom:1px solid #cbd5e1; padding-bottom:.25rem; margin-bottom:.4rem; }
+        .sig-v { display:block; font-weight:700; font-size:1.05rem; }
+        .sig-v.accent { color:var(--accent); }
+        .sig-img { max-height:64px; margin:.4rem auto 0; display:block; }
+
+        .opt-btn { padding:.35rem .8rem; border:1px solid #d1d5db; border-radius:9999px; font-size:.8rem; background:#fff; cursor:pointer; transition:.15s; }
+        .opt-btn:hover { border-color:#059669; }
+        .opt-btn.active { background:#047857; color:#fff; border-color:#047857; }
+        .swatch { width:28px; height:28px; border-radius:9999px; border:2px solid transparent; cursor:pointer; transition:.15s; }
+        .swatch.active { border-color:#111; box-shadow:0 0 0 2px #fff inset; }
+
+        .hbtn { min-width:40px; padding:.3rem .5rem; border:1px solid #d1d5db; border-radius:8px; background:#fff; cursor:pointer; font-size:1.15rem; line-height:1; font-family:'Amiri',serif; transition:.15s; }
+        .hbtn:hover { border-color:#d97706; background:#fffbeb; }
+        .hbtn[data-act] { font-family:'Tajawal',sans-serif; font-size:.8rem; }
+
+        .field-error { border-color:#ef4444 !important; box-shadow:0 0 0 1px #ef4444; }
+        .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); opacity:0; pointer-events:none; transition:.25s; z-index:50; }
+        .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+        .touch-none { touch-action:none; }
+        .exporting, .exporting * { box-shadow:none !important; }
+
+        /* Hamburger + side drawer + accordion */
+        .menu-btn{ position:fixed; top:12px; right:12px; z-index:60; width:46px; height:46px; border-radius:10px; background:#047857; color:#fff; font-size:22px; line-height:1; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.2); }
+        .drawer-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.4); opacity:0; pointer-events:none; transition:opacity .25s; z-index:55; }
+        body.drawer-open .drawer-overlay{ opacity:1; pointer-events:auto; }
+        #formPanel.drawer{ position:fixed; top:0; right:0; height:100vh; width:250px; max-width:92vw; overflow-y:auto; background:#fff; box-shadow:-4px 0 22px rgba(0,0,0,.18); transform:translateX(105%); transition:transform .28s ease; z-index:58; padding:1rem 0.7rem 3rem; }
+        /* Compact controls inside the drawer only */
+        #formPanel input, #formPanel select, #formPanel textarea { font-size:.74rem; padding-top:.3rem; padding-bottom:.3rem; padding-right:.5rem; padding-left:.5rem; }
+        #formPanel label { font-size:.72rem; }
+        #formPanel .acc>summary { font-size:.82rem; padding:.5rem .7rem; }
+        #formPanel .acc-body { padding:.6rem; }
+        #formPanel .opt-btn { font-size:.7rem; padding:.25rem .5rem; }
+        #formPanel .hbtn { font-size:.95rem; min-width:30px; padding:.18rem .35rem; }
+        #formPanel input[type=color]{ width:30px; height:30px; }
+        #formPanel input[type=checkbox]{ width:1rem; height:1rem; }
+        /* Drag-to-resize handle on the drawer's inner edge */
+        #drawerResize{ position:fixed; top:0; bottom:0; width:14px; cursor:ew-resize; z-index:59; display:none; }
+        #drawerResize::before{ content:''; position:absolute; top:50%; right:4px; transform:translateY(-50%); width:4px; height:48px; border-radius:3px; background:#cbd5e1; transition:background .15s; }
+        #drawerResize:hover::before{ background:#10b981; height:70px; }
+        body.drawer-open #drawerResize{ display:block; }
+        body.resizing{ user-select:none; cursor:ew-resize; }
+        /* Floating action buttons + modals */
+        .fab-wrap{ position:fixed; bottom:18px; left:18px; z-index:60; display:flex; flex-direction:column; gap:10px; }
+        .fab{ width:50px; height:50px; border-radius:50%; border:none; cursor:pointer; color:#fff; font-size:22px; box-shadow:0 3px 10px rgba(0,0,0,.25); display:flex; align-items:center; justify-content:center; transition:transform .15s; }
+        .fab:hover{ transform:scale(1.08); }
+        .fab.guide{ background:#0ea5e9; }
+        .fab.contact{ background:#047857; }
+        .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:70; padding:16px; }
+        .modal-overlay.show{ display:flex; }
+        .modal{ background:#fff; border-radius:14px; max-width:480px; width:100%; max-height:85vh; overflow-y:auto; padding:1.25rem; box-shadow:0 10px 40px rgba(0,0,0,.3); }
+        .modal h3{ font-size:1.1rem; font-weight:800; color:#065f46; margin-bottom:.7rem; display:flex; justify-content:space-between; align-items:center; gap:.5rem; }
+        .modal .x{ cursor:pointer; border:none; background:#f1f5f9; border-radius:8px; padding:.15rem .55rem; font-size:.9rem; }
+        .modal a{ color:#047857; text-decoration:underline; word-break:break-all; }
+        .guide-video{ margin-bottom:1rem; aspect-ratio:16/9; background:#000; border-radius:10px; overflow:hidden; }
+        .guide-video iframe{ width:100%; height:100%; border:0; display:block; }
+        .guide-steps{ display:flex; flex-direction:column; gap:.5rem; }
+        .gstep{ display:flex; gap:.6rem; align-items:flex-start; background:#f8fafc; border-right:3px solid var(--c); border-radius:9px; padding:.5rem .6rem; }
+        .gstep-ic{ width:32px; height:32px; min-width:32px; border-radius:50%; background:#fff; border:2px solid var(--c); display:flex; align-items:center; justify-content:center; font-size:1rem; }
+        .gstep-tx{ font-size:.84rem; color:#334155; line-height:1.6; }
+        .gstep-tx b{ color:var(--c); display:block; margin-bottom:.05rem; }
+        #formPanel.drawer.open{ transform:translateX(0); }
+        .drawer-head{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin-bottom:.75rem; position:sticky; top:0; background:#fff; padding:.25rem 0 .5rem; border-bottom:1px solid #eee; z-index:2; }
+        #mainGrid{ display:block; max-width:1000px; margin:0 auto; }
+        #previewPanel{ width:100%; }
+        .acc{ border:1px solid #e5e7eb; border-radius:10px; margin-bottom:.6rem; overflow:hidden; }
+        .acc>summary{ list-style:none; cursor:pointer; padding:.7rem .9rem; font-weight:700; font-size:.92rem; color:#065f46; background:#f0fdf4; display:flex; align-items:center; justify-content:space-between; }
+        .acc>summary::-webkit-details-marker{ display:none; }
+        .acc>summary::after{ content:'⌄'; font-size:1.1rem; transition:transform .2s; }
+        .acc[open]>summary::after{ transform:rotate(180deg); }
+        .acc-body{ padding:.9rem; }
+
+        @media (prefers-reduced-motion: reduce){ *,*::before,*::after{transition:none!important;animation:none!important} }
+        :focus-visible { outline:2px solid #10b981; outline-offset:2px; }
+
+        /* Full-page preview mode (screen only) */
+        #mainGrid.preview-full #formPanel { display:none; }
+        #mainGrid.preview-full #previewPanel { grid-column:1 / -1; position:static; background:#e5e7eb; }
+        #mainGrid.preview-full #print-area { max-width:794px; margin:0 auto; }
+        #mainGrid.preview-full #ijazaBox { box-shadow:0 10px 30px rgba(0,0,0,.18); }
+
+        @media print {
+            @page { margin: 14mm; }
+            body { background:#fff; }
+            .no-print { display:none!important; }
+            #previewPanel { background:#fff!important; box-shadow:none!important; padding:0!important; }
+            #print-area { max-width:none!important; margin:0!important; }
+            /* Hide the in-flow box border/decoration so it isn't only on first/last page */
+            #ijazaBox { border:none!important; box-shadow:none!important; background-image:none!important; }
+            .corner { display:none!important; }
+            /* Fixed frame: repeats on EVERY printed page */
+            .print-frame {
+                display:block; position:fixed; top:4mm; right:4mm; bottom:4mm; left:4mm;
+                border:3px double var(--border-c); box-shadow:0 0 0 1px var(--gold) inset;
+                pointer-events:none; z-index:0;
+            }
+            .ijaza-box.brd-double .print-frame { border:4px double var(--border-c); box-shadow:none; }
+            .ijaza-box.brd-simple .print-frame { border:2px solid var(--border-c); box-shadow:none; }
+            .ijaza-box.brd-none   .print-frame { display:none; }
+            * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+<!-- Hamburger + drawer overlay -->
+<button id="menuBtn" class="menu-btn no-print" aria-label="القائمة">&#9776;</button>
+<div id="drawerOverlay" class="drawer-overlay no-print"></div>
+<div id="drawerResize" class="no-print" aria-hidden="true"></div>
+
+<div id="mainGrid">
+
+    <!-- Side drawer: all controls -->
+    <div id="formPanel" class="drawer no-print">
+        <div class="drawer-head">
+            <h1 class="text-lg font-bold text-emerald-800">وثيقة إثبات سَماع</h1>
+            <button type="button" id="drawerClose" class="opt-btn" aria-label="إغلاق">✕</button>
+        </div>
+
+        <!-- مظهر الوثيقة -->
+        <details class="acc" open>
+            <summary class="acc-h">مظهر الوثيقة</summary>
+            <div class="acc-body space-y-3">
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-xs text-gray-600 w-16">الخط:</span>
+                    <div class="opt-group flex gap-2" data-opt="font">
+                        <button type="button" class="opt-btn active" data-val="'Amiri', serif">أميري</button>
+                        <button type="button" class="opt-btn" data-val="'Noto Naskh Arabic', serif">نسخ</button>
+                        <button type="button" class="opt-btn" data-val="'Aref Ruqaa', serif">رقعة</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-xs text-gray-600 w-16">اللون:</span>
+                    <div class="opt-group flex gap-2 items-center" data-opt="color">
+                        <button type="button" class="swatch active" style="background:#047857" data-theme="emerald" title="أخضر"></button>
+                        <button type="button" class="swatch" style="background:#92400e" data-theme="brown" title="بُنّي"></button>
+                        <button type="button" class="swatch" style="background:#1d4ed8" data-theme="navy" title="أزرق"></button>
+                        <button type="button" class="swatch" style="background:#9f1239" data-theme="burgundy" title="عُنّابي"></button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-xs text-gray-600 w-16">البرواز:</span>
+                    <div class="opt-group flex gap-2 flex-wrap" data-opt="border">
+                        <button type="button" class="opt-btn active" data-brd="ornate">مزخرف</button>
+                        <button type="button" class="opt-btn" data-brd="double">مزدوج</button>
+                        <button type="button" class="opt-btn" data-brd="simple">بسيط</button>
+                        <button type="button" class="opt-btn" data-brd="none">بدون</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-xs text-gray-600 w-16">لون البسملة:</span>
+                    <div class="flex gap-2 items-center">
+                        <input type="color" id="basmalaColor" value="#065f46" class="w-9 h-9 rounded cursor-pointer border border-gray-300 bg-white p-0.5">
+                        <button type="button" id="basmalaAuto" class="opt-btn">تلقائي</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-xs text-gray-600 w-16">لون العنوان:</span>
+                    <div class="flex gap-2 items-center">
+                        <input type="color" id="titleColor" value="#065f46" class="w-9 h-9 rounded cursor-pointer border border-gray-300 bg-white p-0.5">
+                        <button type="button" id="titleAuto" class="opt-btn">تلقائي</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-xs text-gray-600 w-16">حجم الخط:</span>
+                    <input type="range" id="fontSize" min="0.85" max="1.8" step="0.05" value="1.2" class="flex-1 min-w-[120px] accent-emerald-600">
+                </div>
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-xs text-gray-600 w-16">تباعد الأسطر:</span>
+                    <input type="range" id="lineHeight" min="1.5" max="3" step="0.1" value="2.1" class="flex-1 min-w-[120px] accent-emerald-600">
+                </div>
+            </div>
+        </details>
+
+        <form id="ijazaForm" novalidate>
+
+            <!-- التشكيل -->
+            <details class="acc">
+                <summary class="acc-h">شريط التشكيل</summary>
+                <div class="acc-body">
+                    <div class="flex items-center justify-between mb-2 flex-wrap gap-1">
+                        <span class="text-xs font-bold text-amber-800">تشكيل الحقل المحدَّد: <span id="tashkeelTarget" class="text-amber-900">—</span></span>
+                        <span class="text-[11px] text-amber-700">ضع المؤشّر في حقل الاسم ثم اضغط الحركة</span>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5" id="tashkeelBtns">
+                        <button type="button" class="hbtn" data-h="fatha" title="فتحة">ـَ</button>
+                        <button type="button" class="hbtn" data-h="damma" title="ضمة">ـُ</button>
+                        <button type="button" class="hbtn" data-h="kasra" title="كسرة">ـِ</button>
+                        <button type="button" class="hbtn" data-h="sukun" title="سكون">ـْ</button>
+                        <button type="button" class="hbtn" data-h="shadda" title="شدّة">ـّ</button>
+                        <button type="button" class="hbtn" data-h="tanfath" title="تنوين فتح">ـً</button>
+                        <button type="button" class="hbtn" data-h="tandam" title="تنوين ضم">ـٌ</button>
+                        <button type="button" class="hbtn" data-h="tankas" title="تنوين كسر">ـٍ</button>
+                        <button type="button" class="hbtn" data-h="dagger" title="ألف خنجرية">ـٰ</button>
+                        <button type="button" class="hbtn" data-act="del" title="حذف ما قبل المؤشّر">⌫ حذف</button>
+                        <button type="button" class="hbtn" data-act="strip" title="إزالة كل التشكيل">مسح التشكيل</button>
+                    </div>
+                </div>
+            </details>
+
+            <!-- بيانات الطالب والكتاب -->
+            <details class="acc" open>
+                <summary class="acc-h">بيانات الطالب والكتاب</summary>
+                <div class="acc-body space-y-4">
+                    <div>
+                        <label for="studentName" class="block text-sm font-medium text-gray-700 mb-1">اسم الطالب / الطالبة كاملاً <span class="text-red-500">*</span></label>
+                        <input type="text" id="studentName" required data-tash-label="الطالب" class="tash w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: أحمد بن محمد بن عبدالله">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="bookName" class="block text-sm font-medium text-gray-700 mb-1">اسم الكتاب المسموع <span class="text-red-500">*</span></label>
+                            <input type="text" id="bookName" required data-tash-label="الكتاب" class="tash w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: صحيح البخاري">
+                        </div>
+                        <div>
+                            <label for="studentGender" class="block text-sm font-medium text-gray-700 mb-1">جنس الطالب</label>
+                            <select id="studentGender" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="male">ذكر</option><option value="female">أنثى</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- المشايخ -->
+            <details class="acc" open>
+                <summary class="acc-h">المشايخ المُسمِّعون</summary>
+                <div class="acc-body">
+                    <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+                        <span class="text-sm font-bold text-emerald-800">المشايخ <span class="text-red-500">*</span></span>
+                        <button type="button" id="addSheikh" class="opt-btn">+ إضافة شيخ</button>
+                    </div>
+                    <div id="sheikhList" class="space-y-2"></div>
+                    <p class="text-[11px] text-gray-500 mt-1">أضِف شيخاً أو أكثر؛ تتكيّف الصياغة مع المفرد والمثنى والجمع (والتذكير/التأنيث) تلقائياً.</p>
+                </div>
+            </details>
+
+            <!-- حالة السماع -->
+            <details class="acc">
+                <summary class="acc-h">حالة السماع وعدد المجالس</summary>
+                <div class="acc-body">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="completeness" class="block text-sm font-medium text-gray-700 mb-1">حالة السماع</label>
+                            <select id="completeness" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="كاملاً">كاملاً</option>
+                                <option value="مع فوتٍ يسير">مع فوتٍ يسير</option>
+                                <option value="مع فوتٍ كثير">مع فوتٍ كثير</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="sessionMode" class="block text-sm font-medium text-gray-700 mb-1">عدد المجالس</label>
+                            <select id="sessionMode" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="1">في مجلسٍ واحدٍ</option>
+                                <option value="2">في مجلسين</option>
+                                <option value="many">في (عدد) مجلساً…</option>
+                            </select>
+                            <input type="number" id="sessionNum" min="3" value="3" class="hidden mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="اكتب العدد رقماً">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- تاريخ المجلس -->
+            <details class="acc">
+                <summary class="acc-h">تاريخ المجلس</summary>
+                <div class="acc-body space-y-3">
+                    <div class="bg-emerald-50/50 border border-emerald-100 rounded-lg p-4 space-y-3">
+                        <p id="startTitle" class="text-sm font-bold text-emerald-800">تاريخ المجلس</p>
+                        <div>
+                            <label for="startGregPicker" class="block text-xs font-medium text-gray-700 mb-1">التاريخ الميلادي (اختر من التقويم) <span class="text-red-500">*</span></label>
+                            <input type="date" id="startGregPicker" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div><label for="startHD" class="block text-xs text-gray-600 mb-1">يوم (هجري)</label><select id="startHD" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"></select></div>
+                            <div><label for="startHM" class="block text-xs text-gray-600 mb-1">الشهر</label><select id="startHM" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"></select></div>
+                            <div><label for="startHY" class="block text-xs text-gray-600 mb-1">السنة</label><input type="number" id="startHY" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm" placeholder="1445"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label for="startDay" class="block text-xs text-gray-600 mb-1">اليوم</label>
+                                <select id="startDay" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                    <option>الأحد</option><option>الإثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option><option>السبت</option>
+                                </select></div>
+                            <div><label for="startTime" class="block text-xs text-gray-600 mb-1">الساعة <span class="text-red-500">*</span></label>
+                                <input type="text" id="startTime" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="مثال: بعد العصر"></div>
+                        </div>
+                    </div>
+                    <div id="endGroup" class="bg-emerald-50/50 border border-emerald-100 rounded-lg p-4 space-y-3 hidden">
+                        <p class="text-sm font-bold text-emerald-800">تاريخ ختام المجالس</p>
+                        <div>
+                            <label for="endGregPicker" class="block text-xs font-medium text-gray-700 mb-1">التاريخ الميلادي (اختر من التقويم)</label>
+                            <input type="date" id="endGregPicker" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div><label for="endHD" class="block text-xs text-gray-600 mb-1">يوم (هجري)</label><select id="endHD" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"></select></div>
+                            <div><label for="endHM" class="block text-xs text-gray-600 mb-1">الشهر</label><select id="endHM" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"></select></div>
+                            <div><label for="endHY" class="block text-xs text-gray-600 mb-1">السنة</label><input type="number" id="endHY" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm" placeholder="1445"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label for="endDay" class="block text-xs text-gray-600 mb-1">اليوم</label>
+                                <select id="endDay" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                    <option>الأحد</option><option>الإثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option><option>السبت</option>
+                                </select></div>
+                            <div><label for="endTime" class="block text-xs text-gray-600 mb-1">الساعة</label>
+                                <input type="text" id="endTime" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="مثال: بعد المغرب"></div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- طبيعة الحضور -->
+            <details class="acc">
+                <summary class="acc-h">طبيعة الحضور والوسيلة</summary>
+                <div class="acc-body space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="attendanceType" class="block text-sm font-medium text-gray-700 mb-1">طبيعة الحضور</label>
+                            <select id="attendanceType" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="عن بعد">عن بُعد</option>
+                                <option value="حضورياً">حضورياً</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="method" id="methodLabel" class="block text-sm font-medium text-gray-700 mb-1">المنصة / الوسيلة <span class="text-red-500">*</span></label>
+                            <input type="text" id="method" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: تطبيق زووم / قناة تليجرام">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="organizer" class="block text-sm font-medium text-gray-700 mb-1">رتّب اللقاء ونظّمه (اختياري)</label>
+                            <input type="text" id="organizer" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: ملتقى طلبة العلم">
+                        </div>
+                        <div>
+                            <label for="reader" class="block text-sm font-medium text-gray-700 mb-1">وقرأ فيه (القارئ — اختياري)</label>
+                            <input type="text" id="reader" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: الشيخ عبدالرحمن بن سعد">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- خيارات الإجازة -->
+            <details class="acc">
+                <summary class="acc-h">خيارات الإجازة</summary>
+                <div class="acc-body">
+                    <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100 space-y-2.5">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" id="titleIjaza" checked class="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                            <span class="text-gray-800 font-bold text-sm">إضافة كلمة «وإجازة» إلى العنوان</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" id="includeIjaza" checked class="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                            <span class="text-gray-800 font-bold text-sm">إضافة فقرة الإجازة إلى المتن</span>
+                        </label>
+                        <p class="text-[11px] text-gray-500 pr-7">تُحدَّد تفاصيل ما أجازه كلُّ شيخ (خاصة / عامة / الأزواج والذرية / بمؤلفاته) من بطاقة كلِّ شيخ.</p>
+                    </div>
+                </div>
+            </details>
+
+            <!-- الإسناد -->
+            <details class="acc">
+                <summary class="acc-h">سلسلة الإسناد</summary>
+                <div class="acc-body">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <label class="block text-sm font-medium text-gray-700">سلسلة إسناد السماع (اختياري)</label>
+                            <select id="isnadMode" class="text-xs border border-gray-300 rounded px-2 py-1">
+                                <option value="shared">سند واحد مشترك للجميع</option>
+                                <option value="per">سند مستقل لكل شيخ</option>
+                            </select>
+                        </div>
+                        <div id="sharedIsnadWrap">
+                            <p class="text-xs text-gray-500 mb-2">يُذكر مع اسم الكتاب يتبعه «فقال/فقالوا:». افصل بـ «عن / حدثنا».</p>
+                            <textarea id="isnad" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 leading-relaxed text-sm" placeholder="أخبرنا فلان، عن فلان، عن فلان..."></textarea>
+                        </div>
+                        <p id="perIsnadHint" class="hidden text-xs text-gray-500">أدخِل سند كلّ شيخ في حقل الإسناد داخل بطاقته.</p>
+                        <label class="flex items-center gap-2 cursor-pointer pt-1">
+                            <input type="checkbox" id="onePageText" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                            <span class="text-xs text-gray-700">احتواء نص الوثيقة في الصفحة الأولى، ووضع الإسناد في صفحة مستقلّة</span>
+                        </label>
+                    </div>
+                </div>
+            </details>
+
+            <!-- التوقيع -->
+            <details class="acc">
+                <summary class="acc-h">التوقيع / الختم</summary>
+                <div class="acc-body">
+                    <div class="space-y-3">
+                        <div class="flex gap-2 flex-wrap">
+                            <button type="button" id="sigUploadBtn" class="opt-btn">رفع صورة</button>
+                            <button type="button" id="sigDrawBtn" class="opt-btn">رسم توقيع</button>
+                            <button type="button" id="sigClearBtn" class="opt-btn">إزالة</button>
+                        </div>
+                        <input type="file" id="sigFile" accept="image/*" class="hidden">
+                        <div id="sigPadWrap" class="hidden">
+                            <canvas id="sigPad" width="320" height="120" class="border border-gray-300 rounded bg-white touch-none w-full"></canvas>
+                            <button type="button" id="sigPadClear" class="opt-btn mt-2">مسح اللوحة</button>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- تاريخ الإصدار -->
+            <details class="acc">
+                <summary class="acc-h">تاريخ الإصدار</summary>
+                <div class="acc-body">
+                    <input type="text" id="issueDate" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="هجري تلقائي — قابل للتعديل">
+                </div>
+            </details>
+
+            <div class="flex flex-wrap gap-2 pt-3 mt-1 border-t border-gray-200">
+                <button type="button" id="printBtn" class="flex-1 min-w-[120px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm">طباعة / PDF</button>
+                <button type="button" id="imageBtn" class="flex-1 min-w-[110px] bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm">تصدير صورة</button>
+                <button type="button" id="copyBtn" class="flex-1 min-w-[100px] bg-gray-800 hover:bg-gray-900 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm">نسخ النص</button>
+                <button type="button" id="resetBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 px-3 rounded-md transition border border-gray-300 text-sm">تفريغ</button>
+            </div>
+
+            <div id="errorMsg" role="alert" class="hidden text-center text-sm text-red-700 font-bold bg-red-50 border border-red-200 p-2.5 rounded mt-2">
+                الرجاء تعبئة الحقول الأساسية المطلوبة (المحدّدة بـ <span class="text-red-500">*</span>).
+            </div>
+        </form>
+    </div>
+
+    <!-- Preview (main, full page) -->
+    <div id="previewPanel" class="bg-white rounded-xl shadow-lg p-2 sm:p-4 lg:p-8">
+        <div class="flex items-center justify-between mb-3 no-print gap-2">
+            <h2 class="text-xl font-bold text-gray-800">معاينة الوثيقة</h2>
+            <button type="button" id="fullPreviewBtn" class="opt-btn">معاينة بملء الصفحة</button>
+        </div>
+
+        <div id="print-area" class="w-full">
+            <div id="ijazaBox" class="ijaza-box theme-emerald brd-ornate p-6 sm:p-10 rounded shadow-sm text-center">
+                <div class="print-frame" aria-hidden="true"></div>
+                <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+
+                <header class="mb-6">
+                    <h2 id="basmala" class="hd text-3xl font-bold mb-2">بسم الله الرحمن الرحيم</h2>
+                    <h3 id="docTitle" class="hd text-xl font-bold mb-3">وثيقة إثبات سَماع وإجازة شخصية</h3>
+                    <div class="ornament" aria-hidden="true">❖</div>
+                </header>
+
+                <div id="ijazaOutput" class="ijaza-content text-justify" dir="rtl" aria-live="polite">
+                    <div class="text-gray-400 text-center italic mt-10">ابدأ بتعبئة النموذج ليظهر نص الوثيقة هنا.</div>
+                </div>
+
+                <div id="signatureArea" class="sig hidden">
+                    <div><span class="sig-h" id="sigSheikhLabel">المجيز</span><span class="sig-v accent" id="sigSheikh"></span></div>
+                    <div><span class="sig-h">تاريخ الإصدار</span><span class="sig-v" id="sigDate"></span></div>
+                    <div><span class="sig-h" id="sigWroteLabel">وكتبه</span><span class="sig-v accent" id="sigWrote"></span><img id="sigImg" class="sig-img hidden" alt="توقيع الطالب"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating buttons: guide + contact -->
+<div class="fab-wrap no-print">
+    <button type="button" id="fabGuide" class="fab guide" title="دليل الاستخدام" aria-label="دليل الاستخدام">؟</button>
+    <button type="button" id="fabContact" class="fab contact" title="للتواصل والمقترحات" aria-label="تواصل">✉</button>
+</div>
+
+<div id="modalOverlay" class="modal-overlay no-print">
+    <div id="guideModal" class="modal hidden">
+        <h3>دليل الاستخدام <button type="button" class="x" aria-label="إغلاق">✕</button></h3>
+        <div class="guide-video">
+            <iframe src="https://www.youtube.com/embed/W3QDpAVAVTM" title="دليل استخدام وثيقة إثبات السماع" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="guide-steps">
+            <div class="gstep" style="--c:#0ea5e9"><div class="gstep-ic">☰</div><div class="gstep-tx"><b>القائمة والأقسام</b>افتحها من زرّ الخطوط الثلاثة أعلى اليمين؛ أقسامها قابلة للطيّ، ويمكن سحب حافّتها لتوسيعها أو تصغيرها.</div></div>
+            <div class="gstep" style="--c:#8b5cf6"><div class="gstep-ic">🎨</div><div class="gstep-tx"><b>مظهر الوثيقة</b>الخط واللون والبرواز وحجم الخط وتباعد الأسطر ولون البسملة والعنوان.</div></div>
+            <div class="gstep" style="--c:#d97706"><div class="gstep-ic">🔤</div><div class="gstep-tx"><b>شريط التشكيل</b>ضع المؤشّر في حقل الاسم أو الكتاب ثم اضغط الحركة لإدراجها عند المؤشّر.</div></div>
+            <div class="gstep" style="--c:#047857"><div class="gstep-ic">👤</div><div class="gstep-tx"><b>بيانات الطالب والكتاب</b>أدخل اسم الطالب والكتاب وجنس الطالب.</div></div>
+            <div class="gstep" style="--c:#be123c"><div class="gstep-ic">📜</div><div class="gstep-tx"><b>المشايخ المُسمِّعون</b>أضِف شيخاً أو أكثر، وحدّد لكل شيخ نوع إجازته (خاصة / عامة / الأسرة / المؤلفات).</div></div>
+            <div class="gstep" style="--c:#2563eb"><div class="gstep-ic">🗓️</div><div class="gstep-tx"><b>السماع والتاريخ</b>اختر حالة السماع وعدد المجالس، وحدّد التاريخ من التقويم (الهجري والميلادي يتزامنان تلقائياً).</div></div>
+            <div class="gstep" style="--c:#0891b2"><div class="gstep-ic">🎧</div><div class="gstep-tx"><b>طبيعة الحضور</b>اختر الوسيلة (حضوري/عن بُعد)، وأضِف المنظِّم والقارئ إن وُجدا.</div></div>
+            <div class="gstep" style="--c:#ca8a04"><div class="gstep-ic">🔗</div><div class="gstep-tx"><b>الإسناد</b>سند مشترك للجميع أو سند مستقل لكل شيخ، مع إمكان وضعه في صفحة مستقلّة.</div></div>
+            <div class="gstep" style="--c:#7c3aed"><div class="gstep-ic">🖋️</div><div class="gstep-tx"><b>التوقيع / الختم</b>أضِف توقيع الطالب أو ختمه برفع صورة أو بالرسم باليد.</div></div>
+            <div class="gstep" style="--c:#059669"><div class="gstep-ic">👁️</div><div class="gstep-tx"><b>المعاينة</b>تتحدّث فورياً مع كل إدخال؛ واستخدم «معاينة بملء الصفحة» لرؤيتها كاملة.</div></div>
+            <div class="gstep" style="--c:#dc2626"><div class="gstep-ic">📤</div><div class="gstep-tx"><b>الإخراج</b>طباعة / PDF، أو تصدير صورة، أو نسخ النص.</div></div>
+        </div>
+    </div>
+
+    <div id="contactModal" class="modal hidden">
+        <h3>للتواصل والمقترحات <button type="button" class="x" aria-label="إغلاق">✕</button></h3>
+        <p style="font-size:.88rem;color:#065f46;font-weight:700;margin-bottom:.7rem;">إعداد: كليب بن أحمد ضيف الله الزهراني</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:.5rem;font-size:.92rem;color:#334155;">
+            <li>تليجرام: <a href="https://t.me/Kazhrani" target="_blank" rel="noopener">@Kazhrani</a></li>
+            <li>البريد الإلكتروني: <a href="mailto:kmasskmass@gmail.com">kmasskmass@gmail.com</a></li>
+        </ul>
+    </div>
+</div>
+
+<div id="toast" class="toast no-print bg-emerald-600 text-white text-sm font-semibold py-2.5 px-5 rounded-full shadow-lg"></div>
+
+<script>
+(function () {
+    "use strict";
+    const $ = (id) => document.getElementById(id);
+
+    const HIJRI_MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+    const WD=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+    const fields = {
+        studentName:$('studentName'), bookName:$('bookName'),
+        studentGender:$('studentGender'),
+        completeness:$('completeness'), sessionMode:$('sessionMode'), sessionNum:$('sessionNum'),
+        startGregPicker:$('startGregPicker'), startHD:$('startHD'), startHM:$('startHM'), startHY:$('startHY'), startDay:$('startDay'), startTime:$('startTime'),
+        endGregPicker:$('endGregPicker'), endHD:$('endHD'), endHM:$('endHM'), endHY:$('endHY'), endDay:$('endDay'), endTime:$('endTime'),
+        attendanceType:$('attendanceType'), method:$('method'),
+        organizer:$('organizer'), reader:$('reader'),
+        titleIjaza:$('titleIjaza'), includeIjaza:$('includeIjaza'),
+        isnadMode:$('isnadMode'), onePageText:$('onePageText'),
+        isnad:$('isnad'), issueDate:$('issueDate')
+    };
+    const form=$('ijazaForm'), ijazaOutput=$('ijazaOutput'), signatureArea=$('signatureArea');
+    const sigSheikh=$('sigSheikh'), sigDate=$('sigDate'), sigWrote=$('sigWrote'), sigImg=$('sigImg');
+    const sigSheikhLabel=$('sigSheikhLabel'), sigWroteLabel=$('sigWroteLabel');
+    const docTitle=$('docTitle'), methodLabel=$('methodLabel'), errorMsg=$('errorMsg'), toast=$('toast');
+    const endGroup=$('endGroup'), startTitle=$('startTitle'), ijazaBox=$('ijazaBox');
+
+    const REQUIRED=['studentName','bookName','startGregPicker','startTime','method'];
+
+    const esc=(s)=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    const toArabicDigits=(s)=>String(s).replace(/[0-9]/g, d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+    function arabicizeTextNodes(root){ const w=document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n; while((n=w.nextNode())) n.nodeValue=toArabicDigits(n.nodeValue); }
+
+    // ===== Date conversion (Umm al-Qura) =====
+    const pad=(n)=>n<10?'0'+n:''+n;
+    const dateToInputValue=(d)=>d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate());
+    const inputValueToDate=(v)=>new Date(v+'T12:00:00Z');
+    function gregToHijri(date){
+        const f=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'UTC'});
+        const pr=f.formatToParts(date); const g=t=>+pr.find(p=>p.type===t).value;
+        return {d:g('day'), m:g('month'), y:g('year')};
+    }
+    function hijriToGreg(hy,hm,hd){
+        const target=hy*10000+hm*100+hd;
+        const gy=Math.floor(hy*0.970224+621.5643);
+        let lo=Math.floor(Date.UTC(gy-2,0,1)/86400000), hi=Math.floor(Date.UTC(gy+2,0,1)/86400000);
+        while(lo<=hi){
+            const mid=(lo+hi)>>1; const d=new Date(mid*86400000+43200000);
+            const p=gregToHijri(d); const val=p.y*10000+p.m*100+p.d;
+            if(val===target) return d;
+            if(val<target) lo=mid+1; else hi=mid-1;
+        }
+        return null;
+    }
+    function fmtGreg(d){ return new Intl.DateTimeFormat('ar-u-ca-gregory',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(d)+' م'; }
+    function fmtHijri(p){ return p.d+' '+HIJRI_MONTHS[p.m-1]+' '+p.y+'هـ'; }
+
+    function dateStrings(prefix){
+        const pv=fields[prefix+'GregPicker'].value; if(!pv) return null;
+        const d=inputValueToDate(pv);
+        return { greg:fmtGreg(d), hij:fmtHijri(gregToHijri(d)), wd:WD[d.getUTCDay()] };
+    }
+    function syncFromGreg(prefix){
+        const pv=fields[prefix+'GregPicker'].value; if(!pv) return;
+        const d=inputValueToDate(pv); const p=gregToHijri(d);
+        fields[prefix+'HD'].value=p.d; fields[prefix+'HM'].value=p.m; fields[prefix+'HY'].value=p.y;
+        fields[prefix+'Day'].value=WD[d.getUTCDay()]; render();
+    }
+    function syncFromHijri(prefix){
+        const hd=+fields[prefix+'HD'].value, hm=+fields[prefix+'HM'].value, hy=+fields[prefix+'HY'].value;
+        if(!hd||!hm||!hy) return;
+        const d=hijriToGreg(hy,hm,hd);
+        if(!d){ showToast('تاريخ هجري غير صالح', false); return; }
+        fields[prefix+'GregPicker'].value=dateToInputValue(d);
+        fields[prefix+'Day'].value=WD[d.getUTCDay()]; render();
+    }
+
+    function hijriToday(){
+        try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'}).format(new Date()); }
+        catch(e){ return new Date().toLocaleDateString('ar-SA')+' هـ'; }
+    }
+
+    function getSessions(){
+        const m=fields.sessionMode.value;
+        if(m==='1') return 1; if(m==='2') return 2;
+        return Math.max(3, parseInt(fields.sessionNum.value,10)||3);
+    }
+    function countClause(){
+        const m=fields.sessionMode.value;
+        if(m==='1') return 'في <b>مجلسٍ واحدٍ</b>';
+        if(m==='2') return 'في <b>مجلسين</b>';
+        return 'في <b>'+getSessions()+' مجلساً</b>';
+    }
+
+    function showToast(msg, ok){
+        toast.textContent=msg; toast.style.backgroundColor=ok===false?'#dc2626':'#059669';
+        toast.classList.add('show'); clearTimeout(showToast._t); showToast._t=setTimeout(()=>toast.classList.remove('show'),2800);
+    }
+
+    // ===== Sheikhs (one / two / many) =====
+    const sheikhList=$('sheikhList');
+    function addSheikhRow(name, gender){
+        const row=document.createElement('div');
+        row.className='sheikh-row border border-gray-200 rounded-md p-2.5 space-y-2 bg-white';
+        row.innerHTML='<div class="flex gap-2 items-center">'
+            +'<input type="text" class="tash sheikh-name flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الشيخ" placeholder="اسم الشيخ / الشيخة">'
+            +'<select class="sheikh-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select>'
+            +'<button type="button" class="sheikh-del opt-btn" title="حذف هذا الشيخ">✕</button>'
+            +'</div>'
+            +'<div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-700 pr-1">'
+            +'<label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-khassa" checked> إجازة خاصة (بالكتاب)</label>'
+            +'<label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-amma" checked> إجازة عامة</label>'
+            +'<label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-family"> الأزواج والذرية</label>'
+            +'<label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-works" checked> بمؤلفاته خاصة</label>'
+            +'</div>'
+            +'<textarea class="sh-isnad hidden w-full px-3 py-2 border border-gray-300 rounded-md text-sm leading-relaxed" rows="2" placeholder="سند هذا الشيخ (اختياري)..."></textarea>';
+        row.querySelector('.sheikh-name').value=name||'';
+        row.querySelector('.sheikh-gender').value=gender||'male';
+        row.querySelector('.sh-isnad').classList.toggle('hidden', fields.isnadMode.value!=='per');
+        sheikhList.appendChild(row);
+    }
+    function getSheikhs(){
+        return Array.from(sheikhList.querySelectorAll('.sheikh-row')).map(r=>({
+            name:r.querySelector('.sheikh-name').value.trim(),
+            gender:r.querySelector('.sheikh-gender').value,
+            khassa:r.querySelector('.sh-khassa').checked,
+            amma:r.querySelector('.sh-amma').checked,
+            family:r.querySelector('.sh-family').checked,
+            works:r.querySelector('.sh-works').checked,
+            isnad:r.querySelector('.sh-isnad').value.trim()
+        })).filter(s=>s.name);
+    }
+    // One ijaza sentence per sheikh, reflecting exactly what he/she granted
+    function sheikhIjazaSentence(s, book, isFirst){
+        const F=s.gender==='female';
+        const noun=F?'الشيخةُ':'الشيخُ';
+        const ajaza=F?'أجازت':'أجاز';
+        const hu=F?'ها':'ه';
+        const opener=isFirst?'وقد':'كما';
+        const parts=[];
+        if(s.khassa) parts.push(`إجازةً خاصةً بكتاب «<b>${esc(book)}</b>»`);
+        if(s.amma){
+            let a=`إجازةً عامةً بجميعِ مرويّاتِه بما يصحُّ ل${hu} روايتُ${hu} بالشرطِ المعتبَرِ عند أهلِ الحديثِ والأثرِ`;
+            if(s.family) a+=`، وللأزواجِ والذريةِ`;
+            parts.push(a);
+        } else if(s.family){
+            parts.push(`إجازةً للأزواجِ والذريةِ`);
+        }
+        const grants=parts.join(' و');
+        let body;
+        if(grants && s.works) body=`${grants}، و${ajaza} بمؤلَّفات${hu} الخاصة`;
+        else if(grants) body=grants;
+        else if(s.works) body=`بمؤلَّفات${hu} الخاصة`;
+        else return ''; // this sheikh granted nothing
+        return `<p class="text-right mb-4">${opener} ${ajaza} ${noun} <b>${esc(s.name)}</b> ${body}.</p>`;
+    }
+    function sheikhForms(sheikhs){
+        const n=sheikhs.length;
+        const allF = n>0 && sheikhs.every(s=>s.gender==='female');
+        const ajazaV = allF?'أجازت':'أجاز';     // فعل قبل الفاعل الظاهر يبقى مفرداً
+        const akhbaraV = allF?'أخبرت':'أخبر';
+        if(n>=3){
+            return { hu:allF?'هنّ':'هم', noun:allF?'الشيخاتُ':'المشايخُ', honor:allF?'فضيلة الشيخات /':'فضيلة المشايخ /',
+                ajazaV, akhbaraV, ajaza:allF?'أجازْنَ':'أجازوا', qaala:allF?'فقُلن':'فقالوا',
+                mujiz:allF?'المجيزات':'المجيزون', musammi:allF?'الشيخات المُسمِّعات':'المشايخ المُسمِّعون' };
+        }
+        if(n===2){
+            return { hu:'هما', noun:allF?'الشيختان':'الشيخان', honor:allF?'فضيلتي الشيختين /':'فضيلتي الشيخين /',
+                ajazaV, akhbaraV, ajaza:allF?'أجازتا':'أجازا', qaala:allF?'فقالتا':'فقالا',
+                mujiz:allF?'المجيزتان':'المجيزان', musammi:allF?'الشيختان المُسمِّعتان':'الشيخان المُسمِّعان' };
+        }
+        const F=allF;
+        return { hu:F?'ها':'ه', noun:F?'الشيخةُ':'الشيخُ', honor:F?'فضيلة الشيخة /':'فضيلة الشيخ /',
+            ajazaV, akhbaraV, ajaza:F?'أجازت':'أجاز', qaala:F?'فقالت':'فقال',
+            mujiz:F?'المجيزة':'المجيز', musammi:F?'الشيخة المُسمِّعة':'الشيخ المُسمِّع' };
+    }
+
+    function readValues(){ const v={}; for(const k in fields){ const el=fields[k]; v[k]=el.type==='checkbox'?el.checked:el.value.trim(); } return v; }
+    function currentRequired(){ const r=REQUIRED.slice(); if(getSessions()>1) r.push('endGregPicker','endTime'); return r; }
+
+    function buildHtml(v){
+        const multi=getSessions()>1;
+        const sd=dateStrings('start'); const ed=multi?dateStrings('end'):null;
+
+        // sheikh number + gender agreement
+        const sheikhs=getSheikhs();
+        const sf=sheikhForms(sheikhs);
+        const hu=sf.hu;
+        const namesBold = sheikhs.map(s=>`<b>${esc(s.name)}</b>`).join(' و');
+
+        let dateClause='';
+        if(multi && sd && ed){
+            dateClause=`بدأت يوم <b>${esc(v.startDay)}</b> الموافق <b>${esc(sd.hij)}</b>، <b>${esc(sd.greg)}</b> الساعة <b>${esc(v.startTime)}</b>، إلى يوم <b>${esc(v.endDay)}</b> الموافق <b>${esc(ed.greg)}</b>، <b>${esc(ed.hij)}</b> الساعة <b>${esc(v.endTime)}</b>`;
+        } else if(sd){
+            dateClause=`يوم <b>${esc(v.startDay)}</b> الموافق <b>${esc(sd.hij)}</b>، <b>${esc(sd.greg)}</b> الساعة <b>${esc(v.startTime)}</b>`;
+        }
+
+        const method = v.attendanceType==='عن بعد'
+            ? `عن طريق البثِّ المباشر عبر <b>${esc(v.method)}</b>`
+            : `حضورياً في <b>${esc(v.method)}</b>`;
+
+        let orgReader='';
+        if(v.organizer) orgReader+=`، ورتَّب اللقاءَ ونظَّمه: <b>${esc(v.organizer)}</b>`;
+        if(v.reader)    orgReader+=`، وقرأ فيه: <b>${esc(v.reader)}</b>`;
+
+        let ijazaPara='';
+        if(v.includeIjaza){
+            let firstDone=false; const sentences=[];
+            sheikhs.forEach(s=>{ const sent=sheikhIjazaSentence(s, v.bookName, !firstDone); if(sent){ sentences.push(sent); firstDone=true; } });
+            ijazaPara=sentences.join('');
+        }
+
+        // Isnad: shared (collective) OR per-sheikh
+        function isnadHelper(parsed, intro){ return `<div class="isnad-card"><span class="isnad-title">${intro}</span><span class="isnad-body">${parsed}</span></div>`; }
+        const fmtChain=(t)=>esc(t).replace(/(عن|حدثنا|أخبرنا|أنبأنا|قال|سمعت|حدثني|أخبرني)/g,'<span class="isnad-key">$1</span>').replace(/\n/g,'<br>');
+        let isnadBlock='';
+        if(v.isnadMode==='per'){
+            isnadBlock=sheikhs.filter(s=>s.isnad).map(s=>{
+                const F=s.gender==='female'; const akh=F?'أخبرت':'أخبر'; const noun=F?'الشيخةُ':'الشيخُ'; const h=F?'ها':'ه'; const q=F?'فقالت':'فقال';
+                return isnadHelper(fmtChain(s.isnad), `وقد ${akh} ${noun} <b>${esc(s.name)}</b> بسلسلةِ إسنادِ سَماع${h} لـ«${esc(v.bookName)}» ${q}:`);
+            }).join('');
+        } else if(v.isnad){
+            isnadBlock=isnadHelper(fmtChain(v.isnad), `وقد ${sf.akhbaraV} ${sf.noun} بسلسلةِ إسنادِ سَماع${hu} لـ«${esc(v.bookName)}» ${sf.qaala}:`);
+        }
+
+        const mainHtml=`
+            <p class="text-right indent-8 mb-4">الحمدُ لله ربِّ العالمين، والصلاةُ والسلامُ على نبيِّنا محمدٍ وعلى آلِه وصحبِه أجمعين، أمَّا بعد:</p>
+            <p class="text-right mb-4">فقد حضرتُ أنا <b>${esc(v.studentName)}</b> مجلسَ سَماعِ كتابِ «<b>${esc(v.bookName)}</b>» على ${sf.honor} ${namesBold}، وسمعتُه <b>${esc(v.completeness)}</b> ${countClause()}، ${dateClause}، ${method}${orgReader}.</p>
+            ${ijazaPara}
+            <p class="text-center mb-4">غفر اللهُ ل${hu} ولوالدي${hu} وأهل${hu} وذريت${hu} ومشايخ${hu}.</p>
+            <p class="closing text-center font-bold mt-8 text-2xl">واللهُ خيرُ الشاهدين.</p>`;
+
+        if(v.onePageText){
+            // Main text kept together on page one; isnad pushed to a separate page
+            return `<div style="break-inside:avoid">${mainHtml}</div>`
+                + (isnadBlock ? `<div id="isnadSection" style="break-before:page" class="mt-6">${isnadBlock}</div>` : '');
+        }
+        // Normal flow: isnad inline after the ijaza paragraph
+        return `
+            <p class="text-right indent-8 mb-4">الحمدُ لله ربِّ العالمين، والصلاةُ والسلامُ على نبيِّنا محمدٍ وعلى آلِه وصحبِه أجمعين، أمَّا بعد:</p>
+            <p class="text-right mb-4">فقد حضرتُ أنا <b>${esc(v.studentName)}</b> مجلسَ سَماعِ كتابِ «<b>${esc(v.bookName)}</b>» على ${sf.honor} ${namesBold}، وسمعتُه <b>${esc(v.completeness)}</b> ${countClause()}، ${dateClause}، ${method}${orgReader}.</p>
+            ${ijazaPara}
+            ${isnadBlock}
+            <p class="text-center mb-4">غفر اللهُ ل${hu} ولوالدي${hu} وأهل${hu} وذريت${hu} ومشايخ${hu}.</p>
+            <p class="closing text-center font-bold mt-8 text-2xl">واللهُ خيرُ الشاهدين.</p>
+        `;
+    }
+
+    let signatureDataUrl=null;
+
+    function render(){
+        const v=readValues();
+        const sessions=getSessions();
+        endGroup.classList.toggle('hidden', sessions<=1);
+        startTitle.textContent = sessions>1 ? 'تاريخ بداية المجالس' : 'تاريخ المجلس';
+        fields.sessionNum.classList.toggle('hidden', fields.sessionMode.value!=='many');
+
+        docTitle.textContent = v.titleIjaza ? 'وثيقة إثبات سَماع وإجازة شخصية' : 'وثيقة إثبات سَماع شخصية';
+
+        const TG=v.studentGender==='female';
+        const sheikhs=getSheikhs(); const sf=sheikhForms(sheikhs);
+        sigSheikhLabel.textContent = v.includeIjaza ? sf.mujiz : sf.musammi;
+        sigWroteLabel.textContent = TG ? 'وكتبته' : 'وكتبه';
+
+        // Always render the document (no completion gate)
+        ijazaOutput.innerHTML=buildHtml(v);
+        signatureArea.classList.remove('hidden');
+        sigSheikh.textContent=sheikhs.map(s=>s.name).join(' و');
+        sigWrote.textContent=v.studentName;
+        sigDate.textContent=v.issueDate||hijriToday();
+        if(signatureDataUrl){ sigImg.src=signatureDataUrl; sigImg.classList.remove('hidden'); }
+        else sigImg.classList.add('hidden');
+        arabicizeTextNodes(ijazaOutput);
+        arabicizeTextNodes(signatureArea);
+    }
+
+    function validate(){
+        let first=null;
+        currentRequired().forEach(k=>{ const el=fields[k]; const empty=!el.value.trim(); el.classList.toggle('field-error',empty); if(empty&&!first)first=el; });
+        const firstSheikh=sheikhList.querySelector('.sheikh-name');
+        if(getSheikhs().length===0){ if(firstSheikh){ firstSheikh.classList.add('field-error'); if(!first) first=firstSheikh; } }
+        else if(firstSheikh){ sheikhList.querySelectorAll('.sheikh-name').forEach(i=>i.classList.remove('field-error')); }
+        if(first){ errorMsg.classList.remove('hidden'); first.focus(); first.scrollIntoView({behavior:'smooth',block:'center'}); return false; }
+        errorMsg.classList.add('hidden'); return true;
+    }
+
+    function plainText(){
+        const tmp=document.createElement('div'); tmp.innerHTML=ijazaOutput.innerHTML;
+        let t=(tmp.textContent||'').replace(/\s+/g,' ').trim();
+        t+=`\n\n${sigSheikhLabel.textContent}: ${sigSheikh.textContent}`;
+        t+=`\nتاريخ الإصدار: ${sigDate.textContent}`;
+        t+=`\n${sigWroteLabel.textContent}: ${sigWrote.textContent}`;
+        return t;
+    }
+
+    async function copyText(){
+        const text=plainText();
+        try{
+            if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); }
+            else{ const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+            showToast('تم نسخ نص الوثيقة');
+        }catch(e){ showToast('تعذّر النسخ — حدّد النص يدوياً', false); }
+    }
+
+    function printIjaza(){ window.print(); }
+
+    function resetForm(){
+        form.reset(); Object.values(fields).forEach(el=>el.classList.remove('field-error'));
+        errorMsg.classList.add('hidden'); signatureDataUrl=null; clearPad();
+        sheikhList.innerHTML=''; addSheikhRow();
+        fontSize.value=1.2; lineHeight.value=2.1; applyType();
+        updateIsnadMode();
+        updateMethodLabel(); fields.issueDate.value=hijriToday();
+        render(); fields.studentName.focus(); showToast('تم تفريغ النموذج');
+    }
+
+    function updateMethodLabel(){
+        if(fields.attendanceType.value==='حضورياً'){ methodLabel.childNodes[0].nodeValue='مكان المجلس '; fields.method.placeholder='مثال: جامع الملك فهد، مجلس الشيخ'; }
+        else { methodLabel.childNodes[0].nodeValue='المنصة / الوسيلة '; fields.method.placeholder='مثال: تطبيق زووم / قناة تليجرام'; }
+    }
+
+    // ===== Signature pad / upload =====
+    const sigFile=$('sigFile'), sigPadWrap=$('sigPadWrap'), sigPad=$('sigPad');
+    const ctx=sigPad.getContext('2d'); ctx.lineWidth=2.2; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#111';
+    let drawing=false;
+    function posOf(e){ const r=sigPad.getBoundingClientRect(); const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left; const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top; return {x:cx*(sigPad.width/r.width), y:cy*(sigPad.height/r.height)}; }
+    function dStart(e){ drawing=true; const p=posOf(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); }
+    function dMove(e){ if(!drawing)return; const p=posOf(e); ctx.lineTo(p.x,p.y); ctx.stroke(); e.preventDefault(); }
+    function dEnd(){ if(!drawing)return; drawing=false; signatureDataUrl=sigPad.toDataURL('image/png'); render(); }
+    function clearPad(){ ctx.clearRect(0,0,sigPad.width,sigPad.height); }
+    sigPad.addEventListener('mousedown',dStart); sigPad.addEventListener('mousemove',dMove); window.addEventListener('mouseup',dEnd);
+    sigPad.addEventListener('touchstart',dStart,{passive:false}); sigPad.addEventListener('touchmove',dMove,{passive:false}); sigPad.addEventListener('touchend',dEnd);
+
+    $('sigUploadBtn').addEventListener('click', ()=>sigFile.click());
+    $('sigDrawBtn').addEventListener('click', ()=>sigPadWrap.classList.toggle('hidden'));
+    $('sigClearBtn').addEventListener('click', ()=>{ signatureDataUrl=null; sigFile.value=''; clearPad(); render(); showToast('تم إزالة التوقيع'); });
+    $('sigPadClear').addEventListener('click', ()=>{ clearPad(); signatureDataUrl=null; render(); });
+    sigFile.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ signatureDataUrl=r.result; render(); showToast('تمت إضافة الصورة'); }; r.readAsDataURL(f); });
+
+    // ===== Appearance =====
+    document.querySelectorAll('.opt-group').forEach(group=>{
+        const opt=group.dataset.opt;
+        group.addEventListener('click', e=>{
+            const btn=e.target.closest('button'); if(!btn)return;
+            group.querySelectorAll('button').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+            if(opt==='font'){ ijazaBox.style.setProperty('--ijaza-font', btn.dataset.val); }
+            else if(opt==='color'){ ['theme-emerald','theme-brown','theme-navy','theme-burgundy'].forEach(c=>ijazaBox.classList.remove(c)); ijazaBox.classList.add('theme-'+btn.dataset.theme); }
+            else if(opt==='border'){ ['brd-ornate','brd-double','brd-simple','brd-none'].forEach(c=>ijazaBox.classList.remove(c)); ijazaBox.classList.add('brd-'+btn.dataset.brd); }
+        });
+    });
+
+    // Independent colors for basmala and title
+    const basmalaColor=$('basmalaColor'), titleColor=$('titleColor');
+    basmalaColor.addEventListener('input', ()=>ijazaBox.style.setProperty('--basmala-color', basmalaColor.value));
+    titleColor.addEventListener('input', ()=>ijazaBox.style.setProperty('--title-color', titleColor.value));
+    $('basmalaAuto').addEventListener('click', ()=>ijazaBox.style.removeProperty('--basmala-color'));
+    $('titleAuto').addEventListener('click', ()=>ijazaBox.style.removeProperty('--title-color'));
+
+    // Font size & line spacing
+    const fontSize=$('fontSize'), lineHeight=$('lineHeight');
+    function applyType(){ ijazaBox.style.setProperty('--ijaza-fs', fontSize.value+'rem'); ijazaBox.style.setProperty('--ijaza-lh', lineHeight.value); }
+    fontSize.addEventListener('input', applyType);
+    lineHeight.addEventListener('input', applyType);
+    applyType();
+
+    // Isnad mode (shared / per-sheikh)
+    function updateIsnadMode(){
+        const per=fields.isnadMode.value==='per';
+        $('sharedIsnadWrap').classList.toggle('hidden', per);
+        $('perIsnadHint').classList.toggle('hidden', !per);
+        sheikhList.querySelectorAll('.sh-isnad').forEach(t=>t.classList.toggle('hidden', !per));
+        render();
+    }
+    fields.isnadMode.addEventListener('change', updateIsnadMode);
+
+    // Full-page preview toggle
+    const mainGrid=$('mainGrid'), fullBtn=$('fullPreviewBtn');
+    fullBtn.addEventListener('click', ()=>{
+        const on=mainGrid.classList.toggle('preview-full');
+        fullBtn.textContent = on ? 'العودة للتحرير' : 'معاينة بملء الصفحة';
+        if(on) window.scrollTo({top:0, behavior:'smooth'});
+    });
+
+    // Export as image (PNG)
+    $('imageBtn').addEventListener('click', async ()=>{
+        if(typeof html2canvas!=='function'){ showToast('تعذّر تحميل أداة الصورة (تحقّق من الإنترنت)', false); return; }
+        showToast('جارٍ إنشاء الصورة…');
+        ijazaBox.classList.add('exporting');   // disable box-shadows (fixes html2canvas color block)
+        try{
+            const canvas=await html2canvas(ijazaBox, { scale:2, backgroundColor:'#ffffff', useCORS:true, logging:false });
+            const a=document.createElement('a');
+            a.download='ijaza.png'; a.href=canvas.toDataURL('image/png'); a.click();
+            showToast('تم تصدير الصورة');
+        }catch(e){ showToast('تعذّر إنشاء الصورة', false); }
+        finally{ ijazaBox.classList.remove('exporting'); }
+    });
+
+    // ===== Tashkeel (diacritics) helper =====
+    const HARAKAT={ fatha:'\u064E', damma:'\u064F', kasra:'\u0650', sukun:'\u0652', shadda:'\u0651', tanfath:'\u064B', tandam:'\u064C', tankas:'\u064D', dagger:'\u0670' };
+    let activeTashkeel=null;
+    document.addEventListener('focusin', e=>{
+        const el=e.target;
+        if(el && el.classList && el.classList.contains('tash')){ activeTashkeel=el; $('tashkeelTarget').textContent=el.dataset.tashLabel||'—'; }
+    });
+    function fireInput(el){ el.dispatchEvent(new Event('input',{bubbles:true})); }
+    function insertAtCaret(el, ch){
+        const s=el.selectionStart??el.value.length, e=el.selectionEnd??el.value.length, val=el.value;
+        el.value=val.slice(0,s)+ch+val.slice(e);
+        const pos=s+ch.length; el.setSelectionRange(pos,pos); fireInput(el);
+    }
+    function delBeforeCaret(el){
+        const s=el.selectionStart, e=el.selectionEnd, val=el.value;
+        if(s!==e){ el.value=val.slice(0,s)+val.slice(e); el.setSelectionRange(s,s); }
+        else if(s>0){ el.value=val.slice(0,s-1)+val.slice(s); el.setSelectionRange(s-1,s-1); }
+        fireInput(el);
+    }
+    function stripHarakat(el){ el.value=el.value.replace(/[\u064B-\u0652\u0670]/g,''); fireInput(el); }
+    $('tashkeelBtns').addEventListener('pointerdown', e=>{
+        const b=e.target.closest('button'); if(!b) return;
+        e.preventDefault(); // keep caret & focus in the field
+        const tgt=activeTashkeel || fields.studentName;
+        if(!activeTashkeel){ activeTashkeel=tgt; $('tashkeelTarget').textContent=tgt.dataset.tashLabel||'—'; }
+        if(b.dataset.act==='del') delBeforeCaret(tgt);
+        else if(b.dataset.act==='strip') stripHarakat(tgt);
+        else if(b.dataset.h) insertAtCaret(tgt, HARAKAT[b.dataset.h]);
+        tgt.focus();
+    });
+
+    // ===== Side drawer =====
+    const menuBtn=$('menuBtn'), drawer=$('formPanel'), overlay=$('drawerOverlay'), resizeHandle=$('drawerResize');
+    let drawerWidth=250;
+    function applyDrawerWidth(w){
+        drawerWidth=Math.max(200, Math.min(w, Math.min(760, window.innerWidth*0.95)));
+        drawer.style.width=drawerWidth+'px';
+        resizeHandle.style.right=drawerWidth+'px';
+    }
+    applyDrawerWidth(250);
+    let resizing=false;
+    resizeHandle.addEventListener('pointerdown', e=>{ resizing=true; document.body.classList.add('resizing'); try{resizeHandle.setPointerCapture(e.pointerId);}catch(_){ } e.preventDefault(); });
+    resizeHandle.addEventListener('pointermove', e=>{ if(!resizing) return; applyDrawerWidth(window.innerWidth - e.clientX); });
+    const stopResize=(e)=>{ if(!resizing) return; resizing=false; document.body.classList.remove('resizing'); try{resizeHandle.releasePointerCapture(e.pointerId);}catch(_){ } };
+    resizeHandle.addEventListener('pointerup', stopResize);
+    resizeHandle.addEventListener('pointercancel', stopResize);
+    window.addEventListener('resize', ()=>applyDrawerWidth(drawerWidth));
+
+    function openDrawer(){ drawer.classList.add('open'); document.body.classList.add('drawer-open'); }
+    function closeDrawer(){ drawer.classList.remove('open'); document.body.classList.remove('drawer-open'); }
+    menuBtn.addEventListener('click', ()=> drawer.classList.contains('open') ? closeDrawer() : openDrawer());
+    overlay.addEventListener('click', closeDrawer);
+    $('drawerClose').addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDrawer(); });
+    if(window.innerWidth>=1024) openDrawer();   // open by default on wide screens
+
+    // ===== Floating guide / contact modals =====
+    const modalOverlay=$('modalOverlay');
+    function openModal(id){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); $(id).classList.remove('hidden'); modalOverlay.classList.add('show'); }
+    function closeModal(){ modalOverlay.classList.remove('show'); }
+    $('fabGuide').addEventListener('click', ()=>openModal('guideModal'));
+    $('fabContact').addEventListener('click', ()=>openModal('contactModal'));
+    modalOverlay.addEventListener('click', e=>{ if(e.target===modalOverlay) closeModal(); });
+    document.querySelectorAll('#modalOverlay .x').forEach(b=>b.addEventListener('click', closeModal));
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+    // ===== Wire up =====
+    addSheikhRow();  // start with one sheikh
+    $('addSheikh').addEventListener('click', ()=>{ addSheikhRow(); render(); });
+    sheikhList.addEventListener('click', e=>{
+        const del=e.target.closest('.sheikh-del'); if(!del) return;
+        const rows=sheikhList.querySelectorAll('.sheikh-row');
+        if(rows.length<=1){ del.closest('.sheikh-row').querySelector('.sheikh-name').value=''; }
+        else del.closest('.sheikh-row').remove();
+        render();
+    });
+
+    fields.startHD.innerHTML=Array.from({length:30},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
+    fields.endHD.innerHTML=fields.startHD.innerHTML;
+    fields.startHM.innerHTML=HIJRI_MONTHS.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+    fields.endHM.innerHTML=fields.startHM.innerHTML;
+
+    fields.startGregPicker.addEventListener('change', ()=>syncFromGreg('start'));
+    fields.endGregPicker.addEventListener('change', ()=>syncFromGreg('end'));
+    ['startHD','startHM','startHY'].forEach(id=>fields[id].addEventListener('change', ()=>syncFromHijri('start')));
+    ['endHD','endHM','endHY'].forEach(id=>fields[id].addEventListener('change', ()=>syncFromHijri('end')));
+
+    let t; const tick=()=>{ clearTimeout(t); t=setTimeout(render,120); };
+    form.addEventListener('input', tick);
+    form.addEventListener('change', tick);
+    fields.attendanceType.addEventListener('change', ()=>{ updateMethodLabel(); render(); });
+
+    $('printBtn').addEventListener('click', printIjaza);
+    $('copyBtn').addEventListener('click', copyText);
+    $('resetBtn').addEventListener('click', resetForm);
+
+    fields.issueDate.value=hijriToday();
+    updateMethodLabel();
+    render();
+})();
+</script>
+</body>
+</html>
