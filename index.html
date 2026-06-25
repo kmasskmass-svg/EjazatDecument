@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f3f4f6; }
+        html, body { overflow-x:hidden; max-width:100%; }
 
         .ijaza-box {
             --accent:#047857; --accent-strong:#065f46; --border-c:#10b981; --gold:#b8860b;
@@ -168,6 +169,27 @@
 
         @media (prefers-reduced-motion: reduce){ *,*::before,*::after{transition:none!important;animation:none!important} }
         :focus-visible { outline:2px solid #10b981; outline-offset:2px; }
+
+        /* ===== Mobile responsiveness ===== */
+        @media (max-width:768px){
+            #mainGrid, #previewPanel, #print-area { max-width:100%; }
+            #previewPanel { padding-left:.5rem; padding-right:.5rem; }
+            #ijazaBox { padding:1.1rem .85rem !important; }
+            .sig { flex-wrap:wrap; gap:1.4rem 1rem; justify-content:center; margin-top:2rem; }
+            .sig > div { flex:1 1 42%; min-width:42%; }
+            .mujiz-cell { flex-basis:100%; }
+            .mujiz-list { flex-wrap:wrap; gap:.6rem; }
+            .mujiz-item { border-left:none; border-bottom:1px solid var(--border-c,#0a7); padding:.4rem .6rem; }
+            .mujiz-item:last-child { border-bottom:none; }
+            .ss-row { gap:1.6rem; }
+            .blank-name { min-width:90px; }
+            .appendix { overflow-x:auto; }
+            .doc-table { font-size:.72rem; }
+            .doc-table th, .doc-table td { padding:.25rem .3rem; }
+            .serial-box { position:static; text-align:center; margin-top:1.2rem; left:auto; }
+            .menu-btn { width:42px; height:42px; font-size:20px; }
+            .fab { width:46px; height:46px; font-size:20px; }
+        }
 
         /* Full-page preview mode (screen only) */
         #mainGrid.preview-full #formPanel { display:none; }
@@ -1670,10 +1692,18 @@
         if(typeof html2canvas!=='function'){ showToast('تعذّر تحميل أداة الصورة (تحقّق من الإنترنت)', false); return; }
         showToast('جارٍ إنشاء الصورة…');
         ijazaBox.classList.add('exporting');   // disable box-shadows (fixes html2canvas color block)
+        const w=ijazaBox.scrollWidth||ijazaBox.offsetWidth||800, h=ijazaBox.scrollHeight||ijazaBox.offsetHeight||1100;
+        // Clamp scale so the canvas stays within browser limits (large/tall docs fail at scale 2 on desktop)
+        let scale=2; const maxSide=8000, maxArea=16e6;
+        while(scale>1 && ((w*scale>maxSide)||(h*scale>maxSide)||(w*scale*h*scale>maxArea))) scale-=0.25;
+        if(scale<1) scale=1;
+        const opts={ backgroundColor:'#ffffff', useCORS:true, logging:false, scale, windowWidth:document.documentElement.scrollWidth };
         try{
-            const canvas=await html2canvas(ijazaBox, { scale:2, backgroundColor:'#ffffff', useCORS:true, logging:false });
+            let canvas;
+            try{ canvas=await html2canvas(ijazaBox, opts); }
+            catch(e1){ canvas=await html2canvas(ijazaBox, Object.assign({}, opts, {scale:1})); }   // retry smaller
             saveCanvas(canvas);
-        }catch(e){ showToast('تعذّر إنشاء الصورة', false); }
+        }catch(e){ showToast('تعذّر إنشاء الصورة'+(e&&e.message?'؛ '+e.message:''), false); }
         finally{ ijazaBox.classList.remove('exporting'); }
     });
 
