@@ -140,6 +140,14 @@
         .fab:hover{ transform:scale(1.08); }
         .fab.guide{ background:#0ea5e9; }
         .fab.contact{ background:#047857; }
+        .fab.menu{ background:#6d28d9; }
+        .sec-launcher{ position:fixed; left:78px; bottom:18px; z-index:61; display:none; flex-direction:column; gap:9px; max-height:80vh; overflow-y:auto; padding:8px 6px; background:rgba(255,255,255,.85); backdrop-filter:blur(3px); border-radius:16px; box-shadow:0 6px 22px rgba(0,0,0,.18); }
+        .sec-launcher.show{ display:flex; }
+        .sec-circle{ display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; background:none; border:none; padding:0; }
+        .sec-circle .c-ic{ width:44px; height:44px; border-radius:50%; background:#065f46; color:#fff; display:flex; align-items:center; justify-content:center; font-size:19px; box-shadow:0 2px 8px rgba(0,0,0,.22); transition:transform .12s; }
+        .sec-circle:hover .c-ic{ transform:scale(1.09); background:#047857; }
+        .sec-circle.act .c-ic{ background:#b45309; }
+        .sec-circle .c-lb{ font-size:.58rem; color:#065f46; font-weight:800; line-height:1.1; max-width:64px; text-align:center; }
         .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:70; padding:16px; }
         .modal-overlay.show{ display:flex; }
         .modal{ background:#fff; border-radius:14px; max-width:480px; width:100%; max-height:85vh; overflow-y:auto; padding:1.25rem; box-shadow:0 10px 40px rgba(0,0,0,.3); }
@@ -234,8 +242,11 @@
     <!-- Side drawer: all controls -->
     <div id="formPanel" class="drawer no-print">
         <div class="drawer-head">
-            <h1 class="text-lg font-bold text-emerald-800">وثيقة إثبات سَماع</h1>
-            <button type="button" id="drawerClose" class="opt-btn" aria-label="إغلاق">✕</button>
+            <h1 id="drawerTitle" class="text-base font-bold text-emerald-800">وثيقة إثبات سَماع</h1>
+            <div class="flex items-center gap-1">
+                <button type="button" id="showAllSecs" class="opt-btn" title="عرض كل الأقسام">الكل</button>
+                <button type="button" id="drawerClose" class="opt-btn" aria-label="إغلاق">✕</button>
+            </div>
         </div>
 
         <div class="autosave-bar no-print">
@@ -245,7 +256,7 @@
         </div>
 
         <!-- مظهر الوثيقة -->
-        <details class="acc" open>
+        <details id="sec-appearance" class="acc" open>
             <summary class="acc-h">مظهر الوثيقة</summary>
             <div class="acc-body space-y-3">
                 <div class="flex items-center justify-between flex-wrap gap-2">
@@ -317,7 +328,7 @@
         <form id="ijazaForm" novalidate>
 
             <!-- التشكيل -->
-            <details class="acc">
+            <details id="sec-tashkeel" class="acc">
                 <summary class="acc-h">شريط التشكيل</summary>
                 <div class="acc-body">
                     <div class="flex items-center justify-between mb-2 flex-wrap gap-1">
@@ -341,7 +352,7 @@
             </details>
 
             <!-- بيانات الطالب والكتاب -->
-            <details class="acc" open>
+            <details id="sec-student" class="acc" open>
                 <summary class="acc-h">بيانات الطالب والكتاب</summary>
                 <div class="acc-body space-y-4">
                     <div>
@@ -381,7 +392,7 @@
                     </div>
                 </div>
             </details>
-            <details class="acc">
+            <details id="sec-org" class="acc">
                 <summary class="acc-h">العنوان والجهة المُصدِرة والشعار</summary>
                 <div class="acc-body space-y-3">
                     <div>
@@ -477,7 +488,7 @@
             </details>
 
             <!-- المشايخ -->
-            <details class="acc" open>
+            <details id="sec-sheikhs" class="acc" open>
                 <summary class="acc-h">المشايخ المُسمِّعون</summary>
                 <div class="acc-body">
                     <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
@@ -490,7 +501,7 @@
             </details>
 
             <!-- حالة السماع -->
-            <details class="acc">
+            <details id="sec-status" class="acc">
                 <summary class="acc-h">حالة السماع وعدد المجالس</summary>
                 <div class="acc-body">
                     <div>
@@ -502,9 +513,9 @@
                             <option value="حفظ">حفظ</option>
                             <option value="حضر عندي">حضر عندي (بصيغة الشيخ)</option>
                             <option value="اتصل بي">اتصل بي (بصيغة الشيخ)</option>
-                            <option value="custom">أخرى (نص حر)…</option>
                         </select>
-                        <input type="text" id="actionCustom" class="hidden mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="اكتب فعل/طبيعة العمل كما تريد (يوضع قبل اسم الطالب)">
+                        <input type="text" id="actionCustom" class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="أو اكتب طبيعة العمل بنفسك">
+                        <p class="text-[11px] text-gray-500 mt-1">إن لم تجد العبارة المناسبة في القائمة فاكتبها هنا، وستُعتمد بدلاً من الخيار أعلاه.</p>
                         <select id="actionSub" class="hidden mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500">
                             <option value="وقرأ عليّ حفظًا">وقرأ عليّ حفظًا</option>
                             <option value="وقرأ عليّ من الكتاب">وقرأ عليّ من الكتاب</option>
@@ -524,10 +535,10 @@
                                 <option value="مع فوتٍ من وسطه">مع فوتٍ من وسطه</option>
                                 <option value="fawt_range">مع فوتٍ من … إلى …</option>
                                 <option value="upto">سماع إلى نهاية قوله… (مع الإجازة لباقيه)</option>
-                                <option value="custom">أخرى (نص حر)…</option>
                             </select>
                             <input type="text" id="uptoText" class="hidden mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="اكتب موضع الانتهاء، مثل: باب كذا">
-                            <input type="text" id="completenessCustom" class="hidden mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="اكتب حالة السماع كما تريد">
+                            <input type="text" id="completenessCustom" class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="أو اكتب حالة السماع بنفسك">
+                            <p class="text-[11px] text-gray-500 mt-1">إن لم تجد الحالة المناسبة في القائمة فاكتبها هنا، وستُعتمد بدلاً من الخيار أعلاه.</p>
                             <div id="fawtRangeWrap" class="hidden mt-2 grid grid-cols-2 gap-2">
                                 <input type="text" id="fawtFrom" class="px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="الفوت من: …">
                                 <input type="text" id="fawtTo" class="px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="إلى: …">
@@ -556,7 +567,7 @@
             </details>
 
             <!-- تاريخ المجلس -->
-            <details class="acc">
+            <details id="sec-date" class="acc">
                 <summary class="acc-h">تاريخ المجلس</summary>
                 <div class="acc-body space-y-3">
                     <div class="bg-emerald-50/50 border border-emerald-100 rounded-lg p-4 space-y-3">
@@ -603,7 +614,7 @@
             </details>
 
             <!-- طبيعة الحضور -->
-            <details class="acc">
+            <details id="sec-attendance" class="acc">
                 <summary class="acc-h">طبيعة الحضور والوسيلة</summary>
                 <div class="acc-body space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -637,7 +648,7 @@
             </details>
 
             <!-- خيارات الإجازة -->
-            <details class="acc">
+            <details id="sec-ijaza" class="acc">
                 <summary class="acc-h">خيارات الإجازة</summary>
                 <div class="acc-body">
                     <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100 space-y-2.5">
@@ -655,7 +666,7 @@
             </details>
 
             <!-- الإسناد -->
-            <details class="acc">
+            <details id="sec-isnad" class="acc">
                 <summary class="acc-h">سلسلة الإسناد</summary>
                 <div class="acc-body">
                     <div class="space-y-2">
@@ -681,7 +692,7 @@
             </details>
 
             <!-- خيارات إضافية: طباق / حضور / تسلسل / صفحات -->
-            <details class="acc">
+            <details id="sec-extras" class="acc">
                 <summary class="acc-h">الطِّباق والحضور والتسلسل والصفحات</summary>
                 <div class="acc-body space-y-3">
                     <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
@@ -735,7 +746,7 @@
             </details>
 
             <!-- التوقيع -->
-            <details class="acc">
+            <details id="sec-sign" class="acc">
                 <summary class="acc-h">التوقيع / الختم</summary>
                 <div class="acc-body">
                     <div class="space-y-3">
@@ -758,19 +769,30 @@
                         </div>
                         <input type="file" id="stampFile" accept="image/*" class="hidden">
                         <p class="text-[11px] text-gray-500">توقيع كلّ شيخ وختمه يُضافان من بطاقته في قسم «المشايخ»، ويظهران تحت اسمه.</p>
+                        <div class="border-t border-gray-200 pt-2 mt-2 space-y-1">
+                            <p class="text-xs font-bold text-emerald-800">إظهار/إخفاء التواقيع والأختام</p>
+                            <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700"><input type="checkbox" id="showShSig" checked class="w-4 h-4"> توقيع الشيخ</label>
+                            <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700"><input type="checkbox" id="showShStamp" checked class="w-4 h-4"> ختم الشيخ</label>
+                            <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700"><input type="checkbox" id="showSig" checked class="w-4 h-4"> توقيع الطالب / المسؤول</label>
+                            <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700"><input type="checkbox" id="showStamp" checked class="w-4 h-4"> ختم الجهة</label>
+                        </div>
+                        <div class="border-t border-gray-200 pt-2 mt-2">
+                            <label for="duaCustom" class="block text-xs font-bold text-emerald-800 mb-1">تعديل صيغة الدعاء (اختياري)</label>
+                            <input type="text" id="duaCustom" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="اكتب صيغة الدعاء كما تريد لتحلّ محلّ الصيغة التلقائية">
+                        </div>
                     </div>
                 </div>
             </details>
 
             <!-- تاريخ الإصدار -->
-            <details class="acc">
+            <details id="sec-issue" class="acc">
                 <summary class="acc-h">تاريخ الإصدار</summary>
                 <div class="acc-body">
                     <input type="text" id="issueDate" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="هجري تلقائي — قابل للتعديل">
                 </div>
             </details>
 
-            <div class="flex flex-wrap gap-2 pt-3 mt-1 border-t border-gray-200">
+            <div id="actionBar" class="flex flex-wrap gap-2 pt-3 mt-1 border-t border-gray-200">
                 <button type="button" id="printBtn" class="flex-1 min-w-[120px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm">طباعة / PDF</button>
                 <button type="button" id="imageBtn" class="flex-1 min-w-[110px] bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm">تصدير صورة</button>
                 <button type="button" id="copyBtn" class="flex-1 min-w-[100px] bg-gray-800 hover:bg-gray-900 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm">نسخ النص</button>
@@ -829,7 +851,9 @@
 </div>
 
 <!-- Floating buttons: guide + contact -->
+<div id="secLauncher" class="sec-launcher no-print"></div>
 <div class="fab-wrap no-print">
+    <button type="button" id="fabMenu" class="fab menu" title="الأقسام" aria-label="الأقسام">☰</button>
     <button type="button" id="fabGuide" class="fab guide" title="دليل الاستخدام" aria-label="دليل الاستخدام">؟</button>
     <button type="button" id="fabContact" class="fab contact" title="للتواصل والمقترحات" aria-label="تواصل">✉</button>
 </div>
@@ -850,6 +874,7 @@
             <div class="gstep" style="--c:#0e7490"><div class="gstep-ic">🗣️</div><div class="gstep-tx"><b>طبيعة العمل وصيغة الشيخ</b>اختر: حضور/سماع/قراءة/حفظ، أو بصيغة الشيخ «حضر عندي / اتصل بي» فتظهر قائمة فرعية (وقرأ عليّ حفظًا… وسمع عليّ…) وتتحوّل الإجازة إلى «وقد أجزتُه…».</div></div>
             <div class="gstep" style="--c:#7c3aed"><div class="gstep-ic">👥</div><div class="gstep-tx"><b>أكثر من طالب</b>من «بيانات الطالب» أضِف طلاباً، فتتحوّل الصيغة للجمع تلقائياً «فقد حضر فلانٌ وفلانٌ… وسمعوه».</div></div>
             <div class="gstep" style="--c:#059669"><div class="gstep-ic">📋</div><div class="gstep-tx"><b>مسرد الحاضرين والتصدير لإكسل</b>فعّل المسرد، وحدّد الأعمدة وعناوينها والصفوف، ثم «توليد حقول التعبئة» واملأها لتظهر بالأسماء؛ أو «تصدير كشف Excel/CSV» وأرسله عبر درايف، وبعد تعبئته «استيراد كشف معبّأ» لينسّقه التطبيق داخل الجدول.</div></div>
+            <div class="gstep" style="--c:#6d28d9"><div class="gstep-ic">☰</div><div class="gstep-tx"><b>دوائر الأقسام العائمة</b>اضغط زر ☰ أسفل اليسار لتظهر دوائر معنونة لكل قسم (المظهر، الطالب والكتاب، المشايخ، حالة السماع، التواريخ، التوقيع، الإجراءات…). اضغط الدائرة ليفتح قسمها وحده في لوحة مركّزة، وزر «الكل» يعيد عرض جميع الأقسام.</div></div>
             <div class="gstep" style="--c:#0891b2"><div class="gstep-ic">🖼️</div><div class="gstep-tx"><b>موضعا الشعار والوسيلة</b>للشعار موضعان مستقلّان (يمين/يسار/بجوار الاسم/البسملة/العنوان/أسفل توقيع المسؤول/في كل صفحة) يظهران معاً. وحقل الوسيلة/المكان فيه «ملء تلقائي» أو «تركه فارغاً» مستقلّ عن نسخة التوزيع.</div></div>
             <div class="gstep" style="--c:#b45309"><div class="gstep-ic">📚</div><div class="gstep-tx"><b>أكثر من كتاب</b>من «بيانات الطالب والكتاب» اضغط «+ إضافة كتاب» وأدخِل اسمه ونسخته المعتمدة، فتظهر الكتب في المتن «كتابَيْ… / الكتب الآتية…» وتُذكر النسخ المعتمدة لكلٍّ منها.</div></div>
             <div class="gstep" style="--c:#7c3aed"><div class="gstep-ic">🔢</div><div class="gstep-tx"><b>مطابقة عدد الطلاب</b>يتغيّر الفعل تلقائياً بحسب العدد: مفرد (حضر/سمع/قرأ)، مثنى (حضرا/سمعا/قرأا)، جمع (حضروا/سمعوا/قرؤوا)، مع صيغ المؤنث.</div></div>
@@ -891,6 +916,7 @@
         studentGender:$('studentGender'),
         completeness:$('completeness'), uptoText:$('uptoText'), sessionMode:$('sessionMode'), sessionNum:$('sessionNum'),
         actionType:$('actionType'), actionSub:$('actionSub'), actionCustom:$('actionCustom'), completenessCustom:$('completenessCustom'), fawtFrom:$('fawtFrom'), fawtTo:$('fawtTo'), ornamentShape:$('ornamentShape'), methodMode:$('methodMode'),
+        showShSig:$('showShSig'), showShStamp:$('showShStamp'), showSig:$('showSig'), showStamp:$('showStamp'), duaCustom:$('duaCustom'),
         attendedSome:$('attendedSome'), attendedNum:$('attendedNum'),
         customTitle:$('customTitle'), orgEntity:$('orgEntity'), thirdPerson:$('thirdPerson'), blankStudent:$('blankStudent'),
         bookEdition:$('bookEdition'),
@@ -1275,7 +1301,7 @@
         const multiStu = nStu>1;
         const singleFem = nStu===1 && students[0].gender==='female';
         const allFemStu = nStu>0 && students.every(s=>s.gender==='female');
-        const stuPron = !nStu ? 'ه' : (multiStu ? (allFemStu?'هنّ':'هم') : (students[0].gender==='female'?'ها':'ه'));
+        const stuPron = !nStu ? 'ه' : (nStu===2 ? 'هما' : (multiStu ? (allFemStu?'هنّ':'هم') : (students[0].gender==='female'?'ها':'ه')));
         const TP = v.thirdPerson;
         const studentDisp = BL ? BLANK : (nStu ? students.map(s=>`<b>${esc(s.name)}</b>`).join(' و') : BLANK);
         const act = v.actionType || 'حضور';
@@ -1338,10 +1364,10 @@
         if(perMode){
             isnadItems=sheikhs.filter(s=>s.isnad).map(s=>{
                 const F=s.gender==='female'; const akh=F?'أخبرت':'أخبر'; const noun=F?'الشيخةُ':'الشيخُ'; const h=F?'ها':'ه'; const q=F?'فقالت':'فقال';
-                return isnadHelper(fmtChain(s.isnad), `وقد ${akh} ${noun} <b>${esc(s.name)}</b> بسلسلةِ إسنادِ سَماع${h} لـ«${esc(v.bookName)}» ${q}:`);
+                return isnadHelper(fmtChain(s.isnad), `وقد ${akh} ${noun} <b>${esc(s.name)}</b> بسلسلةِ إسناد${h} لـ«${esc(v.bookName)}» ${q}:`);
             });
         } else if(v.isnad){
-            isnadItems=[ isnadHelper(fmtChain(v.isnad), `وقد ${sf.akhbaraV} ${sf.noun} بسلسلةِ إسنادِ سَماع${hu} لـ«${esc(v.bookName)}» ${sf.qaala}:`) ];
+            isnadItems=[ isnadHelper(fmtChain(v.isnad), `وقد ${sf.akhbaraV} ${sf.noun} بسلسلةِ إسناد${hu} لـ«${esc(v.bookName)}» ${sf.qaala}:`) ];
         }
 
         const CONJ={
@@ -1350,14 +1376,26 @@
             'قراءة':{m:['قرأ','قرأا','قرؤوا'], f:['قرأت','قرأتا','قرأن'], p1:['قرأتُ أنا','قرأنا نحن']},
             'حفظ':{m:['حفظ','حفظا','حفظوا'], f:['حفظت','حفظتا','حفظن'], p1:['حفظتُ أنا','حفظنا نحن']}
         };
-        const READ={ m:['وسمعه','وسمعاه','وسمعوه'], f:['وسمعته','وسمعتاه','وسمعنه'], p1:['وسمعتُه','وسمعناه'] };
+        const bCat = books.length>=3?2:(books.length===2?1:0);   // 0=كتاب 1=كتابان 2=ثلاثة فأكثر
+        const bookPron = ['ه','هما','ها'][bCat];                  // ضمير الكتب
+        const kamil = ['كاملاً','كاملين','كاملة'][bCat];          // كامل/كاملين/كاملة بحسب عدد الكتب
         const ATT={ m:['وحضر','وحضرا','وحضروا'], f:['وحضرت','وحضرتا','وحضرن'], p1:['وحضرتُ','وحضرنا'] };
+        function consume(action, third, cat, gen, bP){
+            const root=(action==='قراءة')?'قرأ':(action==='حفظ')?'حفظ':'سمع';
+            let stem;
+            if(!third) stem=root+(cat===0?'تُ':'نا');               // المتكلّم: سمعتُ/سمعنا
+            else if(gen==='f') stem=root+(cat===0?'ت':(cat===1?'تا':'ن'));   // الغائب المؤنث
+            else stem=root+(cat===0?'':(cat===1?'ا':'و'));          // الغائب المذكّر: سمع/سمعا/سمعو
+            return 'و'+stem+bP;                                     // + ضمير الكتب: وسمعه/وسمعهما/وسمعها
+        }
         const customAct = (act==='custom');
         const statusText = ()=>{
             if(BL) return BLANK;
+            if(v.completenessCustom) return `<b>${esc(v.completenessCustom)}</b>`;
             if(v.completeness==='upto') return `إلى نهاية قوله: «<b>${esc(v.uptoText)}</b>» مع الإجازةِ لباقيه`;
             if(v.completeness==='fawt_range') return `مع فوتٍ من <b>${esc(v.fawtFrom)}</b> إلى <b>${esc(v.fawtTo)}</b>`;
             if(v.completeness==='custom') return `<b>${esc(v.completenessCustom||'')}</b>`;
+            if(v.completeness==='كاملاً') return `<b>${kamil}</b>`;
             return `<b>${esc(v.completeness)}</b>`;
         };
         let hearingP;
@@ -1376,11 +1414,10 @@
             hearingP = `<p class="text-right mb-4">فقد ${openWord} ${studentDisp}، ${subPhrase} ${statusText()} ${BL?BLANK:countClause()}، ${dateClause}، ${method}${orgReader}.</p>`;
         } else {
             let openV;
-            if(customAct) openV = `<b>${esc(v.actionCustom||'')}</b>`;
+            if(customAct || v.actionCustom) openV = `<b>${esc(v.actionCustom||'')}</b>`;
             else { const cj = CONJ[act] || CONJ['حضور']; openV = TP ? cj[sGen][0] : cj.p1[multiStu?1:0]; }   // الفعل الأول مفرد في الغائب
             const objectPhrase = (act==='حضور') ? `مجلسَ سَماعِ ${bookGen}` : bookAcc;
-            let readVerb='';
-            if(act==='حضور'){ readVerb = (TP ? READ[sGen][sCat] : READ.p1[multiStu?1:0]) + ' '; }   // الفعل الثاني يطابق عدد الطلاب
+            const readVerb = (customAct || v.actionCustom) ? '' : (consume(act, TP, sCat, sGen, bookPron) + ' ');   // وسمعه/وسمعهما/وسمعها بحسب الكتب والعدد
             const statusPhrase = statusText();
             let countPart;
             if(BL) countPart = BLANK;
@@ -1395,7 +1432,7 @@
         }
 
         const introP = `<p class="text-right indent-8 mb-4">الحمدُ لله ربِّ العالمين، والصلاةُ والسلامُ على نبيِّنا محمدٍ وعلى آلِه وصحبِه أجمعين، أمَّا بعد:</p>`;
-        const duaP = `<p class="text-center mb-4">غفر اللهُ ل${stuPron} ولوالدي${stuPron} وأهل${stuPron} وذريت${stuPron} ومشايخ${stuPron}.</p>`;
+        const duaP = v.duaCustom ? `<p class="text-center mb-4">${esc(v.duaCustom)}</p>` : `<p class="text-center mb-4">غفر اللهُ ل${stuPron} ولوالدي${stuPron} وأهل${stuPron} وذريت${stuPron} ومشايخ${stuPron}.</p>`;
         const closeP = `<p class="closing text-center font-bold mt-8 text-2xl">واللهُ خيرُ الشاهدين.</p>`;
 
         const tabaqBlock = buildTabaqBlock();
@@ -1432,8 +1469,6 @@
         fields.uptoText.classList.toggle('hidden', fields.completeness.value!=='upto');
         $('fawtRangeWrap').classList.toggle('hidden', fields.completeness.value!=='fawt_range');
         $('actionSub').classList.toggle('hidden', !(fields.actionType.value==='حضر عندي'||fields.actionType.value==='اتصل بي'));
-        $('actionCustom').classList.toggle('hidden', fields.actionType.value!=='custom');
-        $('completenessCustom').classList.toggle('hidden', fields.completeness.value!=='custom');
         fields.attendedNum.classList.toggle('hidden', !fields.attendedSome.checked);
         $('tabaqWrap').classList.toggle('hidden', !fields.tabaqEnable.checked);
         $('rosterWrap').classList.toggle('hidden', !fields.rosterEnable.checked);
@@ -1478,17 +1513,17 @@
         signatureArea.classList.remove('hidden');
         mujizList.innerHTML = sheikhs.map(s=>{
             let h=`<div class="mujiz-item"><span class="mujiz-name accent">${esc(s.name)}</span><div class="ss-row">`;
-            h+=`<div class="sigstamp"><span class="ss-label">التوقيع</span>`+ (s.sig ? `<img class="mujiz-sig" src="${s.sig}" alt="توقيع">` : `<span class="ss-blank tall"></span>`) +`</div>`;
-            h+=`<div class="sigstamp"><span class="ss-label">الختم</span>`+ (s.stamp ? `<img class="mujiz-stamp" src="${s.stamp}" alt="ختم">` : `<span class="ss-blank tall"></span>`) +`</div>`;
+            if(v.showShSig) h+=`<div class="sigstamp"><span class="ss-label">التوقيع</span>`+ (s.sig ? `<img class="mujiz-sig" src="${s.sig}" alt="توقيع">` : `<span class="ss-blank tall"></span>`) +`</div>`;
+            if(v.showShStamp) h+=`<div class="sigstamp"><span class="ss-label">الختم</span>`+ (s.stamp ? `<img class="mujiz-stamp" src="${s.stamp}" alt="ختم">` : `<span class="ss-blank tall"></span>`) +`</div>`;
             return h+`</div></div>`;
         }).join('');
         sigWrote.textContent = entity ? (v.orgEntity||'') : (v.blankStudent ? '............' : v.studentName);
         if(entity){ officialLine.innerHTML='المسؤول وتوقيعه: <span class="blank-name">&nbsp;&nbsp;</span>'; officialLine.classList.remove('hidden'); }
         else officialLine.classList.add('hidden');
         sigDate.textContent=v.issueDate||hijriToday();
-        if(signatureDataUrl){ sigImg.src=signatureDataUrl; sigImg.classList.remove('hidden'); }
+        if(signatureDataUrl && v.showSig){ sigImg.src=signatureDataUrl; sigImg.classList.remove('hidden'); }
         else sigImg.classList.add('hidden');
-        if(stampDataUrl){ stampImg.src=stampDataUrl; stampImg.classList.remove('hidden'); }
+        if(stampDataUrl && v.showStamp){ stampImg.src=stampDataUrl; stampImg.classList.remove('hidden'); }
         else stampImg.classList.add('hidden');
         if(v.serialShow && v.serialNum){ serialBox.textContent='تسلسل الإجازة: '+v.serialNum; serialBox.classList.remove('hidden'); }
         else serialBox.classList.add('hidden');
@@ -1757,11 +1792,47 @@
 
     function openDrawer(){ drawer.classList.add('open'); document.body.classList.add('drawer-open'); }
     function closeDrawer(){ drawer.classList.remove('open'); document.body.classList.remove('drawer-open'); }
-    menuBtn.addEventListener('click', ()=> drawer.classList.contains('open') ? closeDrawer() : openDrawer());
-    overlay.addEventListener('click', closeDrawer);
+
+    // ===== Floating circular section launcher =====
+    const SECTION_GROUPS=[
+        {ic:'🎨', label:'المظهر', ids:['sec-appearance','sec-tashkeel']},
+        {ic:'👤', label:'الطالب والكتاب', ids:['sec-student']},
+        {ic:'🏛️', label:'الجهة والشعار', ids:['sec-org']},
+        {ic:'📜', label:'المشايخ', ids:['sec-sheikhs']},
+        {ic:'🎧', label:'حالة السماع', ids:['sec-status']},
+        {ic:'📅', label:'التواريخ', ids:['sec-date','sec-issue']},
+        {ic:'🖥️', label:'الحضور والوسيلة', ids:['sec-attendance']},
+        {ic:'✅', label:'الإجازة والإسناد', ids:['sec-ijaza','sec-isnad']},
+        {ic:'📋', label:'الطِّباق والحضور', ids:['sec-extras']},
+        {ic:'✍️', label:'التوقيع', ids:['sec-sign']},
+        {ic:'⚙️', label:'إجراءات', actions:true}
+    ];
+    const secLauncher=$('secLauncher'), drawerTitle=$('drawerTitle'), actionBar=$('actionBar');
+    function allSecs(){ return Array.from(drawer.querySelectorAll('.acc')); }
+    function showAllSections(){ allSecs().forEach(a=>{ a.style.display=''; }); actionBar.style.display=''; drawerTitle.textContent='كل الأقسام'; }
+    function focusSection(g){
+        openDrawer();
+        allSecs().forEach(a=>{ a.style.display='none'; });
+        actionBar.style.display = g.actions ? '' : 'none';
+        if(!g.actions){ (g.ids||[]).forEach(id=>{ const a=document.getElementById(id); if(a){ a.style.display=''; a.open=true; } }); }
+        drawerTitle.textContent = g.label;
+        drawer.scrollTop=0;
+        secLauncher.classList.remove('show');
+    }
+    SECTION_GROUPS.forEach(g=>{
+        const b=document.createElement('button'); b.type='button'; b.className='sec-circle'+(g.actions?' act':'');
+        b.innerHTML=`<span class="c-ic">${g.ic}</span><span class="c-lb">${g.label}</span>`;
+        b.addEventListener('click', ()=>focusSection(g));
+        secLauncher.appendChild(b);
+    });
+    $('fabMenu').addEventListener('click', ()=> secLauncher.classList.toggle('show'));
+    $('showAllSecs').addEventListener('click', showAllSections);
+
+    menuBtn.addEventListener('click', ()=>{ if(drawer.classList.contains('open')){ closeDrawer(); } else { showAllSections(); openDrawer(); } });
+    overlay.addEventListener('click', ()=>{ closeDrawer(); secLauncher.classList.remove('show'); });
     $('drawerClose').addEventListener('click', closeDrawer);
-    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDrawer(); });
-    if(window.innerWidth>=1024) openDrawer();   // open by default on wide screens
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDrawer(); secLauncher.classList.remove('show'); } });
+    if(window.innerWidth>=1024){ showAllSections(); openDrawer(); }   // open by default on wide screens
 
     // ===== Floating guide / contact modals =====
     const modalOverlay=$('modalOverlay');
