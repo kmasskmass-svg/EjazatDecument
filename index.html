@@ -18,7 +18,7 @@
         .ijaza-box {
             --accent:#047857; --accent-strong:#065f46; --border-c:#10b981; --gold:#b8860b;
             --ijaza-font:'Amiri', serif;
-            --table-margin-top: 3rem; /* متغير للتحكم في المسافة العلوية للجداول */
+            --table-margin-top: 3rem;
             background-color:#fff; position:relative; color:#1c2b26;
             padding: 2.8rem 2.2rem;
             border: 3px double var(--border-c);
@@ -28,7 +28,7 @@
             transition: border 0.1s, box-shadow 0.1s;
         }
 
-        /* ===== كلاسات إخفاء البرواز (تعمل في المعاينة والطباعة) ===== */
+        /* ===== كلاسات إخفاء البرواز ===== */
         .ijaza-box.hide-frame,
         .ijaza-box.hide-frame .print-frame {
             border: none !important;
@@ -38,7 +38,6 @@
         .ijaza-box.hide-frame .print-frame {
             display: none !important;
         }
-        /* عند الطباعة نطبق على الصفحات المحددة */
         @media print {
             .ijaza-box.page-1.hide-frame,
             .ijaza-box.page-1.hide-frame .print-frame,
@@ -78,19 +77,16 @@
             }
         }
 
-        /* أنماط البرواز (بدون أو مزدوج أو بسيط) */
         .ijaza-box.brd-double { border-width: 4px; }
         .ijaza-box.brd-simple { border-width: 2px; box-shadow: none; background-image: none; }
         .ijaza-box.brd-none   { border: none; box-shadow: none; background-image: none; }
 
-        /* الألوان */
         .ijaza-box.theme-emerald  { --accent:#047857; --accent-strong:#065f46; --border-c:#10b981; --gold:#b8860b; }
         .ijaza-box.theme-brown    { --accent:#92400e; --accent-strong:#78350f; --border-c:#b45309; --gold:#a16207; }
         .ijaza-box.theme-navy     { --accent:#1d4ed8; --accent-strong:#1e3a8a; --border-c:#3b82f6; --gold:#b8860b; }
         .ijaza-box.theme-burgundy { --accent:#9f1239; --accent-strong:#881337; --border-c:#be123c; --gold:#a16207; }
         .ijaza-box.theme-gold     { --accent:#b8860b; --accent-strong:#9a7209; --border-c:#d4af37; --gold:#d4af37; }
 
-        /* الزوايا الزخرفية (للإطار المزخرف) */
         .corner { position:absolute; width:30px; height:30px; border:2px solid var(--accent); pointer-events:none; display:none; }
         .ijaza-box.brd-ornate .corner { display:block; }
         .corner-tl{top:10px;right:10px;border-bottom:none;border-left:none}
@@ -98,10 +94,7 @@
         .corner-bl{bottom:10px;right:10px;border-top:none;border-left:none}
         .corner-br{bottom:10px;left:10px;border-top:none;border-right:none}
 
-        .print-frame {
-            display: none;
-            /* في الطباعة يظهر كإطار ثابت */
-        }
+        .print-frame { display:none; }
         .ijaza-content { font-family:var(--ijaza-font); line-height:var(--ijaza-lh,2.1); font-size:var(--ijaza-fs,1.2rem); overflow-wrap: break-word; word-wrap: break-word; }
         .ijaza-content b { color:var(--accent); font-weight:700; }
         .hd { font-family:var(--ijaza-font); color:var(--accent-strong); }
@@ -154,7 +147,6 @@
             text-align: center;
             padding-top: 0.5rem;
         }
-        /* تحسين مظهر العنوان العلوي */
         .appendix-h {
             font-family: var(--ijaza-font);
             font-weight: bold;
@@ -170,7 +162,6 @@
             border-radius: 4px;
         }
 
-        /* ===== تحسين الجداول وتكرار الرأس في كل صفحة ===== */
         .doc-table {
             width:100%;
             border-collapse:collapse;
@@ -183,7 +174,6 @@
             break-inside: auto;
             page-break-inside: auto;
         }
-        /* تكرار رأس الجدول في كل صفحة عند الطباعة */
         .doc-table thead {
             display: table-header-group;
             break-inside: avoid;
@@ -210,7 +200,6 @@
             color:var(--accent-strong);
         }
         .doc-table.roster td { height:2.1rem; }
-        /* إزالة حدود الجدول عند تفعيل الخيار */
         .doc-table.no-border,
         .doc-table.no-border th,
         .doc-table.no-border td {
@@ -256,12 +245,15 @@
         #drawerResize:hover::before{ background:#10b981; height:70px; }
         body.drawer-open #drawerResize{ display:block; }
         body.resizing{ user-select:none; cursor:ew-resize; }
+
         .fab-wrap{ position:fixed; bottom:18px; left:18px; z-index:60; display:flex; flex-direction:column; gap:10px; }
         .fab{ width:50px; height:50px; border-radius:50%; border:none; cursor:pointer; color:#fff; font-size:22px; box-shadow:0 3px 10px rgba(0,0,0,.25); display:flex; align-items:center; justify-content:center; transition:transform .15s; }
         .fab:hover{ transform:scale(1.08); }
         .fab.guide{ background:#0ea5e9; }
         .fab.contact{ background:#047857; }
         .fab.menu{ background:#6d28d9; }
+        .fab.alert{ background:#f59e0b; }
+
         .sec-launcher{ position:fixed; left:78px; bottom:18px; z-index:61; display:none; flex-direction:column; gap:9px; max-height:80vh; overflow-y:auto; padding:8px 6px; background:rgba(255,255,255,.85); backdrop-filter:blur(3px); border-radius:16px; box-shadow:0 6px 22px rgba(0,0,0,.18); }
         .sec-launcher.show{ display:flex; }
         .sec-circle{ display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; background:none; border:none; padding:0; }
@@ -269,12 +261,14 @@
         .sec-circle:hover .c-ic{ transform:scale(1.09); background:#047857; }
         .sec-circle.act .c-ic{ background:#b45309; }
         .sec-circle .c-lb{ font-size:.58rem; color:#065f46; font-weight:800; line-height:1.1; max-width:64px; text-align:center; }
+
         .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:70; padding:16px; }
         .modal-overlay.show{ display:flex; }
-        .modal{ background:#fff; border-radius:14px; max-width:480px; width:100%; max-height:85vh; overflow-y:auto; padding:1.25rem; box-shadow:0 10px 40px rgba(0,0,0,.3); }
+        .modal{ background:#fff; border-radius:14px; max-width:520px; width:100%; max-height:85vh; overflow-y:auto; padding:1.25rem; box-shadow:0 10px 40px rgba(0,0,0,.3); }
         .modal h3{ font-size:1.1rem; font-weight:800; color:#065f46; margin-bottom:.7rem; display:flex; justify-content:space-between; align-items:center; gap:.5rem; }
         .modal .x{ cursor:pointer; border:none; background:#f1f5f9; border-radius:8px; padding:.15rem .55rem; font-size:.9rem; }
         .modal a{ color:#047857; text-decoration:underline; word-break:break-all; }
+
         .guide-video{ margin-bottom:1rem; aspect-ratio:16/9; background:#000; border-radius:10px; overflow:hidden; }
         .guide-video iframe{ width:100%; height:100%; border:0; display:block; }
         .guide-steps{ display:flex; flex-direction:column; gap:.5rem; }
@@ -282,6 +276,42 @@
         .gstep-ic{ width:32px; height:32px; min-width:32px; border-radius:50%; background:#fff; border:2px solid var(--c); display:flex; align-items:center; justify-content:center; font-size:1rem; }
         .gstep-tx{ font-size:.84rem; color:#334155; line-height:1.6; }
         .gstep-tx b{ color:var(--c); display:block; margin-bottom:.05rem; }
+
+        .alert-content {
+            text-align: right;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            color: #1e293b;
+        }
+        .alert-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0;
+        }
+        .alert-content li {
+            margin-bottom: 0.75rem;
+            padding-right: 1.8rem;
+            position: relative;
+        }
+        .alert-content li::before {
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size: 1.2rem;
+            content: attr(data-icon);
+        }
+        .alert-content .highlight {
+            background: #fef3c7;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-weight: bold;
+            color: #92400e;
+        }
+        .alert-content .step {
+            font-weight: bold;
+            color: #065f46;
+        }
+
         #formPanel.drawer.open{ transform:translateX(0); }
         .drawer-head{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin-bottom:.75rem; position:sticky; top:0; background:#fff; padding:.25rem 0 .5rem; border-bottom:1px solid #eee; z-index:2; }
         #mainGrid{ display:block; max-width:1000px; margin:0 auto; }
@@ -330,7 +360,6 @@
             .no-print { display:none!important; }
             #previewPanel { background:#fff!important; box-shadow:none!important; padding:0!important; }
             #print-area { max-width:none!important; margin:0!important; }
-            /* إزالة الإطارات الزائدة */
             #ijazaBox { border:none !important; box-shadow:none !important; background-image:none !important; }
             .corner { display:none !important; }
             .print-frame {
@@ -342,7 +371,6 @@
             .ijaza-box.brd-double .print-frame { border-width: 4px; }
             .ijaza-box.brd-simple .print-frame { border-width: 2px; box-shadow:none; }
             .ijaza-box.brd-none   .print-frame { display:none; }
-            /* إخفاء إطار الطباعة عند تفعيل hide-frame */
             .print-frame.hide-frame { display:none !important; }
             .print-frame::after { content:'تصميم: كليب الزهراني'; position:absolute; bottom:1mm; left:0; right:0; text-align:center; font-size:8pt; color:#9a9a9a; font-family:'Tajawal',sans-serif; }
             .design-credit { display:none!important; }
@@ -430,7 +458,7 @@
                     <input type="range" id="lineHeight" min="1.5" max="3" step="0.1" value="2.1" class="flex-1 min-w-[120px] accent-emerald-600">
                 </div>
                 <div class="flex items-center justify-between flex-wrap gap-2">
-                    <span class="text-xs text-gray-600 w-16">الزخرفة (طول الخيارات مُضاعف):</span>
+                    <span class="text-xs text-gray-600 w-16">الزخرفة:</span>
                     <select id="ornamentShape" class="flex-1 min-w-[120px] px-2 py-2 border border-gray-300 rounded-md text-sm" style="height: 3rem; padding: 0.5rem 0.8rem; font-size: 1.15rem;">
                         <option value="❖">❖ معيّن</option>
                         <option value="✦">✦ نجمة</option>
@@ -1065,21 +1093,25 @@
     </div>
 </div>
 
-<!-- Floating buttons: guide + contact -->
+<!-- Floating buttons: guide + contact + alert -->
 <div id="secLauncher" class="sec-launcher no-print"></div>
 <div class="fab-wrap no-print">
     <button type="button" id="fabMenu" class="fab menu" title="الأقسام" aria-label="الأقسام">☰</button>
     <button type="button" id="fabGuide" class="fab guide" title="دليل الاستخدام" aria-label="دليل الاستخدام">؟</button>
     <button type="button" id="fabContact" class="fab contact" title="للتواصل والمقترحات" aria-label="تواصل">✉</button>
+    <button type="button" id="fabAlert" class="fab alert" title="تنبيهات مهمة" aria-label="تنبيهات">⚠️</button>
 </div>
 
+<!-- Modal Overlay -->
 <div id="modalOverlay" class="modal-overlay no-print">
+    <!-- Guide Modal -->
     <div id="guideModal" class="modal hidden">
         <h3>دليل الاستخدام <button type="button" class="x" aria-label="إغلاق">✕</button></h3>
         <div class="guide-video">
             <iframe src="https://www.youtube.com/embed/Fc6iSWqdIXE" title="دليل استخدام وثيقة إثبات السماع" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
         <div class="guide-steps">
+            <!-- مختصر الخطوات -->
             <div class="gstep" style="--c:#0ea5e9"><div class="gstep-ic">☰</div><div class="gstep-tx"><b>القائمة والأقسام</b>افتحها من زرّ الخطوط الثلاثة أعلى اليمين؛ أقسامها قابلة للطيّ، ويمكن سحب حافّتها لتوسيعها أو تصغيرها.</div></div>
             <div class="gstep" style="--c:#8b5cf6"><div class="gstep-ic">🎨</div><div class="gstep-tx"><b>مظهر الوثيقة</b>الخط واللون والبرواز وحجم الخط وتباعد الأسطر ولون البسملة والعنوان، وأيضاً إخفاء البرواز من صفحات محددة.</div></div>
             <div class="gstep" style="--c:#d97706"><div class="gstep-ic">🔤</div><div class="gstep-tx"><b>شريط التشكيل</b>ضع المؤشّر في حقل الاسم أو الكتاب ثم اضغط الحركة لإدراجها عند المؤشّر.</div></div>
@@ -1098,7 +1130,7 @@
             <div class="gstep" style="--c:#ca8a04"><div class="gstep-ic">🔗</div><div class="gstep-tx"><b>الإسناد</b>سند مشترك للجميع أو سند مستقل لكل شيخ، مع إمكان وضعه في صفحة مستقلّة.</div></div>
             <div class="gstep" style="--c:#7c3aed"><div class="gstep-ic">🖋️</div><div class="gstep-tx"><b>التوقيع والختم</b>أضِف توقيع الطالب (برفع صورة أو الرسم باليد)، وارفع <b>الختم</b> منفصلاً ليظهر أعلى التواقيع. ويمكنك اختيار مكان التوقيع بين ثلاثة خيارات، وإظهار/إخفاء عبارة "المسؤول وتوقيعه" وتعديلها، وتغيير عبارة "والله خير الشاهدين".</div></div>
             <div class="gstep" style="--c:#9333ea"><div class="gstep-ic">🏷️</div><div class="gstep-tx"><b>العنوان والجهة المُصدِرة</b>غيّر عنوان الوثيقة، وأضِف اسم الجهة/القناة مع التحكّم في لونها وخطّها وحجمها وموضعها (يمين/وسط/يسار). وفعّل صيغة الغائب «حضر فلان»، أو اترك اسم الطالب فارغاً للتوزيع.</div></div>
-            <div class="gstep" style--c:#c2410c"><div class="gstep-ic">🖼️</div><div class="gstep-tx"><b>الشعار</b>ارفع شعار القناة/الجهة، واختر موضعه (أعلى اليمين/الوسط/اليسار) وكبّره أو صغّره بمؤشّر الحجم.</div></div>
+            <div class="gstep" style="--c:#c2410c"><div class="gstep-ic">🖼️</div><div class="gstep-tx"><b>الشعار</b>ارفع شعار القناة/الجهة، واختر موضعه (أعلى اليمين/الوسط/اليسار) وكبّره أو صغّره بمؤشّر الحجم.</div></div>
             <div class="gstep" style="--c:#059669"><div class="gstep-ic">👁️</div><div class="gstep-tx"><b>المعاينة</b>تتحدّث فورياً مع كل إدخال؛ واستخدم «معاينة بملء الصفحة» لرؤيتها كاملة.</div></div>
             <div class="gstep" style="--c:#dc2626"><div class="gstep-ic">📤</div><div class="gstep-tx"><b>الإخراج</b>طباعة / PDF، أو تصدير صورة، أو نسخ النص — تعمل على الكمبيوتر (ويندوز/ماك) والجوال (أندرويد/آيفون). على الجوال يظهر «تصدير صورة» في قائمة المشاركة/الحفظ.</div></div>
             <div class="gstep" style="--c:#16a34a"><div class="gstep-ic">💾</div><div class="gstep-tx"><b>الحفظ التلقائي</b>يُحفظ ما ملأته تلقائياً داخل المتصفّح بلا إنترنت، ويُستعاد عند إعادة فتح الملف (تحسّباً لانقطاع النت أو إطفاء الجهاز أو الخروج بالخطأ). يمكنك تعطيله أو مسح المحفوظ من الشريط أعلى القائمة.</div></div>
@@ -1106,6 +1138,7 @@
         </div>
     </div>
 
+    <!-- Contact Modal -->
     <div id="contactModal" class="modal hidden">
         <h3>للتواصل والمقترحات <button type="button" class="x" aria-label="إغلاق">✕</button></h3>
         <p style="font-size:.88rem;color:#065f46;font-weight:700;margin-bottom:.7rem;">إعداد: كليب بن أحمد ضيف الله الزهراني</p>
@@ -1113,6 +1146,32 @@
             <li>تليجرام: <a href="https://t.me/Kazhrani" target="_blank" rel="noopener">@Kazhrani</a></li>
             <li>البريد الإلكتروني: <a href="mailto:kmasskmass@gmail.com">kmasskmass@gmail.com</a></li>
         </ul>
+    </div>
+
+    <!-- Alert Modal (جديد) -->
+    <div id="alertModal" class="modal hidden">
+        <h3>⚠️ تنبيهات مهمة <button type="button" class="x" aria-label="إغلاق">✕</button></h3>
+        <div class="alert-content">
+            <p style="font-weight:bold;color:#b45309;font-size:1.05rem;">
+                📌 عند استخدام خيار <span class="highlight">الطباق</span> وخيار <span class="highlight">مسرد الأسماء</span>، قم باختيار <strong>طباعة/حفظ</strong>، ثم قبل التصدير راجع الأعمدة.
+            </p>
+            <p>إذا لاحظت <strong>تداخلًا بين برواز الوثيقة العلوي وحدود الجداول</strong>، فأمامك عدة خيارات:</p>
+            <ul>
+                <li data-icon="①">🔹 <span class="step">الأول:</span> محاولة تفعيل <strong>إخفاء البراويز</strong> في الصفحات التي فيها الخلل.</li>
+                <li data-icon="②">🔸 <span class="step">الثاني:</span> إن لم ينفع، فعليك بتفعيل خيار <strong>عدد الصفوف في كل صفحة</strong>، علمًا بأن أقصى عدد مناسب هو <span class="highlight">٢٥ صف</span>، ويجب الضغط على <strong>تطبيق التقسيم</strong> حتى يتفعّل.</li>
+                <li data-icon="③">🔹 <span class="step">الثالث:</span> إن لم ينجح، ففعّل خيار <strong>إزالة حدود الجدول</strong>.</li>
+                <li data-icon="④">🔸 <span class="step">الرابع والأخير:</span> إن فشل كل ما سبق، قم بإلغاء البراويز للصفحات نهائيًا عبر اختيار <strong>بدون برواز</strong> من قائمة البرواز.</li>
+            </ul>
+            <p style="margin-top:0.8rem;">📌 <strong>تنبيه إضافي:</strong> مع ضرورة تفعيل خيار <span class="highlight">فصل الأقسام</span> (موجود في أول قسم الطباق).</p>
+            <p>🔧 أيضًا، جرب تغيير موضع <strong>ختم الشيخ</strong> وما معه من بيانات، ففي قسم التوقيع موجود قائمة <strong>وضع التوقيع</strong>، اختر منها ما يناسب الطباعة قبل إصدار الوثيقة.</p>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:0.6rem 1rem;margin-top:1rem;">
+                <p style="font-weight:bold;color:#065f46;">✅ نصائح إضافية:</p>
+                <ul>
+                    <li>🧩 استخدم معاينة الطباعة قبل التصدير النهائي.</li>
+                    <li>🖨️ تأكد من اختيار الإعدادات المناسبة في المتصفح (الهوامش، الحجم).</li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1169,10 +1228,7 @@
 
     // ---- قائمة الصفحات التي سيُخفى فيها البرواز ----
     let hidePages = [];
-
-    // ---- متغيرات لتخزين بيانات المسرد المجزأة ----
-    let rosterData = [];
-    let rosterPagination = []; // مصفوفة من المصفوفات لكل صفحة
+    let rosterPagination = [];
 
     // ---- دوال مساعدة ----
     function applyOrgLogo(){
@@ -1381,11 +1437,8 @@
             h+='</div>';
         }
         grid.innerHTML=h;
-        // تخزين البيانات الحالية
-        rosterData = getRosterData();
     }
 
-    // تطبيق تقسيم الصفحات على المسرد
     function applyRosterPagination() {
         const rowsPerPage = parseInt($('rosterRowsPerPage').value, 10) || 10;
         const data = getRosterData();
@@ -1393,14 +1446,11 @@
             showToast('لا توجد بيانات في المسرد لتقسيمها', false);
             return;
         }
-        // تقسيم البيانات إلى أجزاء
         const pages = [];
         for (let i = 0; i < data.length; i += rowsPerPage) {
             pages.push(data.slice(i, i + rowsPerPage));
         }
         rosterPagination = pages;
-        // إعادة بناء الجدول مع التقسيم (سيتم استخدامه في buildRosterBlock)
-        // نضع علامة لتطبيق التقسيم
         showToast('تم تقسيم المسرد إلى ' + pages.length + ' صفحة');
         render();
         scheduleSave();
@@ -1409,29 +1459,22 @@
     function buildRosterBlock(v){
         if(!$('rosterEnable').checked) return '';
         const {cols, rowsN, names}=rosterCfg();
-        // استخدام البيانات المجزأة إذا وجدت، وإلا استخدم البيانات الكاملة
         let data = getRosterData();
-        let usePagination = false;
         let pages = [];
         if (rosterPagination.length > 0) {
-            // نتحقق مما إذا كان عدد الصفوف مطابقاً للبيانات الحالية
             const totalRows = data.length;
             const paginatedTotal = rosterPagination.reduce((sum, p) => sum + p.length, 0);
             if (paginatedTotal === totalRows) {
                 pages = rosterPagination;
-                usePagination = true;
             } else {
-                // إذا تغيرت البيانات، نعيد تعيين التقسيم
                 rosterPagination = [];
             }
         }
-        if (!usePagination) {
-            // نستخدم البيانات كاملة في صفحة واحدة
+        if (pages.length === 0) {
             pages = [data];
         }
         let noBorderClass = v.rosterNoBorder ? ' no-border' : '';
         let html = `<div class="appendix"><h3 class="appendix-h">مَسْرَدُ الحاضرين للسماع</h3>`;
-        // إنشاء جدول لكل صفحة
         pages.forEach((pageData, pageIndex) => {
             let head = '<thead><tr>';
             for(let c=0;c<cols;c++){ head+=`<th>${esc(names[c])}</th>`; }
@@ -1446,7 +1489,6 @@
                 body += '</tr>';
             });
             body += '</tbody>';
-            // إضافة فاصل صفحة بين الجداول إذا كان هناك أكثر من صفحة
             if (pageIndex > 0) {
                 html += `<div style="break-before:page; margin-top:2rem;"></div>`;
             }
@@ -1717,18 +1759,15 @@
 
         const introP = `<p class="text-right indent-8 mb-4">الحمدُ لله ربِّ العالمين، والصلاةُ والسلامُ على نبيِّنا محمدٍ وعلى آلِه وصحبِه أجمعين، أمَّا بعد:</p>`;
         const duaP = v.duaCustom ? `<p class="text-center mb-4">${esc(v.duaCustom)}</p>` : `<p class="text-center mb-4">غفر اللهُ ل${stuPron} ولوالدي${stuPron} وأهل${stuPron} وذريت${stuPron} ومشايخ${stuPron}.</p>`;
-        
         const closingText = v.closingCustom ? v.closingCustom : 'واللهُ خيرُ الشاهدين.';
         const closeP = `<p class="closing text-center font-bold mt-8 text-2xl">${esc(closingText)}</p>`;
 
         const tabaqBlock = buildTabaqBlock();
-        // بناء المسرد مع التقسيم
         const rosterBlock = buildRosterBlock(v);
 
         const inlineIsnad = (!perMode && isnadItems.length && !v.onePageText && !v.splitPages) ? isnadItems[0] : '';
         const mainCore = introP + hearingP + editionP + ijazaPara + inlineIsnad + duaP + closeP;
 
-        // الأقسام الإضافية
         const appx=[];
         if(perMode){ isnadItems.forEach(card=> appx.push({html:card, newPage:true})); }
         else if(isnadItems.length && (v.splitPages||v.onePageText)){ appx.push({html:isnadItems[0], newPage:true}); }
@@ -1742,14 +1781,13 @@
             ? `<div style="break-before:page" class="mt-8">${a.html}</div>`
             : `<div class="mt-8">${a.html}</div>`).join('');
 
-        // التوقيع حسب الخيار المختار
         const sigHtml = `<div id="signatureContent">${document.getElementById('signatureArea').innerHTML}</div>`;
         const placement = v.signaturePlacement || 'afterClosing';
         if (placement === 'separatePage') {
             fullHtml += `<div style="break-before:page; margin-top:2rem;">${sigHtml}</div>`;
         } else if (placement === 'afterLast') {
             fullHtml += sigHtml;
-        } else { // afterClosing
+        } else {
             let newFullHtml = mainWrapped;
             newFullHtml += sigHtml;
             newFullHtml += appx.map(a=> a.newPage
@@ -1777,7 +1815,6 @@
         if(fields.rosterEnable.checked && !$('rosterGrid').children.length) buildRosterGrid(false);
         if(fields.tabaqEnable.checked) buildTabaqRows();
 
-        // الزخرفة
         const ornEl=$('ornament'); const orn=v.ornamentShape||'❖';
         if(orn==='none'){ ornEl.style.display='none'; }
         else if(orn==='rule'){ ornEl.style.display='block'; ornEl.innerHTML='<hr style="border:none;border-top:2px solid var(--border-c);width:40%;margin:.4rem auto;">'; }
@@ -1836,7 +1873,6 @@
         ijazaOutput.innerHTML = buildHtml(v2);
         signatureArea.style.display = 'none';
 
-        // تطبيق إخفاء البرواز على الصفحات المحددة
         applyHideFrame();
 
         arabicizeTextNodes(ijazaOutput);
@@ -2007,7 +2043,7 @@
             buildRosterGrid(false);
             const cells=$('rosterGrid').querySelectorAll('.r-row');
             dataRows.forEach((dr,r)=>{ if(cells[r]){ const ins=cells[r].querySelectorAll('.r-cell'); dr.forEach((val,c)=>{ if(ins[c]) ins[c].value=val; }); } });
-            rosterPagination = []; // نعيد تعيين التقسيم بعد الاستيراد
+            rosterPagination = [];
             render(); scheduleSave(); showToast('تم استيراد الكشف وتنسيقه');
         };
         rd.readAsText(f,'utf-8'); e.target.value='';
@@ -2196,12 +2232,13 @@
     document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDrawer(); secLauncher.classList.remove('show'); } });
     if(window.innerWidth>=1024){ showAllSections(); openDrawer(); }
 
-    // ---- مودالات الدليل والتواصل ----
+    // ---- مودالات الدليل والتواصل والتنبيه ----
     const modalOverlay=$('modalOverlay');
     function openModal(id){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); $(id).classList.remove('hidden'); modalOverlay.classList.add('show'); }
     function closeModal(){ modalOverlay.classList.remove('show'); }
     $('fabGuide').addEventListener('click', ()=>openModal('guideModal'));
     $('fabContact').addEventListener('click', ()=>openModal('contactModal'));
+    $('fabAlert').addEventListener('click', ()=>openModal('alertModal'));
     modalOverlay.addEventListener('click', e=>{ if(e.target===modalOverlay) closeModal(); });
     document.querySelectorAll('#modalOverlay .x').forEach(b=>b.addEventListener('click', closeModal));
     document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
