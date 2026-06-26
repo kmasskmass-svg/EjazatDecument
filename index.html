@@ -10,28 +10,87 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* Reset and base */
+        * { box-sizing: border-box; }
         body { font-family: 'Tajawal', sans-serif; background-color: #f3f4f6; }
         html, body { overflow-x:hidden; max-width:100%; }
 
         .ijaza-box {
             --accent:#047857; --accent-strong:#065f46; --border-c:#10b981; --gold:#b8860b;
             --ijaza-font:'Amiri', serif;
+            --table-margin-top: 3rem; /* متغير للتحكم في المسافة العلوية للجداول */
             background-color:#fff; position:relative; color:#1c2b26;
+            padding: 2.8rem 2.2rem;
+            border: 3px double var(--border-c);
+            box-shadow: 0 0 0 1px var(--gold) inset;
+            background-image:url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="d" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="%23eef3f0"/></pattern></defs><rect width="100%" height="100%" fill="url(%23d)"/></svg>');
+            border-radius: 4px;
+            transition: border 0.1s, box-shadow 0.1s;
         }
+
+        /* ===== كلاسات إخفاء البرواز (تعمل في المعاينة والطباعة) ===== */
+        .ijaza-box.hide-frame,
+        .ijaza-box.hide-frame .print-frame {
+            border: none !important;
+            box-shadow: none !important;
+            background-image: none !important;
+        }
+        .ijaza-box.hide-frame .print-frame {
+            display: none !important;
+        }
+        /* عند الطباعة نطبق على الصفحات المحددة */
+        @media print {
+            .ijaza-box.page-1.hide-frame,
+            .ijaza-box.page-1.hide-frame .print-frame,
+            .ijaza-box.page-2.hide-frame,
+            .ijaza-box.page-2.hide-frame .print-frame,
+            .ijaza-box.page-3.hide-frame,
+            .ijaza-box.page-3.hide-frame .print-frame,
+            .ijaza-box.page-4.hide-frame,
+            .ijaza-box.page-4.hide-frame .print-frame,
+            .ijaza-box.page-5.hide-frame,
+            .ijaza-box.page-5.hide-frame .print-frame,
+            .ijaza-box.page-6.hide-frame,
+            .ijaza-box.page-6.hide-frame .print-frame,
+            .ijaza-box.page-7.hide-frame,
+            .ijaza-box.page-7.hide-frame .print-frame,
+            .ijaza-box.page-8.hide-frame,
+            .ijaza-box.page-8.hide-frame .print-frame,
+            .ijaza-box.page-9.hide-frame,
+            .ijaza-box.page-9.hide-frame .print-frame,
+            .ijaza-box.page-10.hide-frame,
+            .ijaza-box.page-10.hide-frame .print-frame {
+                border: none !important;
+                box-shadow: none !important;
+                background-image: none !important;
+            }
+            .ijaza-box.page-1.hide-frame .print-frame,
+            .ijaza-box.page-2.hide-frame .print-frame,
+            .ijaza-box.page-3.hide-frame .print-frame,
+            .ijaza-box.page-4.hide-frame .print-frame,
+            .ijaza-box.page-5.hide-frame .print-frame,
+            .ijaza-box.page-6.hide-frame .print-frame,
+            .ijaza-box.page-7.hide-frame .print-frame,
+            .ijaza-box.page-8.hide-frame .print-frame,
+            .ijaza-box.page-9.hide-frame .print-frame,
+            .ijaza-box.page-10.hide-frame .print-frame {
+                display: none !important;
+            }
+        }
+
+        /* أنماط البرواز (بدون أو مزدوج أو بسيط) */
+        .ijaza-box.brd-double { border-width: 4px; }
+        .ijaza-box.brd-simple { border-width: 2px; box-shadow: none; background-image: none; }
+        .ijaza-box.brd-none   { border: none; box-shadow: none; background-image: none; }
+
+        /* الألوان */
         .ijaza-box.theme-emerald  { --accent:#047857; --accent-strong:#065f46; --border-c:#10b981; --gold:#b8860b; }
         .ijaza-box.theme-brown    { --accent:#92400e; --accent-strong:#78350f; --border-c:#b45309; --gold:#a16207; }
         .ijaza-box.theme-navy     { --accent:#1d4ed8; --accent-strong:#1e3a8a; --border-c:#3b82f6; --gold:#b8860b; }
         .ijaza-box.theme-burgundy { --accent:#9f1239; --accent-strong:#881337; --border-c:#be123c; --gold:#a16207; }
         .ijaza-box.theme-gold     { --accent:#b8860b; --accent-strong:#9a7209; --border-c:#d4af37; --gold:#d4af37; }
 
-        .ijaza-box.brd-ornate {
-            border:3px double var(--border-c); box-shadow:0 0 0 1px var(--gold) inset;
-            background-image:url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="d" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="%23eef3f0"/></pattern></defs><rect width="100%" height="100%" fill="url(%23d)"/></svg>');
-        }
-        .ijaza-box.brd-double { border:4px double var(--border-c); }
-        .ijaza-box.brd-simple { border:2px solid var(--border-c); }
-        .ijaza-box.brd-none   { border:none; box-shadow:none; }
-
+        /* الزوايا الزخرفية (للإطار المزخرف) */
         .corner { position:absolute; width:30px; height:30px; border:2px solid var(--accent); pointer-events:none; display:none; }
         .ijaza-box.brd-ornate .corner { display:block; }
         .corner-tl{top:10px;right:10px;border-bottom:none;border-left:none}
@@ -39,17 +98,18 @@
         .corner-bl{bottom:10px;right:10px;border-top:none;border-left:none}
         .corner-br{bottom:10px;left:10px;border-top:none;border-right:none}
 
-        /* Per-page print frame (repeats on every printed page) */
-        .print-frame { display:none; }
-
-        .ijaza-content { font-family:var(--ijaza-font); line-height:var(--ijaza-lh,2.1); font-size:var(--ijaza-fs,1.2rem); }
+        .print-frame {
+            display: none;
+            /* في الطباعة يظهر كإطار ثابت */
+        }
+        .ijaza-content { font-family:var(--ijaza-font); line-height:var(--ijaza-lh,2.1); font-size:var(--ijaza-fs,1.2rem); overflow-wrap: break-word; word-wrap: break-word; }
         .ijaza-content b { color:var(--accent); font-weight:700; }
         .hd { font-family:var(--ijaza-font); color:var(--accent-strong); }
         #basmala { color: var(--basmala-color, var(--accent-strong)); }
         #docTitle { color: var(--title-color, var(--accent-strong)); }
         .closing { color:var(--accent-strong); font-family:var(--ijaza-font); }
         .isnad-key { color:var(--accent-strong); font-weight:700; }
-        .isnad-card { margin:1rem 0; padding:1rem; background:#f8faf9; border-right:4px solid var(--accent); border-radius:6px; box-shadow:inset 0 1px 3px rgba(0,0,0,.05); text-align:right; }
+        .isnad-card { margin:1rem 0; padding:1rem; background:#f8faf9; border-right:4px solid var(--accent); border-radius:6px; box-shadow:inset 0 1px 3px rgba(0,0,0,.05); text-align:right; overflow-wrap: break-word; }
         .isnad-title { display:block; font-family:'Tajawal',sans-serif; font-weight:700; font-size:.9rem; color:#374151; margin-bottom:.5rem; }
         .isnad-body { font-family:var(--ijaza-font); font-style:italic; line-height:2; }
 
@@ -57,8 +117,8 @@
         .ornament::before,.ornament::after { content:""; height:1px; width:56px; background:linear-gradient(to var(--dir,left), transparent, var(--gold)); }
         .ornament::after { --dir:right; }
 
-        .sig { margin-top:3rem; display:flex; justify-content:space-between; gap:.5rem; text-align:center; font-family:var(--ijaza-font); align-items:flex-start; }
-        .sig > div { flex:1; }
+        .sig { margin-top:3rem; display:flex; justify-content:space-between; gap:.5rem; text-align:center; font-family:var(--ijaza-font); align-items:flex-start; flex-wrap:wrap; }
+        .sig > div { flex:1; min-width:120px; }
         .sig-h { display:block; font-weight:700; font-size:.85rem; color:var(--accent-strong); border-bottom:1px solid #cbd5e1; padding-bottom:.25rem; margin-bottom:.4rem; }
         .sig-v { display:block; font-weight:700; font-size:1.05rem; }
         .sig-v.accent { color:var(--accent); }
@@ -71,7 +131,7 @@
         .org-name { font-family:var(--org-font, var(--ijaza-font)); font-weight:700; color:var(--org-color, var(--accent-strong)); font-size:var(--org-size,1.05rem); text-align:var(--org-align,center); margin:0; }
         .org-line { display:flex; align-items:center; justify-content:center; gap:.6rem; margin-bottom:.5rem; }
         .org-logo-inline { max-height:var(--logo-size,70px); max-width:130px; object-fit:contain; }
-        .title-line { display:flex; align-items:center; justify-content:center; gap:.6rem; }
+        .title-line { display:flex; align-items:center; justify-content:center; gap:.6rem; flex-wrap:wrap; }
         .title-logo { max-height:var(--logo-size,60px); max-width:110px; object-fit:contain; }
         .logo-everypage { display:block; max-height:var(--logo-size,64px); margin:0 auto 10px; object-fit:contain; }
         .blank-name { display:inline-block; min-width:160px; border-bottom:1.5px dotted #555; }
@@ -84,19 +144,84 @@
         .mujiz-sig { max-height:52px; margin:.15rem 0; display:block; }
         .mujiz-stamp { max-height:66px; margin:.5rem 0 0; display:block; }
         .sigstamp { margin-top:.45rem; text-align:center; }
-        .ss-row { display:flex; gap:2.4rem; justify-content:center; align-items:flex-start; margin-top:.3rem; }
+        .ss-row { display:flex; gap:2.4rem; justify-content:center; align-items:flex-start; margin-top:.3rem; flex-wrap:wrap; }
         .ss-label { display:block; font-size:.8rem; color:#555; margin-bottom:.1rem; }
         .ss-blank { display:block; width:95px; height:1.5rem; border-bottom:1px dotted #777; margin:.1rem auto 0; }
         .ss-blank.tall { height:2.4rem; }
-        .appendix { margin-top:1.5rem; }
-        .appendix-h { font-family:var(--ijaza-font); font-weight:bold; color:var(--accent-strong); font-size:1.3rem; text-align:center; margin-bottom:.8rem; }
-        .doc-table { width:100%; border-collapse:collapse; font-family:var(--ijaza-font); font-size:1rem; }
-        .doc-table th, .doc-table td { border:1px solid var(--border-c,#0a7); padding:.5rem .6rem; text-align:center; }
-        .doc-table th { background:rgba(0,0,0,.04); font-weight:bold; color:var(--accent-strong); }
+        .appendix {
+            margin-top: 2.5rem;
+            overflow-wrap: break-word;
+            text-align: center;
+            padding-top: 0.5rem;
+        }
+        /* تحسين مظهر العنوان العلوي */
+        .appendix-h {
+            font-family: var(--ijaza-font);
+            font-weight: bold;
+            color: var(--accent-strong);
+            font-size: 1.3rem;
+            text-align: center;
+            background-color: white;
+            padding: 0 15px;
+            display: table;
+            margin: -0.3rem auto 0.8rem auto;
+            position: relative;
+            z-index: 1;
+            border-radius: 4px;
+        }
+
+        /* ===== تحسين الجداول وتكرار الرأس في كل صفحة ===== */
+        .doc-table {
+            width:100%;
+            border-collapse:collapse;
+            font-family:var(--ijaza-font);
+            font-size:1rem;
+            table-layout: auto;
+            word-wrap: break-word;
+            margin-top: var(--table-margin-top, 3rem);
+            margin-bottom: 2rem;
+            break-inside: auto;
+            page-break-inside: auto;
+        }
+        /* تكرار رأس الجدول في كل صفحة عند الطباعة */
+        .doc-table thead {
+            display: table-header-group;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        .doc-table tbody {
+            display: table-row-group;
+            break-inside: auto;
+            page-break-inside: auto;
+        }
+        .doc-table tr {
+            break-inside: auto;
+            page-break-inside: auto;
+        }
+        .doc-table th, .doc-table td {
+            border:1px solid var(--border-c,#0a7);
+            padding:.5rem .6rem;
+            text-align:center;
+            word-break: break-word;
+        }
+        .doc-table th {
+            background:rgba(0,0,0,.04);
+            font-weight:bold;
+            color:var(--accent-strong);
+        }
         .doc-table.roster td { height:2.1rem; }
+        /* إزالة حدود الجدول عند تفعيل الخيار */
+        .doc-table.no-border,
+        .doc-table.no-border th,
+        .doc-table.no-border td {
+            border: none !important;
+        }
+        .doc-table.no-border th {
+            background: none;
+        }
+
         .serial-box { position:absolute; bottom:12px; left:16px; font-family:var(--ijaza-font); font-size:.9rem; color:var(--accent-strong); font-weight:bold; }
         .design-credit { text-align:center; font-size:10px; color:#9a9a9a; margin-top:1.6rem; font-family:'Tajawal',sans-serif; }
-        .isnad-card, .doc-table tr, #signatureArea, .sig { break-inside:avoid; }
 
         .opt-btn { padding:.35rem .8rem; border:1px solid #d1d5db; border-radius:9999px; font-size:.8rem; background:#fff; cursor:pointer; transition:.15s; }
         .opt-btn:hover { border-color:#059669; }
@@ -114,12 +239,10 @@
         .touch-none { touch-action:none; }
         .exporting, .exporting * { box-shadow:none !important; }
 
-        /* Hamburger + side drawer + accordion */
         .menu-btn{ position:fixed; top:12px; right:12px; z-index:60; width:46px; height:46px; border-radius:10px; background:#047857; color:#fff; font-size:22px; line-height:1; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.2); }
         .drawer-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.4); opacity:0; pointer-events:none; transition:opacity .25s; z-index:55; }
         body.drawer-open .drawer-overlay{ opacity:1; pointer-events:auto; }
         #formPanel.drawer{ position:fixed; top:0; right:0; height:100vh; width:250px; max-width:92vw; overflow-y:auto; background:#fff; box-shadow:-4px 0 22px rgba(0,0,0,.18); transform:translateX(105%); transition:transform .28s ease; z-index:58; padding:1rem 0.7rem 3rem; }
-        /* Compact controls inside the drawer only */
         #formPanel input, #formPanel select, #formPanel textarea { font-size:.74rem; padding-top:.3rem; padding-bottom:.3rem; padding-right:.5rem; padding-left:.5rem; }
         #formPanel label { font-size:.72rem; }
         #formPanel .acc>summary { font-size:.82rem; padding:.5rem .7rem; }
@@ -128,13 +251,11 @@
         #formPanel .hbtn { font-size:.95rem; min-width:30px; padding:.18rem .35rem; }
         #formPanel input[type=color]{ width:30px; height:30px; }
         #formPanel input[type=checkbox]{ width:1rem; height:1rem; }
-        /* Drag-to-resize handle on the drawer's inner edge */
         #drawerResize{ position:fixed; top:0; bottom:0; width:14px; cursor:ew-resize; z-index:59; display:none; }
         #drawerResize::before{ content:''; position:absolute; top:50%; right:4px; transform:translateY(-50%); width:4px; height:48px; border-radius:3px; background:#cbd5e1; transition:background .15s; }
         #drawerResize:hover::before{ background:#10b981; height:70px; }
         body.drawer-open #drawerResize{ display:block; }
         body.resizing{ user-select:none; cursor:ew-resize; }
-        /* Floating action buttons + modals */
         .fab-wrap{ position:fixed; bottom:18px; left:18px; z-index:60; display:flex; flex-direction:column; gap:10px; }
         .fab{ width:50px; height:50px; border-radius:50%; border:none; cursor:pointer; color:#fff; font-size:22px; box-shadow:0 3px 10px rgba(0,0,0,.25); display:flex; align-items:center; justify-content:center; transition:transform .15s; }
         .fab:hover{ transform:scale(1.08); }
@@ -178,7 +299,6 @@
         @media (prefers-reduced-motion: reduce){ *,*::before,*::after{transition:none!important;animation:none!important} }
         :focus-visible { outline:2px solid #10b981; outline-offset:2px; }
 
-        /* ===== Mobile responsiveness ===== */
         @media (max-width:768px){
             #mainGrid, #previewPanel, #print-area { max-width:100%; }
             #previewPanel { padding-left:.5rem; padding-right:.5rem; }
@@ -199,7 +319,6 @@
             .fab { width:46px; height:46px; font-size:20px; }
         }
 
-        /* Full-page preview mode (screen only) */
         #mainGrid.preview-full #formPanel { display:none; }
         #mainGrid.preview-full #previewPanel { grid-column:1 / -1; position:static; background:#e5e7eb; }
         #mainGrid.preview-full #print-area { max-width:794px; margin:0 auto; }
@@ -211,18 +330,20 @@
             .no-print { display:none!important; }
             #previewPanel { background:#fff!important; box-shadow:none!important; padding:0!important; }
             #print-area { max-width:none!important; margin:0!important; }
-            /* Hide the in-flow box border/decoration so it isn't only on first/last page */
-            #ijazaBox { border:none!important; box-shadow:none!important; background-image:none!important; }
-            .corner { display:none!important; }
-            /* Fixed frame: repeats on EVERY printed page */
+            /* إزالة الإطارات الزائدة */
+            #ijazaBox { border:none !important; box-shadow:none !important; background-image:none !important; }
+            .corner { display:none !important; }
             .print-frame {
                 display:block; position:fixed; top:4mm; right:4mm; bottom:4mm; left:4mm;
-                border:3px double var(--border-c); box-shadow:0 0 0 1px var(--gold) inset;
+                border: 3px double var(--border-c);
+                box-shadow: 0 0 0 1px var(--gold) inset;
                 pointer-events:none; z-index:0;
             }
-            .ijaza-box.brd-double .print-frame { border:4px double var(--border-c); box-shadow:none; }
-            .ijaza-box.brd-simple .print-frame { border:2px solid var(--border-c); box-shadow:none; }
+            .ijaza-box.brd-double .print-frame { border-width: 4px; }
+            .ijaza-box.brd-simple .print-frame { border-width: 2px; box-shadow:none; }
             .ijaza-box.brd-none   .print-frame { display:none; }
+            /* إخفاء إطار الطباعة عند تفعيل hide-frame */
+            .print-frame.hide-frame { display:none !important; }
             .print-frame::after { content:'تصميم: كليب الزهراني'; position:absolute; bottom:1mm; left:0; right:0; text-align:center; font-size:8pt; color:#9a9a9a; font-family:'Tajawal',sans-serif; }
             .design-credit { display:none!important; }
             .logo-everypage { position:fixed; top:6mm; left:50%; transform:translateX(-50%); max-height:46px; margin:0; z-index:1; }
@@ -309,8 +430,8 @@
                     <input type="range" id="lineHeight" min="1.5" max="3" step="0.1" value="2.1" class="flex-1 min-w-[120px] accent-emerald-600">
                 </div>
                 <div class="flex items-center justify-between flex-wrap gap-2">
-                    <span class="text-xs text-gray-600 w-16">الزخرفة:</span>
-                    <select id="ornamentShape" class="flex-1 min-w-[120px] px-2 py-2 border border-gray-300 rounded-md text-sm">
+                    <span class="text-xs text-gray-600 w-16">الزخرفة (طول الخيارات مُضاعف):</span>
+                    <select id="ornamentShape" class="flex-1 min-w-[120px] px-2 py-2 border border-gray-300 rounded-md text-sm" style="height: 3rem; padding: 0.5rem 0.8rem; font-size: 1.15rem;">
                         <option value="❖">❖ معيّن</option>
                         <option value="✦">✦ نجمة</option>
                         <option value="❀">❀ زهرة</option>
@@ -318,9 +439,38 @@
                         <option value="✿ ❖ ✿">✿ ❖ ✿ مركّبة</option>
                         <option value="◆◆◆">◆◆◆ معيّنات</option>
                         <option value="﴾﴿">﴾﴿ أقواس</option>
+                        <option value="﷽">﷽ بسم الله</option>
+                        <option value="🌸">🌸 زهرة كرز</option>
+                        <option value="⭐">⭐ نجمة لامعة</option>
+                        <option value="🌙">🌙 هلال</option>
+                        <option value="🕌">🕌 مسجد</option>
+                        <option value="☾">☾ هلال آخر</option>
+                        <option value="❋">❋ نجمة ثمانية</option>
+                        <option value="⁕">⁕ نجمة خماسية</option>
+                        <option value="꧁ ꧂">꧁ ꧂ إطار زخرفي</option>
+                        <option value="☯">☯ يين ويانغ</option>
+                        <option value="✧">✧ نجمة ماسية</option>
+                        <option value="✵">✵ نجمة شمسية</option>
+                        <option value="✶">✶ نجمة سداسية مفرغة</option>
+                        <option value="✹">✹ نجمة اثنا عشرية</option>
+                        <option value="❂">❂ نجمة ثمانية مفرغة</option>
+                        <option value="⊹">⊹ علامة زهرية</option>
+                        <option value="✿">✿ زهرة</option>
+                        <option value="⚘">⚘ زهرة</option>
                         <option value="rule">— خطّ فاصل</option>
                         <option value="none">بدون زخرفة</option>
                     </select>
+                </div>
+
+                <!-- إخفاء البرواز من الصفحات -->
+                <div class="border-t border-gray-200 pt-2 mt-2">
+                    <span class="block text-xs font-bold text-emerald-800 mb-2">إخفاء البرواز من الصفحات</span>
+                    <div class="flex gap-2 flex-wrap items-center">
+                        <input type="text" id="hidePagesInput" class="flex-1 min-w-[120px] px-2 py-1 border border-gray-300 rounded text-sm" placeholder="أرقام الصفحات (مثال: 1,3,5 أو 2-4)">
+                        <button type="button" id="addHidePageRule" class="opt-btn">إضافة</button>
+                    </div>
+                    <div id="hidePagesList" class="flex flex-wrap gap-1 mt-2"></div>
+                    <p class="text-[10px] text-gray-500 mt-1">الاخفاء يستخدم عند وجود جداول تتعارض حدودها مع حدود زخرفة الصفحة.</p>
                 </div>
             </div>
         </details>
@@ -577,10 +727,18 @@
                             <input type="date" id="startGregPicker" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
                         </div>
                         <div class="grid grid-cols-3 gap-2">
-                            <div><label for="startHD" class="block text-xs text-gray-600 mb-1">يوم (هجري)</label><select id="startHD" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"></select></div>
+                            <div>
+                                <label for="startHD" class="block text-xs text-gray-600 mb-1">يوم (هجري)</label>
+                                <div class="flex items-center gap-1">
+                                    <select id="startHD" class="flex-1 px-2 py-2 border border-gray-300 rounded-md text-sm"></select>
+                                    <button type="button" class="hbtn hijri-adjust" data-prefix="start" data-delta="1" title="زيادة اليوم">+</button>
+                                    <button type="button" class="hbtn hijri-adjust" data-prefix="start" data-delta="-1" title="نقص اليوم">−</button>
+                                </div>
+                            </div>
                             <div><label for="startHM" class="block text-xs text-gray-600 mb-1">الشهر</label><select id="startHM" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"></select></div>
                             <div><label for="startHY" class="block text-xs text-gray-600 mb-1">السنة</label><input type="number" id="startHY" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm" placeholder="1445"></div>
                         </div>
+                        <p class="text-[10px] text-gray-500 mt-1">الزائد والناقص تستخدم عند اختلاف التاريخ الهجري عن الميلادي</p>
                         <div class="grid grid-cols-2 gap-3">
                             <div><label for="startDay" class="block text-xs text-gray-600 mb-1">اليوم</label>
                                 <select id="startDay" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
@@ -597,10 +755,18 @@
                             <input type="date" id="endGregPicker" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
                         </div>
                         <div class="grid grid-cols-3 gap-2">
-                            <div><label for="endHD" class="block text-xs text-gray-600 mb-1">يوم (هجري)</label><select id="endHD" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"></select></div>
+                            <div>
+                                <label for="endHD" class="block text-xs text-gray-600 mb-1">يوم (هجري)</label>
+                                <div class="flex items-center gap-1">
+                                    <select id="endHD" class="flex-1 px-2 py-2 border border-gray-300 rounded-md text-sm"></select>
+                                    <button type="button" class="hbtn hijri-adjust" data-prefix="end" data-delta="1" title="زيادة اليوم">+</button>
+                                    <button type="button" class="hbtn hijri-adjust" data-prefix="end" data-delta="-1" title="نقص اليوم">−</button>
+                                </div>
+                            </div>
                             <div><label for="endHM" class="block text-xs text-gray-600 mb-1">الشهر</label><select id="endHM" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"></select></div>
                             <div><label for="endHY" class="block text-xs text-gray-600 mb-1">السنة</label><input type="number" id="endHY" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm" placeholder="1445"></div>
                         </div>
+                        <p class="text-[10px] text-gray-500 mt-1">الزائد والناقص تستخدم عند اختلاف التاريخ الهجري عن الميلادي</p>
                         <div class="grid grid-cols-2 gap-3">
                             <div><label for="endDay" class="block text-xs text-gray-600 mb-1">اليوم</label>
                                 <select id="endDay" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
@@ -727,16 +893,40 @@
                         </label>
                         <div id="rosterWrap" class="hidden space-y-2">
                             <div class="grid grid-cols-2 gap-2">
-                                <div><label class="block text-xs text-gray-600 mb-1">عدد الأعمدة</label><input type="number" id="rosterCols" min="1" max="10" value="3" class="w-full px-2 py-1 border border-gray-300 rounded-md text-sm"></div>
-                                <div><label class="block text-xs text-gray-600 mb-1">عدد الصفوف</label><input type="number" id="rosterRows" min="1" max="200" value="10" class="w-full px-2 py-1 border border-gray-300 rounded-md text-sm"></div>
+                                <div>
+                                    <label class="block text-xs text-gray-600 mb-1">عدد الأعمدة <span class="text-[10px] text-gray-400">(تظهر عدد الأعمدة وأسماء الأعمدة وعدد الصفوف التي حددتها بعد الضغط على "توليد حقول التعبئة" في الأسفل)</span></label>
+                                    <input type="number" id="rosterCols" min="1" max="10" value="3" class="w-full px-2 py-1 border border-gray-300 rounded-md text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-600 mb-1">عدد الصفوف</label>
+                                    <input type="number" id="rosterRows" min="1" max="500" value="10" class="w-full px-2 py-1 border border-gray-300 rounded-md text-sm">
+                                </div>
                             </div>
-                            <div><label class="block text-xs text-gray-600 mb-1">أسماء الأعمدة (افصل بفاصلة)</label>
-                                <input type="text" id="rosterColNames" class="w-full px-2 py-1 border border-gray-300 rounded-md text-sm" placeholder="م، الاسم، البلد، التوقيع"></div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">أسماء الأعمدة (افصل بفاصلة)</label>
+                                <input type="text" id="rosterColNames" class="w-full px-2 py-1 border border-gray-300 rounded-md text-sm" placeholder="م، الاسم، البلد، التوقيع">
+                            </div>
                             <div class="flex flex-wrap gap-2">
                                 <button type="button" id="rosterBuild" class="opt-btn">توليد حقول التعبئة</button>
                                 <button type="button" id="rosterExport" class="opt-btn">تصدير كشف Excel/CSV</button>
                                 <button type="button" id="rosterImportBtn" class="opt-btn">استيراد كشف معبّأ</button>
                                 <input type="file" id="rosterImport" accept=".csv,text/csv" class="hidden">
+                            </div>
+                            <!-- خيارات الطباعة للمسرد -->
+                            <div class="border-t border-gray-200 pt-2 mt-2">
+                                <label class="block text-xs font-bold text-emerald-800 mb-1">خيارات الطباعة للمسرد</label>
+                                <div class="flex flex-wrap gap-2 items-center">
+                                    <span class="text-xs text-gray-600">عدد الصفوف في كل صفحة:</span>
+                                    <input type="number" id="rosterRowsPerPage" min="1" max="50" value="10" class="w-20 px-2 py-1 border border-gray-300 rounded text-sm">
+                                    <button type="button" id="applyRosterPagination" class="opt-btn">تطبيق التقسيم</button>
+                                </div>
+                                <div class="mt-2">
+                                    <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700">
+                                        <input type="checkbox" id="rosterNoBorder" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                        إزالة حدود الجدول (تظهر بدون حدود أثناء الطباعة)
+                                    </label>
+                                </div>
+                                <p class="text-[10px] text-gray-500 mt-1">هذا الخيار يستخدم لمعالجة تداخل البرواز مع حد الجدول.</p>
                             </div>
                             <p class="text-[11px] text-gray-500">املأ الحقول لتظهر بالأسماء داخل المسرد، أو صدّر الكشف وأرسله للطلاب عبر رابط درايف، وبعد تعبئته استورده ليُنسَّق تلقائياً في الجدول.</p>
                             <div id="rosterGrid" class="space-y-1 max-h-72 overflow-auto"></div>
@@ -780,6 +970,30 @@
                             <label for="duaCustom" class="block text-xs font-bold text-emerald-800 mb-1">تعديل صيغة الدعاء (اختياري)</label>
                             <input type="text" id="duaCustom" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="اكتب صيغة الدعاء كما تريد لتحلّ محلّ الصيغة التلقائية">
                         </div>
+                        <!-- خيارات وضع التوقيع (3 خيارات) -->
+                        <div class="border-t border-gray-200 pt-2 mt-2">
+                            <label class="block text-xs font-bold text-emerald-800 mb-1">وضع التوقيع (المجيز، تاريخ الإصدار، وكتبه)</label>
+                            <select id="signaturePlacement" class="w-full px-2 py-2 border border-gray-300 rounded-md text-sm">
+                                <option value="afterClosing">في السطر التالي لعبارة «والله خير الشاهدين»</option>
+                                <option value="afterLast">بعد آخر سطر في الوثيقة</option>
+                                <option value="separatePage">في صفحة مستقلة (نهاية الوثيقة)</option>
+                            </select>
+                        </div>
+                        <!-- عبارة المسؤول وتوقيعه (اختيارية + حقل نص) -->
+                        <div class="border-t border-gray-200 pt-2 mt-2">
+                            <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700">
+                                <input type="checkbox" id="officialLineEnable" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                إظهار عبارة «المسؤول وتوقيعه»
+                            </label>
+                            <input type="text" id="officialLineText" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="المسؤول وتوقيعه (يمكنك تغيير النص)" value="المسؤول وتوقيعه">
+                            <p class="text-[10px] text-gray-500 mt-1">ألغِ التحديد لإخفاء العبارة، أو غيّر النص حسب رغبتك.</p>
+                        </div>
+                        <!-- تغيير عبارة "والله خير الشاهدين" -->
+                        <div class="border-t border-gray-200 pt-2 mt-2">
+                            <label class="block text-xs font-bold text-emerald-800 mb-1">تغيير عبارة «والله خير الشاهدين»</label>
+                            <input type="text" id="closingCustom" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="اكتب العبارة التي تريدها بدلاً من «والله خير الشاهدين»">
+                            <p class="text-[10px] text-gray-500 mt-1">يمكنك تغيير العبارة بالكتابة هنا، وعند ترك الخانة فارغة تعتمد الموجودة في الوثيقة.</p>
+                        </div>
                     </div>
                 </div>
             </details>
@@ -795,6 +1009,7 @@
             <div id="actionBar" class="flex flex-wrap gap-2 pt-3 mt-1 border-t border-gray-200">
                 <button type="button" id="printBtn" class="flex-1 min-w-[120px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm">طباعة / PDF</button>
                 <button type="button" id="imageBtn" class="flex-1 min-w-[110px] bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm">تصدير صورة</button>
+                <p class="text-[10px] text-gray-500 text-center w-full mt-1">هذا مثالي عندما تكون الإجازة صفحة واحدة فقط</p>
                 <button type="button" id="copyBtn" class="flex-1 min-w-[100px] bg-gray-800 hover:bg-gray-900 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm">نسخ النص</button>
                 <button type="button" id="resetBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 px-3 rounded-md transition border border-gray-300 text-sm">تفريغ</button>
             </div>
@@ -866,14 +1081,14 @@
         </div>
         <div class="guide-steps">
             <div class="gstep" style="--c:#0ea5e9"><div class="gstep-ic">☰</div><div class="gstep-tx"><b>القائمة والأقسام</b>افتحها من زرّ الخطوط الثلاثة أعلى اليمين؛ أقسامها قابلة للطيّ، ويمكن سحب حافّتها لتوسيعها أو تصغيرها.</div></div>
-            <div class="gstep" style="--c:#8b5cf6"><div class="gstep-ic">🎨</div><div class="gstep-tx"><b>مظهر الوثيقة</b>الخط واللون والبرواز وحجم الخط وتباعد الأسطر ولون البسملة والعنوان.</div></div>
+            <div class="gstep" style="--c:#8b5cf6"><div class="gstep-ic">🎨</div><div class="gstep-tx"><b>مظهر الوثيقة</b>الخط واللون والبرواز وحجم الخط وتباعد الأسطر ولون البسملة والعنوان، وأيضاً إخفاء البرواز من صفحات محددة.</div></div>
             <div class="gstep" style="--c:#d97706"><div class="gstep-ic">🔤</div><div class="gstep-tx"><b>شريط التشكيل</b>ضع المؤشّر في حقل الاسم أو الكتاب ثم اضغط الحركة لإدراجها عند المؤشّر.</div></div>
             <div class="gstep" style="--c:#047857"><div class="gstep-ic">👤</div><div class="gstep-tx"><b>بيانات الطالب والكتاب</b>أدخل اسم الطالب والكتاب وجنس الطالب.</div></div>
             <div class="gstep" style="--c:#be123c"><div class="gstep-ic">📜</div><div class="gstep-tx"><b>المشايخ المُسمِّعون</b>أضِف شيخاً أو أكثر، وحدّد لكل شيخ نوع إجازته (خاصة / عامة / الأسرة / المؤلفات) مع <b>حقل حرّ</b> لإضافة أي نصّ. ما اتّفق عليه المشايخ يظهر مرّةً واحدة بأسمائهم جميعاً «وقد أجازوا جميعاً…»، وما تفرّد به أحدهم يُفرَد له «وأجاز فلان…». ويمكن رفع <b>توقيع كل شيخ وختمه</b> من بطاقته فيظهران تحت اسمه، مع فاصل عمودي بين كل شيخ وآخر.</div></div>
             <div class="gstep" style="--c:#b8860b"><div class="gstep-ic">🎨</div><div class="gstep-tx"><b>اللون الذهبي</b>من «مظهر الوثيقة» يمكن اختيار اللون الذهبي الخالص للكتابة والبراويز في كل الوثيقة.</div></div>
             <div class="gstep" style="--c:#0e7490"><div class="gstep-ic">🗣️</div><div class="gstep-tx"><b>طبيعة العمل وصيغة الشيخ</b>اختر: حضور/سماع/قراءة/حفظ، أو بصيغة الشيخ «حضر عندي / اتصل بي» فتظهر قائمة فرعية (وقرأ عليّ حفظًا… وسمع عليّ…) وتتحوّل الإجازة إلى «وقد أجزتُه…».</div></div>
             <div class="gstep" style="--c:#7c3aed"><div class="gstep-ic">👥</div><div class="gstep-tx"><b>أكثر من طالب</b>من «بيانات الطالب» أضِف طلاباً، فتتحوّل الصيغة للجمع تلقائياً «فقد حضر فلانٌ وفلانٌ… وسمعوه».</div></div>
-            <div class="gstep" style="--c:#059669"><div class="gstep-ic">📋</div><div class="gstep-tx"><b>مسرد الحاضرين والتصدير لإكسل</b>فعّل المسرد، وحدّد الأعمدة وعناوينها والصفوف، ثم «توليد حقول التعبئة» واملأها لتظهر بالأسماء؛ أو «تصدير كشف Excel/CSV» وأرسله عبر درايف، وبعد تعبئته «استيراد كشف معبّأ» لينسّقه التطبيق داخل الجدول.</div></div>
+            <div class="gstep" style="--c:#059669"><div class="gstep-ic">📋</div><div class="gstep-tx"><b>مسرد الحاضرين والتصدير لإكسل</b>فعّل المسرد، وحدّد الأعمدة وعناوينها والصفوف، ثم «توليد حقول التعبئة» واملأها لتظهر بالأسماء؛ أو «تصدير كشف Excel/CSV» وأرسله عبر درايف، وبعد تعبئته «استيراد كشف معبّأ» لينسّقه التطبيق داخل الجدول. كما يمكنك تقسيم الجدول إلى صفحات عند الطباعة واختيار إزالة الحدود.</div></div>
             <div class="gstep" style="--c:#6d28d9"><div class="gstep-ic">☰</div><div class="gstep-tx"><b>دوائر الأقسام العائمة</b>اضغط زر ☰ أسفل اليسار لتظهر دوائر معنونة لكل قسم (المظهر، الطالب والكتاب، المشايخ، حالة السماع، التواريخ، التوقيع، الإجراءات…). اضغط الدائرة ليفتح قسمها وحده في لوحة مركّزة، وزر «الكل» يعيد عرض جميع الأقسام.</div></div>
             <div class="gstep" style="--c:#0891b2"><div class="gstep-ic">🖼️</div><div class="gstep-tx"><b>موضعا الشعار والوسيلة</b>للشعار موضعان مستقلّان (يمين/يسار/بجوار الاسم/البسملة/العنوان/أسفل توقيع المسؤول/في كل صفحة) يظهران معاً. وحقل الوسيلة/المكان فيه «ملء تلقائي» أو «تركه فارغاً» مستقلّ عن نسخة التوزيع.</div></div>
             <div class="gstep" style="--c:#b45309"><div class="gstep-ic">📚</div><div class="gstep-tx"><b>أكثر من كتاب</b>من «بيانات الطالب والكتاب» اضغط «+ إضافة كتاب» وأدخِل اسمه ونسخته المعتمدة، فتظهر الكتب في المتن «كتابَيْ… / الكتب الآتية…» وتُذكر النسخ المعتمدة لكلٍّ منها.</div></div>
@@ -881,9 +1096,9 @@
             <div class="gstep" style="--c:#2563eb"><div class="gstep-ic">🗓️</div><div class="gstep-tx"><b>السماع والتاريخ</b>اختر حالة السماع (ومنها «سماع إلى نهاية قوله… مع الإجازة لباقيه») وعدد المجالس، مع خيار «وحضرتُ منها» الذي يصوغ لفظة المجلس بحسب العدد. وحدّد التاريخ من التقويم (الهجري والميلادي يتزامنان تلقائياً).</div></div>
             <div class="gstep" style="--c:#0891b2"><div class="gstep-ic">🎧</div><div class="gstep-tx"><b>طبيعة الحضور</b>اختر الوسيلة (حضوري/عن بُعد)، وأضِف المنظِّم والقارئ إن وُجدا.</div></div>
             <div class="gstep" style="--c:#ca8a04"><div class="gstep-ic">🔗</div><div class="gstep-tx"><b>الإسناد</b>سند مشترك للجميع أو سند مستقل لكل شيخ، مع إمكان وضعه في صفحة مستقلّة.</div></div>
-            <div class="gstep" style="--c:#7c3aed"><div class="gstep-ic">🖋️</div><div class="gstep-tx"><b>التوقيع والختم</b>أضِف توقيع الطالب (برفع صورة أو الرسم باليد)، وارفع <b>الختم</b> منفصلاً ليظهر أعلى التواقيع.</div></div>
+            <div class="gstep" style="--c:#7c3aed"><div class="gstep-ic">🖋️</div><div class="gstep-tx"><b>التوقيع والختم</b>أضِف توقيع الطالب (برفع صورة أو الرسم باليد)، وارفع <b>الختم</b> منفصلاً ليظهر أعلى التواقيع. ويمكنك اختيار مكان التوقيع بين ثلاثة خيارات، وإظهار/إخفاء عبارة "المسؤول وتوقيعه" وتعديلها، وتغيير عبارة "والله خير الشاهدين".</div></div>
             <div class="gstep" style="--c:#9333ea"><div class="gstep-ic">🏷️</div><div class="gstep-tx"><b>العنوان والجهة المُصدِرة</b>غيّر عنوان الوثيقة، وأضِف اسم الجهة/القناة مع التحكّم في لونها وخطّها وحجمها وموضعها (يمين/وسط/يسار). وفعّل صيغة الغائب «حضر فلان»، أو اترك اسم الطالب فارغاً للتوزيع.</div></div>
-            <div class="gstep" style="--c:#c2410c"><div class="gstep-ic">🖼️</div><div class="gstep-tx"><b>الشعار</b>ارفع شعار القناة/الجهة، واختر موضعه (أعلى اليمين/الوسط/اليسار) وكبّره أو صغّره بمؤشّر الحجم.</div></div>
+            <div class="gstep" style--c:#c2410c"><div class="gstep-ic">🖼️</div><div class="gstep-tx"><b>الشعار</b>ارفع شعار القناة/الجهة، واختر موضعه (أعلى اليمين/الوسط/اليسار) وكبّره أو صغّره بمؤشّر الحجم.</div></div>
             <div class="gstep" style="--c:#059669"><div class="gstep-ic">👁️</div><div class="gstep-tx"><b>المعاينة</b>تتحدّث فورياً مع كل إدخال؛ واستخدم «معاينة بملء الصفحة» لرؤيتها كاملة.</div></div>
             <div class="gstep" style="--c:#dc2626"><div class="gstep-ic">📤</div><div class="gstep-tx"><b>الإخراج</b>طباعة / PDF، أو تصدير صورة، أو نسخ النص — تعمل على الكمبيوتر (ويندوز/ماك) والجوال (أندرويد/آيفون). على الجوال يظهر «تصدير صورة» في قائمة المشاركة/الحفظ.</div></div>
             <div class="gstep" style="--c:#16a34a"><div class="gstep-ic">💾</div><div class="gstep-tx"><b>الحفظ التلقائي</b>يُحفظ ما ملأته تلقائياً داخل المتصفّح بلا إنترنت، ويُستعاد عند إعادة فتح الملف (تحسّباً لانقطاع النت أو إطفاء الجهاز أو الخروج بالخطأ). يمكنك تعطيله أو مسح المحفوظ من الشريط أعلى القائمة.</div></div>
@@ -911,6 +1126,7 @@
     const HIJRI_MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
     const WD=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 
+    // ---- حقول النموذج ----
     const fields = {
         studentName:$('studentName'), bookName:$('bookName'),
         studentGender:$('studentGender'),
@@ -929,8 +1145,16 @@
         organizer:$('organizer'), reader:$('reader'),
         titleIjaza:$('titleIjaza'), includeIjaza:$('includeIjaza'),
         isnadMode:$('isnadMode'), onePageText:$('onePageText'),
-        isnad:$('isnad'), issueDate:$('issueDate')
+        isnad:$('isnad'), issueDate:$('issueDate'),
+        signaturePlacement:$('signaturePlacement'),
+        officialLineEnable:$('officialLineEnable'),
+        officialLineText:$('officialLineText'),
+        closingCustom:$('closingCustom'),
+        rosterRowsPerPage:$('rosterRowsPerPage'),
+        rosterNoBorder:$('rosterNoBorder')
     };
+
+    // ---- متغيرات الحالة ----
     const form=$('ijazaForm'), ijazaOutput=$('ijazaOutput'), signatureArea=$('signatureArea');
     const sigDate=$('sigDate'), sigWrote=$('sigWrote'), sigImg=$('sigImg');
     const logoRight=$('logoRight'), logoLeft=$('logoLeft'), orgName=$('orgName');
@@ -938,6 +1162,19 @@
     const logoEveryPage=$('logoEveryPage'), logoBelowOfficial=$('logoBelowOfficial');
     const stampImg=$('stampImg'), officialLine=$('officialLine');
     const mujizList=$('mujizList'), serialBox=$('serialBox');
+    const ijazaBox=$('ijazaBox');
+    const printFrame = document.querySelector('.print-frame');
+    let orgColorAuto=true;
+    let signatureDataUrl=null, logoDataUrl=null, stampDataUrl=null;
+
+    // ---- قائمة الصفحات التي سيُخفى فيها البرواز ----
+    let hidePages = [];
+
+    // ---- متغيرات لتخزين بيانات المسرد المجزأة ----
+    let rosterData = [];
+    let rosterPagination = []; // مصفوفة من المصفوفات لكل صفحة
+
+    // ---- دوال مساعدة ----
     function applyOrgLogo(){
         if(orgColorAuto) ijazaBox.style.removeProperty('--org-color');
         else ijazaBox.style.setProperty('--org-color', $('orgColor').value);
@@ -946,17 +1183,13 @@
         ijazaBox.style.setProperty('--org-align', $('orgAlign').value);
         ijazaBox.style.setProperty('--logo-size', $('logoSize').value+'px');
     }
-    const sigSheikhLabel=$('sigSheikhLabel'), sigWroteLabel=$('sigWroteLabel');
-    const docTitle=$('docTitle'), methodLabel=$('methodLabel'), errorMsg=$('errorMsg'), toast=$('toast');
-    const endGroup=$('endGroup'), startTitle=$('startTitle'), ijazaBox=$('ijazaBox');
 
-    const REQUIRED=['studentName','bookName','startGregPicker','startTime','method'];
+    function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-    const esc=(s)=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    const toArabicDigits=(s)=>String(s).replace(/[0-9]/g, d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+    function toArabicDigits(s){ return String(s).replace(/[0-9]/g, d=>'٠١٢٣٤٥٦٧٨٩'[d]); }
     function arabicizeTextNodes(root){ const w=document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n; while((n=w.nextNode())) n.nodeValue=toArabicDigits(n.nodeValue); }
 
-    // ===== Date conversion (Umm al-Qura) =====
+    // ---- دوال التواريخ ----
     const pad=(n)=>n<10?'0'+n:''+n;
     const dateToInputValue=(d)=>d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate());
     const inputValueToDate=(v)=>new Date(v+'T12:00:00Z');
@@ -980,24 +1213,27 @@
     function fmtGreg(d){ return new Intl.DateTimeFormat('ar-u-ca-gregory',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(d)+' م'; }
     function fmtHijri(p){ return p.d+' '+HIJRI_MONTHS[p.m-1]+' '+p.y+'هـ'; }
 
-    function dateStrings(prefix){
-        const pv=fields[prefix+'GregPicker'].value; if(!pv) return null;
-        const d=inputValueToDate(pv);
-        return { greg:fmtGreg(d), hij:fmtHijri(gregToHijri(d)), wd:WD[d.getUTCDay()] };
-    }
-    function syncFromGreg(prefix){
-        const pv=fields[prefix+'GregPicker'].value; if(!pv) return;
-        const d=inputValueToDate(pv); const p=gregToHijri(d);
-        fields[prefix+'HD'].value=p.d; fields[prefix+'HM'].value=p.m; fields[prefix+'HY'].value=p.y;
-        fields[prefix+'Day'].value=WD[d.getUTCDay()]; render();
-    }
-    function syncFromHijri(prefix){
-        const hd=+fields[prefix+'HD'].value, hm=+fields[prefix+'HM'].value, hy=+fields[prefix+'HY'].value;
-        if(!hd||!hm||!hy) return;
-        const d=hijriToGreg(hy,hm,hd);
-        if(!d){ showToast('تاريخ هجري غير صالح', false); return; }
-        fields[prefix+'GregPicker'].value=dateToInputValue(d);
-        fields[prefix+'Day'].value=WD[d.getUTCDay()]; render();
+    function getDateParts(prefix){
+        const gregVal = fields[prefix+'GregPicker'].value;
+        const dayVal = fields[prefix+'Day'].value;
+        const hd = parseInt(fields[prefix+'HD'].value,10);
+        const hm = parseInt(fields[prefix+'HM'].value,10);
+        const hy = parseInt(fields[prefix+'HY'].value,10);
+        let hijStr = '';
+        if (hd && hm && hy) {
+            hijStr = hd+' '+HIJRI_MONTHS[hm-1]+' '+hy+'هـ';
+        } else if (gregVal) {
+            const d = inputValueToDate(gregVal);
+            const p = gregToHijri(d);
+            hijStr = fmtHijri(p);
+        }
+        let gregStr = '';
+        if (gregVal) {
+            const d = inputValueToDate(gregVal);
+            gregStr = fmtGreg(d);
+        }
+        let day = dayVal || (gregVal ? WD[inputValueToDate(gregVal).getUTCDay()] : '');
+        return { hij: hijStr, greg: gregStr, day: day };
     }
 
     function hijriToday(){
@@ -1005,6 +1241,75 @@
         catch(e){ return new Date().toLocaleDateString('ar-SA')+' هـ'; }
     }
 
+    function syncFromGreg(prefix){
+        const pv=fields[prefix+'GregPicker'].value; if(!pv) return;
+        const d=inputValueToDate(pv); const p=gregToHijri(d);
+        fields[prefix+'HD'].value=p.d; fields[prefix+'HM'].value=p.m; fields[prefix+'HY'].value=p.y;
+        fields[prefix+'Day'].value=WD[d.getUTCDay()];
+        render();
+    }
+
+    function adjustHijriDay(prefix, delta) {
+        const hdSelect = fields[prefix+'HD'];
+        if (!hdSelect) return;
+        let val = parseInt(hdSelect.value, 10) || 1;
+        val = Math.min(30, Math.max(1, val + delta));
+        hdSelect.value = val;
+        render();
+        scheduleSave();
+    }
+
+    // ---- ربط أزرار + و - للتاريخ الهجري (عام) ----
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.hijri-adjust');
+        if (!btn) return;
+        const prefix = btn.dataset.prefix;
+        const delta = parseInt(btn.dataset.delta, 10);
+        if (prefix && !isNaN(delta)) {
+            adjustHijriDay(prefix, delta);
+        }
+    });
+
+    // ---- ربط أزرار + و - داخل جدول الطباق ----
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.tab-hijri-adjust');
+        if (!btn) return;
+        const row = btn.closest('.tab-row');
+        if (!row) return;
+        const prefix = btn.dataset.prefix;
+        const delta = parseInt(btn.dataset.delta, 10);
+        if (!prefix || isNaN(delta)) return;
+        const select = row.querySelector(`.tab-${prefix}-hd`);
+        if (!select) return;
+        let val = parseInt(select.value, 10) || 1;
+        val = Math.min(30, Math.max(1, val + delta));
+        select.value = val;
+        const gregInput = row.querySelector(`.tab-${prefix}-greg`);
+        if (gregInput) {
+            if (!gregInput.value) {
+                const hm = parseInt(row.querySelector(`.tab-${prefix}-hm`)?.value, 10);
+                const hy = parseInt(row.querySelector(`.tab-${prefix}-hy`)?.value, 10);
+                if (hm && hy) {
+                    const d = hijriToGreg(hy, hm, val);
+                    if (d) gregInput.value = dateToInputValue(d);
+                }
+            }
+        }
+        const derSpan = row.querySelector('.tab-derived');
+        if (derSpan) {
+            const greg = gregInput?.value || '';
+            const d = greg ? tabaqDerive(greg) : null;
+            if (d && d.hij) {
+                derSpan.textContent = d.day + ' ' + d.hij + ' / ' + d.greg;
+            } else {
+                derSpan.textContent = '';
+            }
+        }
+        render();
+        scheduleSave();
+    });
+
+    // ---- عدد المجالس ----
     function getSessions(){
         const m=fields.sessionMode.value;
         if(m==='1') return 1; if(m==='2') return 2;
@@ -1017,12 +1322,11 @@
         if(m==='2') return 'في <b>مجلسين</b>';
         const raw=fields.sessionNum.value.trim();
         const isNum=/^[0-9٠-٩]+$/.test(raw);
-        if(raw && !isNum) return 'في <b>'+esc(raw)+'</b>';           // نص يكتبه المستخدم يدوياً
+        if(raw && !isNum) return 'في <b>'+esc(raw)+'</b>';
         const n=Math.max(3, parseInt(raw.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)),10)||3);
-        const tam=(n>=3&&n<=10)?'مجالس':'مجلساً';                    // ٣-١٠ مجالس، وما زاد مجلساً
-        return 'في <b>'+arWords(n)+' '+tam+'</b>';                   // حروفاً لا أرقاماً
+        const tam=(n>=3&&n<=10)?'مجالس':'مجلساً';
+        return 'في <b>'+arWords(n)+' '+tam+'</b>';
     }
-    // spelled-out majlis count (for «وحضرت منها»)
     const ONESW=['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة','عشرة'];
     const TEENSW={11:'أحد عشر',12:'اثنا عشر',13:'ثلاثة عشر',14:'أربعة عشر',15:'خمسة عشر',16:'ستة عشر',17:'سبعة عشر',18:'ثمانية عشر',19:'تسعة عشر'};
     const TENSW={20:'عشرون',30:'ثلاثون',40:'أربعون',50:'خمسون',60:'ستون',70:'سبعون',80:'ثمانون',90:'تسعون'};
@@ -1031,7 +1335,7 @@
     const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر','السابع عشر','الثامن عشر','التاسع عشر','العشرون'];
     function ordinal(n){ return ORD[n] || ('('+n+')'); }
 
-    // ===== Tabaq (per-session record) =====
+    // ---- الطِباق ----
     function tabaqDerive(greg){ if(!greg) return {hij:'',day:'',greg:''}; const d=inputValueToDate(greg); return { hij:fmtHijri(gregToHijri(d)), day:WD[d.getUTCDay()], greg:fmtGreg(d) }; }
     function getTabaqRows(){
         return Array.from(document.querySelectorAll('#tabaqList .tab-row')).map(r=>({
@@ -1044,17 +1348,20 @@
         if(!$('tabaqEnable').checked) return '';
         const rows=getTabaqRows();
         if(!rows.length) return '';
-        let body='';
+        let header = '<thead><tr><th>المجلس</th><th>التاريخ الهجري</th><th>الميلادي</th><th>بداية المجلس</th><th>انتهاء المجلس</th></tr></thead>';
+        let body = '<tbody>';
         rows.forEach((r,i)=>{ const d=tabaqDerive(r.greg);
-            body+=`<tr><td>المجلس ${ordinal(i+1)}</td><td>${d.day} ${esc(d.hij)}</td><td>${esc(d.greg)}</td><td>${esc(r.start)||'—'}</td><td>${esc(r.end)||'—'}</td></tr>`; });
+            body+=`<tr><td>المجلس ${ordinal(i+1)}</td><td>${d.day} ${esc(d.hij)}</td><td>${esc(d.greg)}</td><td>${esc(r.start)||'—'}</td><td>${esc(r.end)||'—'}</td></tr>`;
+        });
+        body += '</tbody>';
         return `<div class="appendix"><h3 class="appendix-h">طِباقُ المجالس</h3>`
-            +`<table class="doc-table"><thead><tr><th>المجلس</th><th>التاريخ الهجري</th><th>الميلادي</th><th>بداية المجلس</th><th>انتهاء المجلس</th></tr></thead><tbody>${body}</tbody></table></div>`;
+            +`<table class="doc-table">${header}${body}</table></div>`;
     }
 
-    // ===== Attendees roster (fill-in fields → rendered table; CSV export/import) =====
+    // ---- مسرد الحضور ----
     function rosterCfg(){
         const cols=Math.max(1, Math.min(10, parseInt($('rosterCols').value,10)||3));
-        const rowsN=Math.max(1, Math.min(200, parseInt($('rosterRows').value,10)||10));
+        const rowsN=Math.max(1, Math.min(500, parseInt($('rosterRows').value,10)||10));
         let names=($('rosterColNames').value||'').split(/[,،]/).map(s=>s.trim());
         for(let c=0;c<cols;c++){ if(!names[c]) names[c]='عمود '+(c+1); }
         names=names.slice(0,cols);
@@ -1074,18 +1381,81 @@
             h+='</div>';
         }
         grid.innerHTML=h;
+        // تخزين البيانات الحالية
+        rosterData = getRosterData();
     }
+
+    // تطبيق تقسيم الصفحات على المسرد
+    function applyRosterPagination() {
+        const rowsPerPage = parseInt($('rosterRowsPerPage').value, 10) || 10;
+        const data = getRosterData();
+        if (data.length === 0) {
+            showToast('لا توجد بيانات في المسرد لتقسيمها', false);
+            return;
+        }
+        // تقسيم البيانات إلى أجزاء
+        const pages = [];
+        for (let i = 0; i < data.length; i += rowsPerPage) {
+            pages.push(data.slice(i, i + rowsPerPage));
+        }
+        rosterPagination = pages;
+        // إعادة بناء الجدول مع التقسيم (سيتم استخدامه في buildRosterBlock)
+        // نضع علامة لتطبيق التقسيم
+        showToast('تم تقسيم المسرد إلى ' + pages.length + ' صفحة');
+        render();
+        scheduleSave();
+    }
+
     function buildRosterBlock(v){
         if(!$('rosterEnable').checked) return '';
         const {cols, rowsN, names}=rosterCfg();
-        const data=getRosterData();
-        let head='<tr>'; for(let c=0;c<cols;c++){ head+=`<th>${esc(names[c])}</th>`; } head+='</tr>';
-        let body='';
-        const rows = data.length ? data.length : rowsN;
-        for(let r=0;r<rows;r++){ body+='<tr>'; for(let c=0;c<cols;c++){ const val=(data[r]&&data[r][c])?esc(data[r][c]):'&nbsp;'; body+=`<td>${val}</td>`; } body+='</tr>'; }
-        return `<div class="appendix"><h3 class="appendix-h">مَسْرَدُ الحاضرين للسماع</h3>`
-            +`<table class="doc-table roster"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+        // استخدام البيانات المجزأة إذا وجدت، وإلا استخدم البيانات الكاملة
+        let data = getRosterData();
+        let usePagination = false;
+        let pages = [];
+        if (rosterPagination.length > 0) {
+            // نتحقق مما إذا كان عدد الصفوف مطابقاً للبيانات الحالية
+            const totalRows = data.length;
+            const paginatedTotal = rosterPagination.reduce((sum, p) => sum + p.length, 0);
+            if (paginatedTotal === totalRows) {
+                pages = rosterPagination;
+                usePagination = true;
+            } else {
+                // إذا تغيرت البيانات، نعيد تعيين التقسيم
+                rosterPagination = [];
+            }
+        }
+        if (!usePagination) {
+            // نستخدم البيانات كاملة في صفحة واحدة
+            pages = [data];
+        }
+        let noBorderClass = v.rosterNoBorder ? ' no-border' : '';
+        let html = `<div class="appendix"><h3 class="appendix-h">مَسْرَدُ الحاضرين للسماع</h3>`;
+        // إنشاء جدول لكل صفحة
+        pages.forEach((pageData, pageIndex) => {
+            let head = '<thead><tr>';
+            for(let c=0;c<cols;c++){ head+=`<th>${esc(names[c])}</th>`; }
+            head+='</tr></thead>';
+            let body = '<tbody>';
+            pageData.forEach(row => {
+                body += '<tr>';
+                for(let c=0;c<cols;c++){
+                    const val = (row && row[c] !== undefined) ? row[c] : '&nbsp;';
+                    body += `<td>${esc(val)}</td>`;
+                }
+                body += '</tr>';
+            });
+            body += '</tbody>';
+            // إضافة فاصل صفحة بين الجداول إذا كان هناك أكثر من صفحة
+            if (pageIndex > 0) {
+                html += `<div style="break-before:page; margin-top:2rem;"></div>`;
+            }
+            html += `<table class="doc-table roster${noBorderClass}">${head}${body}</table>`;
+        });
+        html += '</div>';
+        return html;
     }
+
     function rosterToCSV(){
         const {cols, rowsN, names}=rosterCfg();
         const data=getRosterData();
@@ -1093,7 +1463,7 @@
         const q=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"';
         let csv=names.map(q).join(',')+'\r\n';
         for(let r=0;r<rows;r++){ const line=[]; for(let c=0;c<cols;c++){ line.push(q((data[r]&&data[r][c])||'')); } csv+=line.join(',')+'\r\n'; }
-        return '\ufeff'+csv; // BOM for Excel Arabic
+        return '\ufeff'+csv;
     }
     function parseCSV(text){
         text=text.replace(/^\ufeff/,''); const rows=[]; let row=[], cur='', inQ=false;
@@ -1107,13 +1477,38 @@
     function makeTabRow(i, d){
         d=d||{}; const row=document.createElement('div');
         row.className='tab-row border border-gray-200 rounded p-2 space-y-1';
-        row.innerHTML=`<div class="flex items-center gap-2"><span class="text-xs font-bold text-emerald-800 min-w-[68px]">المجلس ${ordinal(i+1)}</span><input type="date" class="tab-greg flex-1 px-2 py-1 border border-gray-300 rounded text-sm"></div>`
-            +`<span class="tab-derived block text-[11px] text-gray-500"></span>`
-            +`<div class="grid grid-cols-2 gap-2"><input type="text" class="tab-start px-2 py-1 border border-gray-300 rounded text-sm" placeholder="بداية المجلس"><input type="text" class="tab-end px-2 py-1 border border-gray-300 rounded text-sm" placeholder="انتهاء المجلس"></div>`;
-        row.querySelector('.tab-greg').value=d.greg||'';
-        row.querySelector('.tab-start').value=d.start||'';
-        row.querySelector('.tab-end').value=d.end||'';
-        const der=tabaqDerive(d.greg||''); if(der.hij) row.querySelector('.tab-derived').textContent=der.day+' '+der.hij+' / '+der.greg;
+        row.innerHTML=`
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-xs font-bold text-emerald-800 min-w-[68px]">المجلس ${ordinal(i+1)}</span>
+                <input type="date" class="tab-greg flex-1 px-2 py-1 border border-gray-300 rounded text-sm" value="${d.greg||''}">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] text-gray-500">بداية المجلس (هجري)</label>
+                    <div class="flex items-center gap-1">
+                        <select class="tab-start-hd px-2 py-1 border border-gray-300 rounded text-sm flex-1"></select>
+                        <button type="button" class="hbtn tab-hijri-adjust" data-prefix="start" data-delta="1" title="زيادة اليوم">+</button>
+                        <button type="button" class="hbtn tab-hijri-adjust" data-prefix="start" data-delta="-1" title="نقص اليوم">−</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500">انتهاء المجلس (هجري)</label>
+                    <div class="flex items-center gap-1">
+                        <select class="tab-end-hd px-2 py-1 border border-gray-300 rounded text-sm flex-1"></select>
+                        <button type="button" class="hbtn tab-hijri-adjust" data-prefix="end" data-delta="1" title="زيادة اليوم">+</button>
+                        <button type="button" class="hbtn tab-hijri-adjust" data-prefix="end" data-delta="-1" title="نقص اليوم">−</button>
+                    </div>
+                </div>
+            </div>
+            <p class="text-[10px] text-gray-500 mt-1">الزائد والناقص تستخدم عند اختلاف التاريخ الهجري عن الميلادي</p>
+            <div class="grid grid-cols-2 gap-2">
+                <input type="text" class="tab-start px-2 py-1 border border-gray-300 rounded text-sm" placeholder="بداية المجلس (نص)" value="${d.start||''}">
+                <input type="text" class="tab-end px-2 py-1 border border-gray-300 rounded text-sm" placeholder="انتهاء المجلس (نص)" value="${d.end||''}">
+            </div>
+            <span class="tab-derived block text-[11px] text-gray-500"></span>
+        `;
+        const opts = Array.from({length:30}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join('');
+        row.querySelectorAll('.tab-start-hd, .tab-end-hd').forEach(sel => sel.innerHTML = opts);
         return row;
     }
     function buildTabaqRows(){
@@ -1123,193 +1518,84 @@
         const old=Array.from(rows).map(r=>({greg:r.querySelector('.tab-greg').value, start:r.querySelector('.tab-start').value, end:r.querySelector('.tab-end').value}));
         list.innerHTML='';
         for(let i=0;i<N;i++) list.appendChild(makeTabRow(i, old[i]));
+        list.querySelectorAll('.tab-row').forEach(row => {
+            const greg = row.querySelector('.tab-greg').value;
+            if (greg) {
+                const der = tabaqDerive(greg);
+                row.querySelector('.tab-derived').textContent = der.day + ' ' + der.hij + ' / ' + der.greg;
+            }
+            row.querySelector('.tab-greg').addEventListener('change', function() {
+                const d = tabaqDerive(this.value);
+                const derSpan = this.closest('.tab-row').querySelector('.tab-derived');
+                if (d.hij) derSpan.textContent = d.day + ' ' + d.hij + ' / ' + d.greg;
+                else derSpan.textContent = '';
+                render(); scheduleSave();
+            });
+        });
     }
 
     function showToast(msg, ok){
+        const toast=$('toast');
         toast.textContent=msg; toast.style.backgroundColor=ok===false?'#dc2626':'#059669';
         toast.classList.add('show'); clearTimeout(showToast._t); showToast._t=setTimeout(()=>toast.classList.remove('show'),2800);
     }
 
-    // ===== Sheikhs (one / two / many) =====
+    // ---- المشايخ والطلاب والكتب ----
     const sheikhList=$('sheikhList');
     const studentList=$('studentList');
     const bookList=$('bookList');
-    function addBookRow(d){
-        d=d||{};
-        const row=document.createElement('div');
-        row.className='book-row grid grid-cols-1 gap-1 border border-gray-200 rounded p-2';
-        row.innerHTML='<div class="flex gap-2 items-center"><input type="text" class="tash book-name flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الكتاب" placeholder="اسم الكتاب المسموع"><button type="button" class="book-del opt-btn" title="حذف">✕</button></div>'
-            +'<input type="text" class="book-edition w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="النسخة المعتمدة لهذا الكتاب (اختياري)">';
-        row.querySelector('.book-name').value=d.name||'';
-        row.querySelector('.book-edition').value=d.edition||'';
-        bookList.appendChild(row);
-    }
-    function getBooks(){
-        const list=[];
-        const n=fields.bookName.value.trim();
-        if(n) list.push({name:n, edition:fields.bookEdition.value.trim()});
-        Array.from(bookList.querySelectorAll('.book-row')).forEach(r=>{ const nm=r.querySelector('.book-name').value.trim(); if(nm) list.push({name:nm, edition:r.querySelector('.book-edition').value.trim()}); });
-        return list;
-    }
-    function addStudentRow(d){
-        d=d||{};
-        const row=document.createElement('div');
-        row.className='student-row flex gap-2 items-center';
-        row.innerHTML='<input type="text" class="tash student-name flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الطالب" placeholder="اسم الطالب / الطالبة">'
-            +'<select class="student-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select>'
-            +'<button type="button" class="student-del opt-btn" title="حذف">✕</button>';
-        row.querySelector('.student-name').value=d.name||'';
-        row.querySelector('.student-gender').value=d.gender||'male';
-        studentList.appendChild(row);
-    }
-    function getStudents(){
-        const list=[];
-        const n=fields.studentName.value.trim();
-        if(n) list.push({name:n, gender:fields.studentGender.value});
-        Array.from(studentList.querySelectorAll('.student-row')).forEach(r=>{ const nm=r.querySelector('.student-name').value.trim(); if(nm) list.push({name:nm, gender:r.querySelector('.student-gender').value}); });
-        return list;
-    }
-    function addSheikhRow(d){
-        d=d||{};
-        const row=document.createElement('div');
-        row.className='sheikh-row border border-gray-200 rounded-md p-2.5 space-y-2 bg-white';
-        row.innerHTML='<div class="flex gap-2 items-center">'
-            +'<input type="text" class="tash sheikh-name flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الشيخ" placeholder="اسم الشيخ / الشيخة">'
-            +'<select class="sheikh-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select>'
-            +'<button type="button" class="sheikh-del opt-btn" title="حذف هذا الشيخ">✕</button>'
-            +'</div>'
-            +'<div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-700 pr-1">'
-            +'<label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-khassa" checked> إجازة خاصة (بالكتاب)</label>'
-            +'<label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-amma" checked> إجازة عامة</label>'
-            +'<label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-family"> الأزواج والذرية</label>'
-            +'<label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-works" checked> بمؤلفاته خاصة</label>'
-            +'</div>'
-            +'<input type="text" class="sh-custom w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="إضافة حرّة لإجازة هذا الشيخ (اختياري)">'
-            +'<textarea class="sh-isnad hidden w-full px-3 py-2 border border-gray-300 rounded-md text-sm leading-relaxed" rows="2" placeholder="سند هذا الشيخ (اختياري)..."></textarea>'
-            +'<div class="flex flex-wrap gap-2 items-center text-[11px] text-gray-600">'
-            +'<button type="button" class="sh-sigbtn opt-btn">توقيع الشيخ</button><span class="sh-sigok"></span>'
-            +'<button type="button" class="sh-stampbtn opt-btn">ختم الشيخ</button><span class="sh-stampok"></span>'
-            +'<button type="button" class="sh-imgclear opt-btn">مسح التوقيع/الختم</button>'
-            +'<input type="file" class="sh-sigfile hidden" accept="image/*"><input type="file" class="sh-stampfile hidden" accept="image/*">'
-            +'</div>';
-        row.querySelector('.sheikh-name').value=d.name||'';
-        row.querySelector('.sheikh-gender').value=d.gender||'male';
-        if(d.khassa===false) row.querySelector('.sh-khassa').checked=false;
-        if(d.amma===false)   row.querySelector('.sh-amma').checked=false;
-        if(d.family===true)  row.querySelector('.sh-family').checked=true;
-        if(d.works===false)  row.querySelector('.sh-works').checked=false;
-        row.querySelector('.sh-custom').value=d.custom||'';
-        row.querySelector('.sh-isnad').value=d.isnad||'';
-        row.querySelector('.sh-isnad').classList.toggle('hidden', fields.isnadMode.value!=='per');
-        row._sig=d.sig||null; row._stamp=d.stamp||null;
-        if(row._sig) row.querySelector('.sh-sigok').textContent='✓';
-        if(row._stamp) row.querySelector('.sh-stampok').textContent='✓';
-        sheikhList.appendChild(row);
-    }
-    function getSheikhs(){
-        return Array.from(sheikhList.querySelectorAll('.sheikh-row')).map(r=>({
-            name:r.querySelector('.sheikh-name').value.trim(),
-            gender:r.querySelector('.sheikh-gender').value,
-            khassa:r.querySelector('.sh-khassa').checked,
-            amma:r.querySelector('.sh-amma').checked,
-            family:r.querySelector('.sh-family').checked,
-            works:r.querySelector('.sh-works').checked,
-            custom:r.querySelector('.sh-custom').value.trim(),
-            isnad:r.querySelector('.sh-isnad').value.trim(),
-            sig:r._sig||null, stamp:r._stamp||null
-        })).filter(s=>s.name);
-    }
-    // One ijaza sentence per sheikh, reflecting exactly what he/she granted
-    function sheikhIjazaSentence(s, book, isFirst){
-        const F=s.gender==='female';
-        const noun=F?'الشيخةُ':'الشيخُ';
-        const ajaza=F?'أجازت':'أجاز';
-        const hu=F?'ها':'ه';
-        const opener=isFirst?'وقد':'كما';
-        const parts=[];
-        if(s.khassa) parts.push(`إجازةً خاصةً بكتاب «<b>${esc(book)}</b>»`);
-        if(s.amma){
-            let a=`إجازةً عامةً بجميعِ مرويّاتِه بما يصحُّ ل${hu} روايتُ${hu} بالشرطِ المعتبَرِ عند أهلِ الحديثِ والأثرِ`;
-            if(s.family) a+=`، وللأزواجِ والذريةِ`;
-            parts.push(a);
-        } else if(s.family){
-            parts.push(`إجازةً للأزواجِ والذريةِ`);
-        }
-        const grants=parts.join(' و');
-        let body;
-        if(grants && s.works) body=`${grants}، و${ajaza} بمؤلَّفات${hu} الخاصة`;
-        else if(grants) body=grants;
-        else if(s.works) body=`بمؤلَّفات${hu} الخاصة`;
-        else return ''; // this sheikh granted nothing
-        return `<p class="text-right mb-4">${opener} ${ajaza} ${noun} <b>${esc(s.name)}</b> ${body}.</p>`;
-    }
-    function sheikhForms(sheikhs){
-        const n=sheikhs.length;
-        const allF = n>0 && sheikhs.every(s=>s.gender==='female');
-        const ajazaV = allF?'أجازت':'أجاز';     // فعل قبل الفاعل الظاهر يبقى مفرداً
-        const akhbaraV = allF?'أخبرت':'أخبر';
-        if(n>=3){
-            return { hu:allF?'هنّ':'هم', noun:allF?'الشيخاتُ':'المشايخُ', honor:allF?'فضيلة الشيخات /':'فضيلة المشايخ /',
-                ajazaV, akhbaraV, ajaza:allF?'أجازْنَ':'أجازوا', qaala:allF?'فقُلن':'فقالوا',
-                mujiz:allF?'المجيزات':'المجيزون', musammi:allF?'الشيخات المُسمِّعات':'المشايخ المُسمِّعون' };
-        }
-        if(n===2){
-            return { hu:'هما', noun:allF?'الشيختان':'الشيخان', honor:allF?'فضيلتي الشيختين /':'فضيلتي الشيخين /',
-                ajazaV, akhbaraV, ajaza:allF?'أجازتا':'أجازا', qaala:allF?'فقالتا':'فقالا',
-                mujiz:allF?'المجيزتان':'المجيزان', musammi:allF?'الشيختان المُسمِّعتان':'الشيخان المُسمِّعان' };
-        }
-        const F=allF;
-        return { hu:F?'ها':'ه', noun:F?'الشيخةُ':'الشيخُ', honor:F?'فضيلة الشيخة /':'فضيلة الشيخ /',
-            ajazaV, akhbaraV, ajaza:F?'أجازت':'أجاز', qaala:F?'فقالت':'فقال',
-            mujiz:F?'المجيزة':'المجيز', musammi:F?'الشيخة المُسمِّعة':'الشيخ المُسمِّع' };
-    }
+    function addBookRow(d){ d=d||{}; const row=document.createElement('div'); row.className='book-row grid grid-cols-1 gap-1 border border-gray-200 rounded p-2'; row.innerHTML='<div class="flex gap-2 items-center"><input type="text" class="tash book-name flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الكتاب" placeholder="اسم الكتاب المسموع"><button type="button" class="book-del opt-btn" title="حذف">✕</button></div><input type="text" class="book-edition w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="النسخة المعتمدة لهذا الكتاب (اختياري)">'; row.querySelector('.book-name').value=d.name||''; row.querySelector('.book-edition').value=d.edition||''; bookList.appendChild(row); }
+    function getBooks(){ const list=[]; const n=fields.bookName.value.trim(); if(n) list.push({name:n, edition:fields.bookEdition.value.trim()}); Array.from(bookList.querySelectorAll('.book-row')).forEach(r=>{ const nm=r.querySelector('.book-name').value.trim(); if(nm) list.push({name:nm, edition:r.querySelector('.book-edition').value.trim()}); }); return list; }
+    function addStudentRow(d){ d=d||{}; const row=document.createElement('div'); row.className='student-row flex gap-2 items-center'; row.innerHTML='<input type="text" class="tash student-name flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الطالب" placeholder="اسم الطالب / الطالبة"><select class="student-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="student-del opt-btn" title="حذف">✕</button>'; row.querySelector('.student-name').value=d.name||''; row.querySelector('.student-gender').value=d.gender||'male'; studentList.appendChild(row); }
+    function getStudents(){ const list=[]; const n=fields.studentName.value.trim(); if(n) list.push({name:n, gender:fields.studentGender.value}); Array.from(studentList.querySelectorAll('.student-row')).forEach(r=>{ const nm=r.querySelector('.student-name').value.trim(); if(nm) list.push({name:nm, gender:r.querySelector('.student-gender').value}); }); return list; }
+    function addSheikhRow(d){ d=d||{}; const row=document.createElement('div'); row.className='sheikh-row border border-gray-200 rounded-md p-2.5 space-y-2 bg-white'; row.innerHTML='<div class="flex gap-2 items-center"><input type="text" class="tash sheikh-name flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الشيخ" placeholder="اسم الشيخ / الشيخة"><select class="sheikh-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="sheikh-del opt-btn" title="حذف هذا الشيخ">✕</button></div><div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-700 pr-1"><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-khassa" checked> إجازة خاصة (بالكتاب)</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-amma" checked> إجازة عامة</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-family"> الأزواج والذرية</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-works" checked> بمؤلفاته خاصة</label></div><input type="text" class="sh-custom w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="إضافة حرّة لإجازة هذا الشيخ (اختياري)"><textarea class="sh-isnad hidden w-full px-3 py-2 border border-gray-300 rounded-md text-sm leading-relaxed" rows="2" placeholder="سند هذا الشيخ (اختياري)..."></textarea><div class="flex flex-wrap gap-2 items-center text-[11px] text-gray-600"><button type="button" class="sh-sigbtn opt-btn">توقيع الشيخ</button><span class="sh-sigok"></span><button type="button" class="sh-stampbtn opt-btn">ختم الشيخ</button><span class="sh-stampok"></span><button type="button" class="sh-imgclear opt-btn">مسح التوقيع/الختم</button><input type="file" class="sh-sigfile hidden" accept="image/*"><input type="file" class="sh-stampfile hidden" accept="image/*"></div>'; row.querySelector('.sheikh-name').value=d.name||''; row.querySelector('.sheikh-gender').value=d.gender||'male'; if(d.khassa===false) row.querySelector('.sh-khassa').checked=false; if(d.amma===false) row.querySelector('.sh-amma').checked=false; if(d.family===true) row.querySelector('.sh-family').checked=true; if(d.works===false) row.querySelector('.sh-works').checked=false; row.querySelector('.sh-custom').value=d.custom||''; row.querySelector('.sh-isnad').value=d.isnad||''; row.querySelector('.sh-isnad').classList.toggle('hidden', fields.isnadMode.value!=='per'); row._sig=d.sig||null; row._stamp=d.stamp||null; if(row._sig) row.querySelector('.sh-sigok').textContent='✓'; if(row._stamp) row.querySelector('.sh-stampok').textContent='✓'; sheikhList.appendChild(row); }
+    function getSheikhs(){ return Array.from(sheikhList.querySelectorAll('.sheikh-row')).map(r=>({ name:r.querySelector('.sheikh-name').value.trim(), gender:r.querySelector('.sheikh-gender').value, khassa:r.querySelector('.sh-khassa').checked, amma:r.querySelector('.sh-amma').checked, family:r.querySelector('.sh-family').checked, works:r.querySelector('.sh-works').checked, custom:r.querySelector('.sh-custom').value.trim(), isnad:r.querySelector('.sh-isnad').value.trim(), sig:r._sig||null, stamp:r._stamp||null })).filter(s=>s.name); }
+    function sheikhForms(sheikhs){ const n=sheikhs.length; const allF = n>0 && sheikhs.every(s=>s.gender==='female'); const ajazaV = allF?'أجازت':'أجاز'; const akhbaraV = allF?'أخبرت':'أخبر'; if(n>=3){ return { hu:allF?'هنّ':'هم', noun:allF?'الشيخاتُ':'المشايخُ', honor:allF?'فضيلة الشيخات /':'فضيلة المشايخ /', ajazaV, akhbaraV, ajaza:allF?'أجازْنَ':'أجازوا', qaala:allF?'فقُلن':'فقالوا', mujiz:allF?'المجيزات':'المجيزون', musammi:allF?'الشيخات المُسمِّعات':'المشايخ المُسمِّعون' }; } if(n===2){ return { hu:'هما', noun:allF?'الشيختان':'الشيخان', honor:allF?'فضيلتي الشيختين /':'فضيلتي الشيخين /', ajazaV, akhbaraV, ajaza:allF?'أجازتا':'أجازا', qaala:allF?'فقالتا':'فقالا', mujiz:allF?'المجيزتان':'المجيزان', musammi:allF?'الشيختان المُسمِّعتان':'الشيخان المُسمِّعان' }; } const F=allF; return { hu:F?'ها':'ه', noun:F?'الشيخةُ':'الشيخُ', honor:F?'فضيلة الشيخة /':'فضيلة الشيخ /', ajazaV, akhbaraV, ajaza:F?'أجازت':'أجاز', qaala:F?'فقالت':'فقال', mujiz:F?'المجيزة':'المجيز', musammi:F?'الشيخة المُسمِّعة':'الشيخ المُسمِّع' }; }
 
+    // ---- قراءة القيم ----
     function readValues(){ const v={}; for(const k in fields){ const el=fields[k]; v[k]=el.type==='checkbox'?el.checked:el.value.trim(); } return v; }
-    function currentRequired(){ const r=REQUIRED.slice(); if(getSessions()>1) r.push('endGregPicker','endTime'); return r; }
+    function currentRequired(){ const r=['studentName','bookName','startGregPicker','startTime','method']; if(getSessions()>1) r.push('endGregPicker','endTime'); return r; }
 
+    // ---- بناء نص الوثيقة (HTML) ----
     function buildHtml(v){
         const multi=getSessions()>1;
-        const sd=dateStrings('start'); const ed=multi?dateStrings('end'):null;
-
-        // sheikh number + gender agreement
+        const sd = getDateParts('start');
+        const ed = multi ? getDateParts('end') : null;
         const sheikhs=getSheikhs();
         const sf=sheikhForms(sheikhs);
         const hu=sf.hu;
         const namesBold = sheikhs.map(s=>`<b>${esc(s.name)}</b>`).join(' و');
 
         let dateClause='';
-        if(multi && sd && ed){
+        if(multi && sd.hij && ed.hij){
             dateClause=`بدأت يوم <b>${esc(v.startDay)}</b> <b>${esc(sd.hij)}</b> الموافق <b>${esc(sd.greg)}</b> الساعة <b>${esc(v.startTime)}</b>، إلى يوم <b>${esc(v.endDay)}</b> <b>${esc(ed.hij)}</b> الموافق <b>${esc(ed.greg)}</b> الساعة <b>${esc(v.endTime)}</b>`;
-        } else if(sd){
+        } else if(sd.hij){
             dateClause=`يوم <b>${esc(v.startDay)}</b> <b>${esc(sd.hij)}</b> الموافق <b>${esc(sd.greg)}</b> الساعة <b>${esc(v.startTime)}</b>`;
+        } else {
+            dateClause='';
         }
 
         const BL = v.blankStudent;
         const BLANK = '<span class="blank-name">&nbsp;&nbsp;&nbsp;</span>';
         const platform = (v.methodMode==='blank') ? BLANK : `<b>${esc(v.method)}</b>`;
-        const method = v.attendanceType==='عن بعد'
-            ? `عن طريق البثِّ المباشر عبر ${platform}`
-            : `حضورياً في ${platform}`;
+        const method = v.attendanceType==='عن بعد' ? `عن طريق البثِّ المباشر عبر ${platform}` : `حضورياً في ${platform}`;
 
         let orgReader='';
         if(v.organizer) orgReader+=`، ورتَّب اللقاءَ ونظَّمه: <b>${esc(v.organizer)}</b>`;
         if(v.reader)    orgReader+=`، وقرأ فيه: <b>${esc(v.reader)}</b>`;
 
-        // Students (one or more)
         const students = getStudents();
         const nStu = students.length;
         const multiStu = nStu>1;
-        const singleFem = nStu===1 && students[0].gender==='female';
         const allFemStu = nStu>0 && students.every(s=>s.gender==='female');
         const stuPron = !nStu ? 'ه' : (nStu===2 ? 'هما' : (multiStu ? (allFemStu?'هنّ':'هم') : (students[0].gender==='female'?'ها':'ه')));
         const TP = v.thirdPerson;
         const studentDisp = BL ? BLANK : (nStu ? students.map(s=>`<b>${esc(s.name)}</b>`).join(' و') : BLANK);
         const act = v.actionType || 'حضور';
         const narr = (act==='حضر عندي' || act==='اتصل بي');
-        const sCat = nStu>=3 ? 2 : (nStu===2 ? 1 : 0);   // 0=مفرد 1=مثنى 2=جمع
+        const sCat = nStu>=3 ? 2 : (nStu===2 ? 1 : 0);
         const sGen = allFemStu ? 'f' : 'm';
 
-        // Books (one or more) with editions
         const books = getBooks();
         const bn = books.map(b=>`«<b>${esc(b.name)}</b>»`);
         const booksJoined = bn.join(' و');
@@ -1318,7 +1604,6 @@
         const bookGen = books.length>=3 ? `الكتبِ الآتية: ${booksJoined}` : (books.length===2 ? `كتابَيْ ${bn[0]} و${bn[1]}` : `كتابِ ${bn[0]||'«<b></b>»'}`);
         const bookKPhrase = books.length>1 ? `خاصةً بالكتب: ${booksJoined}` : `خاصةً بكتاب ${bn[0]||''}`;
 
-        // Grant phrase builder (shared by standard + sheikh-narrated)
         const gp=(t,pp,lp)=>{
             const ijz=[];
             if(t.K) ijz.push(bookKPhrase);
@@ -1356,7 +1641,6 @@
             }
         }
 
-        // Isnad: shared (collective) OR per-sheikh (each on its own page)
         function isnadHelper(parsed, intro){ return `<div class="isnad-card"><span class="isnad-title">${intro}</span><span class="isnad-body">${parsed}</span></div>`; }
         const fmtChain=(t)=>esc(t).replace(/(عن|حدثنا|أخبرنا|أنبأنا|قال|سمعت|حدثني|أخبرني)/g,'<span class="isnad-key">$1</span>').replace(/\n/g,'<br>');
         const perMode = (v.isnadMode==='per');
@@ -1376,17 +1660,17 @@
             'قراءة':{m:['قرأ','قرأا','قرؤوا'], f:['قرأت','قرأتا','قرأن'], p1:['قرأتُ أنا','قرأنا نحن']},
             'حفظ':{m:['حفظ','حفظا','حفظوا'], f:['حفظت','حفظتا','حفظن'], p1:['حفظتُ أنا','حفظنا نحن']}
         };
-        const bCat = books.length>=3?2:(books.length===2?1:0);   // 0=كتاب 1=كتابان 2=ثلاثة فأكثر
-        const bookPron = ['ه','هما','ها'][bCat];                  // ضمير الكتب
-        const kamil = ['كاملاً','كاملين','كاملة'][bCat];          // كامل/كاملين/كاملة بحسب عدد الكتب
+        const bCat = books.length>=3?2:(books.length===2?1:0);
+        const bookPron = ['ه','هما','ها'][bCat];
+        const kamil = ['كاملاً','كاملين','كاملة'][bCat];
         const ATT={ m:['وحضر','وحضرا','وحضروا'], f:['وحضرت','وحضرتا','وحضرن'], p1:['وحضرتُ','وحضرنا'] };
         function consume(action, third, cat, gen, bP){
             const root=(action==='قراءة')?'قرأ':(action==='حفظ')?'حفظ':'سمع';
             let stem;
-            if(!third) stem=root+(cat===0?'تُ':'نا');               // المتكلّم: سمعتُ/سمعنا
-            else if(gen==='f') stem=root+(cat===0?'ت':(cat===1?'تا':'ن'));   // الغائب المؤنث
-            else stem=root+(cat===0?'':(cat===1?'ا':'و'));          // الغائب المذكّر: سمع/سمعا/سمعو
-            return 'و'+stem+bP;                                     // + ضمير الكتب: وسمعه/وسمعهما/وسمعها
+            if(!third) stem=root+(cat===0?'تُ':'نا');
+            else if(gen==='f') stem=root+(cat===0?'ت':(cat===1?'تا':'ن'));
+            else stem=root+(cat===0?'':(cat===1?'ا':'و'));
+            return 'و'+stem+bP;
         }
         const customAct = (act==='custom');
         const statusText = ()=>{
@@ -1401,10 +1685,10 @@
         let hearingP;
         if(narr){
             const openTbl = (act==='حضر عندي') ? {m:['حضر','حضرا','حضروا'],f:['حضرت','حضرتا','حضرن']} : {m:['اتصل','اتصلا','اتصلوا'],f:['اتصلت','اتصلتا','اتصلن']};
-            const openWord = openTbl[sGen][0] + (act==='حضر عندي'?' عندي':' بي');   // الفعل الأول دائماً مفرد
+            const openWord = openTbl[sGen][0] + (act==='حضر عندي'?' عندي':' بي');
             const obj = bookAcc;
             const subTbl = { 'قرأ':{m:['قرأ','قرأا','قرؤوا'],f:['قرأت','قرأتا','قرأن']}, 'سمع':{m:['سمع','سمعا','سمعوا'],f:['سمعت','سمعتا','سمعن']} };
-            const cv=(root)=> subTbl[root][sGen][sCat];   // الفعل الثاني يطابق عدد الطلاب
+            const cv=(root)=> subTbl[root][sGen][sCat];
             const opt=v.actionSub||'وسمع عليّ';
             let subPhrase;
             if(opt==='وقرأ عليّ حفظًا') subPhrase=`و${cv('قرأ')} عليَّ ${obj} حفظاً عن ظهر قلب`;
@@ -1415,9 +1699,9 @@
         } else {
             let openV;
             if(customAct || v.actionCustom) openV = `<b>${esc(v.actionCustom||'')}</b>`;
-            else { const cj = CONJ[act] || CONJ['حضور']; openV = TP ? cj[sGen][0] : cj.p1[multiStu?1:0]; }   // الفعل الأول مفرد في الغائب
+            else { const cj = CONJ[act] || CONJ['حضور']; openV = TP ? cj[sGen][0] : cj.p1[multiStu?1:0]; }
             const objectPhrase = (act==='حضور') ? `مجلسَ سَماعِ ${bookGen}` : bookAcc;
-            const readVerb = (customAct || v.actionCustom) ? '' : (consume(act, TP, sCat, sGen, bookPron) + ' ');   // وسمعه/وسمعهما/وسمعها بحسب الكتب والعدد
+            const readVerb = (customAct || v.actionCustom) ? '' : (consume(act, TP, sCat, sGen, bookPron) + ' ');
             const statusPhrase = statusText();
             let countPart;
             if(BL) countPart = BLANK;
@@ -1433,33 +1717,51 @@
 
         const introP = `<p class="text-right indent-8 mb-4">الحمدُ لله ربِّ العالمين، والصلاةُ والسلامُ على نبيِّنا محمدٍ وعلى آلِه وصحبِه أجمعين، أمَّا بعد:</p>`;
         const duaP = v.duaCustom ? `<p class="text-center mb-4">${esc(v.duaCustom)}</p>` : `<p class="text-center mb-4">غفر اللهُ ل${stuPron} ولوالدي${stuPron} وأهل${stuPron} وذريت${stuPron} ومشايخ${stuPron}.</p>`;
-        const closeP = `<p class="closing text-center font-bold mt-8 text-2xl">واللهُ خيرُ الشاهدين.</p>`;
+        
+        const closingText = v.closingCustom ? v.closingCustom : 'واللهُ خيرُ الشاهدين.';
+        const closeP = `<p class="closing text-center font-bold mt-8 text-2xl">${esc(closingText)}</p>`;
 
         const tabaqBlock = buildTabaqBlock();
+        // بناء المسرد مع التقسيم
         const rosterBlock = buildRosterBlock(v);
 
-        // Shared isnad flows inline only when not separated; per-sheikh always paginated
         const inlineIsnad = (!perMode && isnadItems.length && !v.onePageText && !v.splitPages) ? isnadItems[0] : '';
         const mainCore = introP + hearingP + editionP + ijazaPara + inlineIsnad + duaP + closeP;
 
-        // Appendix pages with explicit page-break flags
+        // الأقسام الإضافية
         const appx=[];
-        if(perMode){ isnadItems.forEach(card=> appx.push({html:card, newPage:true})); }            // each sanad on its own page
+        if(perMode){ isnadItems.forEach(card=> appx.push({html:card, newPage:true})); }
         else if(isnadItems.length && (v.splitPages||v.onePageText)){ appx.push({html:isnadItems[0], newPage:true}); }
         if(tabaqBlock)  appx.push({html:tabaqBlock,  newPage:v.splitPages});
         if(rosterBlock) appx.push({html:rosterBlock, newPage:v.splitPages});
 
         const mainWrapped = (v.splitPages||v.onePageText) ? `<div style="break-inside:avoid">${mainCore}</div>` : mainCore;
-        return mainWrapped + appx.map(a=> a.newPage
+
+        let fullHtml = mainWrapped;
+        fullHtml += appx.map(a=> a.newPage
             ? `<div style="break-before:page" class="mt-8">${a.html}</div>`
             : `<div class="mt-8">${a.html}</div>`).join('');
+
+        // التوقيع حسب الخيار المختار
+        const sigHtml = `<div id="signatureContent">${document.getElementById('signatureArea').innerHTML}</div>`;
+        const placement = v.signaturePlacement || 'afterClosing';
+        if (placement === 'separatePage') {
+            fullHtml += `<div style="break-before:page; margin-top:2rem;">${sigHtml}</div>`;
+        } else if (placement === 'afterLast') {
+            fullHtml += sigHtml;
+        } else { // afterClosing
+            let newFullHtml = mainWrapped;
+            newFullHtml += sigHtml;
+            newFullHtml += appx.map(a=> a.newPage
+                ? `<div style="break-before:page" class="mt-8">${a.html}</div>`
+                : `<div class="mt-8">${a.html}</div>`).join('');
+            return newFullHtml;
+        }
+
+        return fullHtml;
     }
 
-    let signatureDataUrl=null;
-    let logoDataUrl=null;
-    let stampDataUrl=null;
-    let orgColorAuto=true;
-
+    // ---- دالة العرض الرئيسية ----
     function render(){
         const v=readValues();
         const sessions=getSessions();
@@ -1475,14 +1777,13 @@
         if(fields.rosterEnable.checked && !$('rosterGrid').children.length) buildRosterGrid(false);
         if(fields.tabaqEnable.checked) buildTabaqRows();
 
-        // Ornament
+        // الزخرفة
         const ornEl=$('ornament'); const orn=v.ornamentShape||'❖';
         if(orn==='none'){ ornEl.style.display='none'; }
         else if(orn==='rule'){ ornEl.style.display='block'; ornEl.innerHTML='<hr style="border:none;border-top:2px solid var(--border-c);width:40%;margin:.4rem auto;">'; }
         else { ornEl.style.display='block'; ornEl.textContent=orn; }
 
-        docTitle.textContent = v.customTitle ? v.customTitle
-            : (v.titleIjaza ? 'وثيقة إثبات سَماع وإجازة شخصية' : 'وثيقة إثبات سَماع شخصية');
+        docTitle.textContent = v.customTitle ? v.customTitle : (v.titleIjaza ? 'وثيقة إثبات سَماع وإجازة شخصية' : 'وثيقة إثبات سَماع شخصية');
 
         orgName.textContent = v.orgEntity || '';
         applyOrgLogo();
@@ -1491,7 +1792,6 @@
         const has=p=>logoDataUrl && positions.indexOf(p)>=0;
         const besideName=has('center');
         orgName.classList.toggle('hidden', !showName);
-        // place logo in each chosen slot (two positions supported)
         if(besideName){ orgLogoInline.src=logoDataUrl; orgLogoInline.classList.remove('hidden'); } else orgLogoInline.classList.add('hidden');
         $('orgLine').classList.toggle('hidden', !(showName||besideName));
         $('orgLine').style.justifyContent = ($('orgAlign').value==='center')?'center':($('orgAlign').value==='right'?'flex-start':'flex-end');
@@ -1508,9 +1808,6 @@
         sigSheikhLabel.textContent = v.includeIjaza ? sf.mujiz : sf.musammi;
         sigWroteLabel.textContent = entity ? 'وكتبه' : (TG ? 'وكتبته' : 'وكتبه');
 
-        // Always render the document (no completion gate)
-        ijazaOutput.innerHTML=buildHtml(v);
-        signatureArea.classList.remove('hidden');
         mujizList.innerHTML = sheikhs.map(s=>{
             let h=`<div class="mujiz-item"><span class="mujiz-name accent">${esc(s.name)}</span><div class="ss-row">`;
             if(v.showShSig) h+=`<div class="sigstamp"><span class="ss-label">التوقيع</span>`+ (s.sig ? `<img class="mujiz-sig" src="${s.sig}" alt="توقيع">` : `<span class="ss-blank tall"></span>`) +`</div>`;
@@ -1518,8 +1815,15 @@
             return h+`</div></div>`;
         }).join('');
         sigWrote.textContent = entity ? (v.orgEntity||'') : (v.blankStudent ? '............' : v.studentName);
-        if(entity){ officialLine.innerHTML='المسؤول وتوقيعه: <span class="blank-name">&nbsp;&nbsp;</span>'; officialLine.classList.remove('hidden'); }
-        else officialLine.classList.add('hidden');
+
+        const officialText = v.officialLineEnable ? v.officialLineText : '';
+        if (officialText) {
+            officialLine.innerHTML = officialText + ': <span class="blank-name">&nbsp;&nbsp;</span>';
+            officialLine.classList.remove('hidden');
+        } else {
+            officialLine.classList.add('hidden');
+        }
+
         sigDate.textContent=v.issueDate||hijriToday();
         if(signatureDataUrl && v.showSig){ sigImg.src=signatureDataUrl; sigImg.classList.remove('hidden'); }
         else sigImg.classList.add('hidden');
@@ -1527,21 +1831,101 @@
         else stampImg.classList.add('hidden');
         if(v.serialShow && v.serialNum){ serialBox.textContent='تسلسل الإجازة: '+v.serialNum; serialBox.classList.remove('hidden'); }
         else serialBox.classList.add('hidden');
+
+        const v2 = readValues();
+        ijazaOutput.innerHTML = buildHtml(v2);
+        signatureArea.style.display = 'none';
+
+        // تطبيق إخفاء البرواز على الصفحات المحددة
+        applyHideFrame();
+
         arabicizeTextNodes(ijazaOutput);
-        arabicizeTextNodes(signatureArea);
         arabicizeTextNodes(serialBox);
     }
 
-    function validate(){
-        let first=null;
-        currentRequired().forEach(k=>{ const el=fields[k]; const empty=!el.value.trim(); el.classList.toggle('field-error',empty); if(empty&&!first)first=el; });
-        const firstSheikh=sheikhList.querySelector('.sheikh-name');
-        if(getSheikhs().length===0){ if(firstSheikh){ firstSheikh.classList.add('field-error'); if(!first) first=firstSheikh; } }
-        else if(firstSheikh){ sheikhList.querySelectorAll('.sheikh-name').forEach(i=>i.classList.remove('field-error')); }
-        if(first){ errorMsg.classList.remove('hidden'); first.focus(); first.scrollIntoView({behavior:'smooth',block:'center'}); return false; }
-        errorMsg.classList.add('hidden'); return true;
+    // ---- تطبيق إخفاء البرواز ----
+    function applyHideFrame(){
+        ijazaBox.classList.remove('hide-frame');
+        if (printFrame) printFrame.classList.remove('hide-frame');
+        for(let p=1; p<=10; p++){
+            ijazaBox.classList.remove(`page-${p}`);
+        }
+
+        if (hidePages.length > 0) {
+            ijazaBox.classList.add('hide-frame');
+            if (printFrame) printFrame.classList.add('hide-frame');
+            hidePages.forEach(page => {
+                ijazaBox.classList.add(`page-${page}`);
+            });
+        }
     }
 
+    // ---- إدارة قائمة الصفحات المخفية ----
+    function updateHidePagesList(){
+        const list = document.getElementById('hidePagesList');
+        list.innerHTML = '';
+        hidePages.forEach((page, index) => {
+            const span = document.createElement('span');
+            span.className = 'inline-flex items-center gap-1 bg-gray-100 rounded-full px-2 py-0.5 text-xs';
+            span.innerHTML = `صفحة ${page} <button type="button" class="text-red-500 hover:text-red-700" data-remove="${index}">✕</button>`;
+            list.appendChild(span);
+        });
+        list.querySelectorAll('[data-remove]').forEach(btn => {
+            btn.addEventListener('click', function(){
+                const idx = parseInt(this.dataset.remove);
+                hidePages.splice(idx, 1);
+                updateHidePagesList();
+                render();
+                scheduleSave();
+            });
+        });
+    }
+
+    // ---- ربط زر إضافة الصفحات ----
+    document.getElementById('addHidePageRule').addEventListener('click', function(){
+        const input = document.getElementById('hidePagesInput');
+        const val = input.value.trim();
+        if (!val) {
+            showToast('الرجاء إدخال أرقام الصفحات', false);
+            return;
+        }
+        const parts = val.split(',').map(s => s.trim());
+        let newPages = [];
+        parts.forEach(p => {
+            if (p.includes('-')) {
+                const range = p.split('-').map(Number);
+                if (range.length === 2 && !isNaN(range[0]) && !isNaN(range[1])) {
+                    const start = Math.min(range[0], range[1]);
+                    const end = Math.max(range[0], range[1]);
+                    for (let i = start; i <= end; i++) {
+                        if (!hidePages.includes(i)) newPages.push(i);
+                    }
+                }
+            } else {
+                const num = Number(p);
+                if (!isNaN(num) && num > 0 && !hidePages.includes(num)) {
+                    newPages.push(num);
+                }
+            }
+        });
+        if (newPages.length === 0) {
+            showToast('لم يتم التعرف على أرقام صحيحة أو أنها مكررة', false);
+            return;
+        }
+        hidePages = hidePages.concat(newPages);
+        hidePages.sort((a,b) => a - b);
+        input.value = '';
+        updateHidePagesList();
+        render();
+        scheduleSave();
+    });
+
+    // ---- ربط زر تطبيق تقسيم المسرد ----
+    document.getElementById('applyRosterPagination').addEventListener('click', function(){
+        applyRosterPagination();
+    });
+
+    // ---- دوال أخرى (نسخ، طباعة، صورة) ----
     function plainText(){
         const tmp=document.createElement('div'); tmp.innerHTML=ijazaOutput.innerHTML;
         let t=(tmp.textContent||'').replace(/\s+/g,' ').trim();
@@ -1552,27 +1936,8 @@
         if(!officialLine.classList.contains('hidden')) t+=`\n${officialLine.textContent}`;
         return t;
     }
-
-    function legacyCopy(text){
-        const ta=document.createElement('textarea');
-        ta.value=text; ta.readOnly=false; ta.contentEditable='true';
-        ta.style.position='fixed'; ta.style.top='0'; ta.style.left='0'; ta.style.opacity='0';
-        document.body.appendChild(ta);
-        const range=document.createRange(); range.selectNodeContents(ta);
-        const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
-        try{ ta.setSelectionRange(0, text.length); }catch(_){ }
-        let ok=false; try{ ok=document.execCommand('copy'); }catch(_){ }
-        document.body.removeChild(ta); return ok;
-    }
-    async function copyText(){
-        const text=plainText();
-        try{
-            if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); showToast('تم نسخ نص الوثيقة'); return; }
-        }catch(e){ /* fall back */ }
-        if(legacyCopy(text)) showToast('تم نسخ نص الوثيقة');
-        else showToast('تعذّر النسخ — حدّد النص يدوياً', false);
-    }
-
+    function legacyCopy(text){ const ta=document.createElement('textarea'); ta.value=text; ta.readOnly=false; ta.contentEditable='true'; ta.style.position='fixed'; ta.style.top='0'; ta.style.left='0'; ta.style.opacity='0'; document.body.appendChild(ta); const range=document.createRange(); range.selectNodeContents(ta); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range); try{ ta.setSelectionRange(0, text.length); }catch(_){ } let ok=false; try{ ok=document.execCommand('copy'); }catch(_){ } document.body.removeChild(ta); return ok; }
+    async function copyText(){ const text=plainText(); try{ if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); showToast('تم نسخ نص الوثيقة'); return; } }catch(e){ } if(legacyCopy(text)) showToast('تم نسخ نص الوثيقة'); else showToast('تعذّر النسخ — حدّد النص يدوياً', false); }
     function printIjaza(){ window.print(); }
 
     function resetForm(){
@@ -1583,8 +1948,10 @@
         fontSize.value=1.2; lineHeight.value=2.1; applyType();
         updateIsnadMode();
         updateMethodLabel(); fields.issueDate.value=hijriToday();
+        hidePages = []; updateHidePagesList();
+        rosterPagination = [];
         render(); fields.studentName.focus(); showToast('تم تفريغ النموذج');
-        if(typeof scheduleSave==='function') scheduleSave();
+        scheduleSave();
     }
 
     function updateMethodLabel(){
@@ -1592,38 +1959,37 @@
         else { methodLabel.childNodes[0].nodeValue='المنصة / الوسيلة '; fields.method.placeholder='مثال: تطبيق زووم / قناة تليجرام'; }
     }
 
-    // ===== Signature pad / upload =====
+    // ---- التوقيع والرسم ----
     const sigFile=$('sigFile'), sigPadWrap=$('sigPadWrap'), sigPad=$('sigPad');
     const ctx=sigPad.getContext('2d'); ctx.lineWidth=2.2; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#111';
     let drawing=false;
     function posOf(e){ const r=sigPad.getBoundingClientRect(); const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left; const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top; return {x:cx*(sigPad.width/r.width), y:cy*(sigPad.height/r.height)}; }
     function dStart(e){ drawing=true; const p=posOf(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); }
     function dMove(e){ if(!drawing)return; const p=posOf(e); ctx.lineTo(p.x,p.y); ctx.stroke(); e.preventDefault(); }
-    function dEnd(){ if(!drawing)return; drawing=false; signatureDataUrl=sigPad.toDataURL('image/png'); render(); if(typeof scheduleSave==='function') scheduleSave(); }
+    function dEnd(){ if(!drawing)return; drawing=false; signatureDataUrl=sigPad.toDataURL('image/png'); render(); scheduleSave(); }
     function clearPad(){ ctx.clearRect(0,0,sigPad.width,sigPad.height); }
     sigPad.addEventListener('mousedown',dStart); sigPad.addEventListener('mousemove',dMove); window.addEventListener('mouseup',dEnd);
     sigPad.addEventListener('touchstart',dStart,{passive:false}); sigPad.addEventListener('touchmove',dMove,{passive:false}); sigPad.addEventListener('touchend',dEnd);
 
     $('sigUploadBtn').addEventListener('click', ()=>sigFile.click());
     $('sigDrawBtn').addEventListener('click', ()=>sigPadWrap.classList.toggle('hidden'));
-    $('sigClearBtn').addEventListener('click', ()=>{ signatureDataUrl=null; sigFile.value=''; clearPad(); render(); showToast('تم إزالة التوقيع'); if(typeof scheduleSave==='function') scheduleSave(); });
-    $('sigPadClear').addEventListener('click', ()=>{ clearPad(); signatureDataUrl=null; render(); if(typeof scheduleSave==='function') scheduleSave(); });
-    sigFile.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ signatureDataUrl=r.result; render(); showToast('تمت إضافة الصورة'); if(typeof scheduleSave==='function') scheduleSave(); }; r.readAsDataURL(f); });
+    $('sigClearBtn').addEventListener('click', ()=>{ signatureDataUrl=null; sigFile.value=''; clearPad(); render(); showToast('تم إزالة التوقيع'); scheduleSave(); });
+    $('sigPadClear').addEventListener('click', ()=>{ clearPad(); signatureDataUrl=null; render(); scheduleSave(); });
+    sigFile.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ signatureDataUrl=r.result; render(); showToast('تمت إضافة الصورة'); scheduleSave(); }; r.readAsDataURL(f); });
 
-    // Logo (organizing entity)
+    // ---- الشعار والختم ----
     const logoFile=$('logoFile');
     $('logoBtn').addEventListener('click', ()=>logoFile.click());
-    $('logoClear').addEventListener('click', ()=>{ logoDataUrl=null; logoFile.value=''; render(); showToast('تم إزالة الشعار'); if(typeof scheduleSave==='function') scheduleSave(); });
-    logoFile.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ logoDataUrl=r.result; render(); showToast('تمت إضافة الشعار'); if(typeof scheduleSave==='function') scheduleSave(); }; r.readAsDataURL(f); });
+    $('logoClear').addEventListener('click', ()=>{ logoDataUrl=null; logoFile.value=''; render(); showToast('تم إزالة الشعار'); scheduleSave(); });
+    logoFile.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ logoDataUrl=r.result; render(); showToast('تمت إضافة الشعار'); scheduleSave(); }; r.readAsDataURL(f); });
 
-    // Stamp (الختم)
     const stampFile=$('stampFile');
     $('stampUploadBtn').addEventListener('click', ()=>stampFile.click());
-    $('stampClearBtn').addEventListener('click', ()=>{ stampDataUrl=null; stampFile.value=''; render(); showToast('تم إزالة الختم'); if(typeof scheduleSave==='function') scheduleSave(); });
-    stampFile.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ stampDataUrl=r.result; render(); showToast('تمت إضافة الختم'); if(typeof scheduleSave==='function') scheduleSave(); }; r.readAsDataURL(f); });
+    $('stampClearBtn').addEventListener('click', ()=>{ stampDataUrl=null; stampFile.value=''; render(); showToast('تم إزالة الختم'); scheduleSave(); });
+    stampFile.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ stampDataUrl=r.result; render(); showToast('تمت إضافة الختم'); scheduleSave(); }; r.readAsDataURL(f); });
 
-    // Roster fill-in grid + CSV export/import
-    $('rosterBuild').addEventListener('click', ()=>{ buildRosterGrid(true); render(); if(typeof scheduleSave==='function') scheduleSave(); });
+    // ---- المسرد ----
+    $('rosterBuild').addEventListener('click', ()=>{ buildRosterGrid(true); render(); scheduleSave(); });
     $('rosterExport').addEventListener('click', ()=>{
         const blob=new Blob([rosterToCSV()], {type:'text/csv;charset=utf-8;'});
         const url=URL.createObjectURL(blob); const a=document.createElement('a');
@@ -1637,54 +2003,51 @@
             const header=rows[0]; const dataRows=rows.slice(1);
             $('rosterColNames').value=header.join('،');
             $('rosterCols').value=Math.min(10, header.length);
-            $('rosterRows').value=Math.min(200, Math.max(1, dataRows.length));
+            $('rosterRows').value=Math.min(500, Math.max(1, dataRows.length));
             buildRosterGrid(false);
             const cells=$('rosterGrid').querySelectorAll('.r-row');
             dataRows.forEach((dr,r)=>{ if(cells[r]){ const ins=cells[r].querySelectorAll('.r-cell'); dr.forEach((val,c)=>{ if(ins[c]) ins[c].value=val; }); } });
-            render(); if(typeof scheduleSave==='function') scheduleSave(); showToast('تم استيراد الكشف وتنسيقه');
+            rosterPagination = []; // نعيد تعيين التقسيم بعد الاستيراد
+            render(); scheduleSave(); showToast('تم استيراد الكشف وتنسيقه');
         };
         rd.readAsText(f,'utf-8'); e.target.value='';
     });
 
-    // Tabaq rows: update derived hijri/greg on date change
+    // ---- الطِباق ----
     $('tabaqList').addEventListener('change', e=>{
         if(e.target.classList.contains('tab-greg')){ const row=e.target.closest('.tab-row'); const der=tabaqDerive(e.target.value); row.querySelector('.tab-derived').textContent = der.hij ? (der.day+' '+der.hij+' / '+der.greg) : ''; }
-        render(); if(typeof scheduleSave==='function') scheduleSave();
+        render(); scheduleSave();
     });
 
-    // Org name color
+    // ---- الألوان والخطوط ----
     $('orgColor').addEventListener('input', ()=>{ orgColorAuto=false; render(); });
-    $('orgColorAuto').addEventListener('click', ()=>{ orgColorAuto=true; render(); if(typeof scheduleSave==='function') scheduleSave(); });
+    $('orgColorAuto').addEventListener('click', ()=>{ orgColorAuto=true; render(); scheduleSave(); });
 
-    // ===== Appearance =====
     document.querySelectorAll('.opt-group').forEach(group=>{
         const opt=group.dataset.opt;
         group.addEventListener('click', e=>{
             const btn=e.target.closest('button'); if(!btn)return;
             group.querySelectorAll('button').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
             if(opt==='font'){ ijazaBox.style.setProperty('--ijaza-font', btn.dataset.val); }
-            else if(opt==='color'){ ['theme-emerald','theme-brown','theme-navy','theme-burgundy'].forEach(c=>ijazaBox.classList.remove(c)); ijazaBox.classList.add('theme-'+btn.dataset.theme); }
+            else if(opt==='color'){ ['theme-emerald','theme-brown','theme-navy','theme-burgundy','theme-gold'].forEach(c=>ijazaBox.classList.remove(c)); ijazaBox.classList.add('theme-'+btn.dataset.theme); }
             else if(opt==='border'){ ['brd-ornate','brd-double','brd-simple','brd-none'].forEach(c=>ijazaBox.classList.remove(c)); ijazaBox.classList.add('brd-'+btn.dataset.brd); }
-            if(typeof scheduleSave==='function') scheduleSave();
+            scheduleSave();
         });
     });
 
-    // Independent colors for basmala and title
     const basmalaColor=$('basmalaColor'), titleColor=$('titleColor');
     basmalaColor.addEventListener('input', ()=>ijazaBox.style.setProperty('--basmala-color', basmalaColor.value));
     titleColor.addEventListener('input', ()=>ijazaBox.style.setProperty('--title-color', titleColor.value));
-    $('basmalaAuto').addEventListener('click', ()=>{ ijazaBox.style.removeProperty('--basmala-color'); if(typeof scheduleSave==='function') scheduleSave(); });
-    $('titleAuto').addEventListener('click', ()=>{ ijazaBox.style.removeProperty('--title-color'); if(typeof scheduleSave==='function') scheduleSave(); });
+    $('basmalaAuto').addEventListener('click', ()=>{ ijazaBox.style.removeProperty('--basmala-color'); scheduleSave(); });
+    $('titleAuto').addEventListener('click', ()=>{ ijazaBox.style.removeProperty('--title-color'); scheduleSave(); });
 
-    // Font size & line spacing
     const fontSize=$('fontSize'), lineHeight=$('lineHeight');
     function applyType(){ ijazaBox.style.setProperty('--ijaza-fs', fontSize.value+'rem'); ijazaBox.style.setProperty('--ijaza-lh', lineHeight.value); }
     fontSize.addEventListener('input', applyType);
     lineHeight.addEventListener('input', applyType);
-    $('ornamentShape').addEventListener('change', ()=>{ render(); if(typeof scheduleSave==='function') scheduleSave(); });
+    $('ornamentShape').addEventListener('change', ()=>{ render(); scheduleSave(); });
     applyType();
 
-    // Isnad mode (shared / per-sheikh)
     function updateIsnadMode(){
         const per=fields.isnadMode.value==='per';
         $('sharedIsnadWrap').classList.toggle('hidden', per);
@@ -1694,7 +2057,7 @@
     }
     fields.isnadMode.addEventListener('change', updateIsnadMode);
 
-    // Full-page preview toggle
+    // ---- معاينة بملء الشاشة ----
     const mainGrid=$('mainGrid'), fullBtn=$('fullPreviewBtn');
     fullBtn.addEventListener('click', ()=>{
         const on=mainGrid.classList.toggle('preview-full');
@@ -1702,7 +2065,7 @@
         if(on) window.scrollTo({top:0, behavior:'smooth'});
     });
 
-    // Export as image (PNG) — works on desktop & mobile (share sheet on phones)
+    // ---- تصدير صورة ----
     function saveCanvas(canvas){
         canvas.toBlob((blob)=>{
             if(!blob){ showToast('تعذّر إنشاء الصورة', false); return; }
@@ -1726,9 +2089,8 @@
     $('imageBtn').addEventListener('click', async ()=>{
         if(typeof html2canvas!=='function'){ showToast('تعذّر تحميل أداة الصورة (تحقّق من الإنترنت)', false); return; }
         showToast('جارٍ إنشاء الصورة…');
-        ijazaBox.classList.add('exporting');   // disable box-shadows (fixes html2canvas color block)
+        ijazaBox.classList.add('exporting');
         const w=ijazaBox.scrollWidth||ijazaBox.offsetWidth||800, h=ijazaBox.scrollHeight||ijazaBox.offsetHeight||1100;
-        // Clamp scale so the canvas stays within browser limits (large/tall docs fail at scale 2 on desktop)
         let scale=2; const maxSide=8000, maxArea=16e6;
         while(scale>1 && ((w*scale>maxSide)||(h*scale>maxSide)||(w*scale*h*scale>maxArea))) scale-=0.25;
         if(scale<1) scale=1;
@@ -1736,13 +2098,13 @@
         try{
             let canvas;
             try{ canvas=await html2canvas(ijazaBox, opts); }
-            catch(e1){ canvas=await html2canvas(ijazaBox, Object.assign({}, opts, {scale:1})); }   // retry smaller
+            catch(e1){ canvas=await html2canvas(ijazaBox, Object.assign({}, opts, {scale:1})); }
             saveCanvas(canvas);
         }catch(e){ showToast('تعذّر إنشاء الصورة'+(e&&e.message?'؛ '+e.message:''), false); }
         finally{ ijazaBox.classList.remove('exporting'); }
     });
 
-    // ===== Tashkeel (diacritics) helper =====
+    // ---- التشكيل ----
     const HARAKAT={ fatha:'\u064E', damma:'\u064F', kasra:'\u0650', sukun:'\u0652', shadda:'\u0651', tanfath:'\u064B', tandam:'\u064C', tankas:'\u064D', dagger:'\u0670' };
     let activeTashkeel=null;
     document.addEventListener('focusin', e=>{
@@ -1764,7 +2126,7 @@
     function stripHarakat(el){ el.value=el.value.replace(/[\u064B-\u0652\u0670]/g,''); fireInput(el); }
     $('tashkeelBtns').addEventListener('pointerdown', e=>{
         const b=e.target.closest('button'); if(!b) return;
-        e.preventDefault(); // keep caret & focus in the field
+        e.preventDefault();
         const tgt=activeTashkeel || fields.studentName;
         if(!activeTashkeel){ activeTashkeel=tgt; $('tashkeelTarget').textContent=tgt.dataset.tashLabel||'—'; }
         if(b.dataset.act==='del') delBeforeCaret(tgt);
@@ -1773,7 +2135,7 @@
         tgt.focus();
     });
 
-    // ===== Side drawer =====
+    // ---- القائمة الجانبية ----
     const menuBtn=$('menuBtn'), drawer=$('formPanel'), overlay=$('drawerOverlay'), resizeHandle=$('drawerResize');
     let drawerWidth=250;
     function applyDrawerWidth(w){
@@ -1785,7 +2147,7 @@
     let resizing=false;
     resizeHandle.addEventListener('pointerdown', e=>{ resizing=true; document.body.classList.add('resizing'); try{resizeHandle.setPointerCapture(e.pointerId);}catch(_){ } e.preventDefault(); });
     resizeHandle.addEventListener('pointermove', e=>{ if(!resizing) return; applyDrawerWidth(window.innerWidth - e.clientX); });
-    const stopResize=(e)=>{ if(!resizing) return; resizing=false; document.body.classList.remove('resizing'); try{resizeHandle.releasePointerCapture(e.pointerId);}catch(_){ } if(typeof scheduleSave==='function') scheduleSave(); };
+    const stopResize=(e)=>{ if(!resizing) return; resizing=false; document.body.classList.remove('resizing'); try{resizeHandle.releasePointerCapture(e.pointerId);}catch(_){ } scheduleSave(); };
     resizeHandle.addEventListener('pointerup', stopResize);
     resizeHandle.addEventListener('pointercancel', stopResize);
     window.addEventListener('resize', ()=>applyDrawerWidth(drawerWidth));
@@ -1793,7 +2155,7 @@
     function openDrawer(){ drawer.classList.add('open'); document.body.classList.add('drawer-open'); }
     function closeDrawer(){ drawer.classList.remove('open'); document.body.classList.remove('drawer-open'); }
 
-    // ===== Floating circular section launcher =====
+    // ---- الأقسام العائمة ----
     const SECTION_GROUPS=[
         {ic:'🎨', label:'المظهر', ids:['sec-appearance','sec-tashkeel']},
         {ic:'👤', label:'الطالب والكتاب', ids:['sec-student']},
@@ -1832,9 +2194,9 @@
     overlay.addEventListener('click', ()=>{ closeDrawer(); secLauncher.classList.remove('show'); });
     $('drawerClose').addEventListener('click', closeDrawer);
     document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDrawer(); secLauncher.classList.remove('show'); } });
-    if(window.innerWidth>=1024){ showAllSections(); openDrawer(); }   // open by default on wide screens
+    if(window.innerWidth>=1024){ showAllSections(); openDrawer(); }
 
-    // ===== Floating guide / contact modals =====
+    // ---- مودالات الدليل والتواصل ----
     const modalOverlay=$('modalOverlay');
     function openModal(id){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); $(id).classList.remove('hidden'); modalOverlay.classList.add('show'); }
     function closeModal(){ modalOverlay.classList.remove('show'); }
@@ -1844,34 +2206,35 @@
     document.querySelectorAll('#modalOverlay .x').forEach(b=>b.addEventListener('click', closeModal));
     document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 
-    // ===== Wire up =====
-    addSheikhRow();  // start with one sheikh
-    $('addSheikh').addEventListener('click', ()=>{ addSheikhRow(); render(); if(typeof scheduleSave==='function') scheduleSave(); });
+    // ---- إضافة المشايخ والطلاب والكتب ----
+    addSheikhRow();
+    $('addSheikh').addEventListener('click', ()=>{ addSheikhRow(); render(); scheduleSave(); });
     sheikhList.addEventListener('click', e=>{
         const row=e.target.closest('.sheikh-row');
         if(e.target.closest('.sheikh-del')){
             const rows=sheikhList.querySelectorAll('.sheikh-row');
             if(rows.length<=1){ row.querySelector('.sheikh-name').value=''; }
             else row.remove();
-            render(); if(typeof scheduleSave==='function') scheduleSave(); return;
+            render(); scheduleSave(); return;
         }
         if(e.target.closest('.sh-sigbtn')){ row.querySelector('.sh-sigfile').click(); return; }
         if(e.target.closest('.sh-stampbtn')){ row.querySelector('.sh-stampfile').click(); return; }
-        if(e.target.closest('.sh-imgclear')){ row._sig=null; row._stamp=null; row.querySelector('.sh-sigok').textContent=''; row.querySelector('.sh-stampok').textContent=''; render(); if(typeof scheduleSave==='function') scheduleSave(); return; }
+        if(e.target.closest('.sh-imgclear')){ row._sig=null; row._stamp=null; row.querySelector('.sh-sigok').textContent=''; row.querySelector('.sh-stampok').textContent=''; render(); scheduleSave(); return; }
     });
     sheikhList.addEventListener('change', e=>{
         const row=e.target.closest('.sheikh-row'); if(!row) return;
         if(e.target.classList.contains('sh-sigfile') || e.target.classList.contains('sh-stampfile')){
             const f=e.target.files[0]; if(!f) return; const isSig=e.target.classList.contains('sh-sigfile');
-            const r=new FileReader(); r.onload=()=>{ if(isSig){ row._sig=r.result; row.querySelector('.sh-sigok').textContent='✓'; } else { row._stamp=r.result; row.querySelector('.sh-stampok').textContent='✓'; } render(); if(typeof scheduleSave==='function') scheduleSave(); }; r.readAsDataURL(f);
+            const r=new FileReader(); r.onload=()=>{ if(isSig){ row._sig=r.result; row.querySelector('.sh-sigok').textContent='✓'; } else { row._stamp=r.result; row.querySelector('.sh-stampok').textContent='✓'; } render(); scheduleSave(); }; r.readAsDataURL(f);
         }
     });
 
-    $('addStudentBtn').addEventListener('click', ()=>{ addStudentRow(); render(); if(typeof scheduleSave==='function') scheduleSave(); });
-    studentList.addEventListener('click', e=>{ if(e.target.closest('.student-del')){ e.target.closest('.student-row').remove(); render(); if(typeof scheduleSave==='function') scheduleSave(); } });
-    $('addBookBtn').addEventListener('click', ()=>{ addBookRow(); render(); if(typeof scheduleSave==='function') scheduleSave(); });
-    bookList.addEventListener('click', e=>{ if(e.target.closest('.book-del')){ e.target.closest('.book-row').remove(); render(); if(typeof scheduleSave==='function') scheduleSave(); } });
+    $('addStudentBtn').addEventListener('click', ()=>{ addStudentRow(); render(); scheduleSave(); });
+    studentList.addEventListener('click', e=>{ if(e.target.closest('.student-del')){ e.target.closest('.student-row').remove(); render(); scheduleSave(); } });
+    $('addBookBtn').addEventListener('click', ()=>{ addBookRow(); render(); scheduleSave(); });
+    bookList.addEventListener('click', e=>{ if(e.target.closest('.book-del')){ e.target.closest('.book-row').remove(); render(); scheduleSave(); } });
 
+    // ---- التواريخ ----
     fields.startHD.innerHTML=Array.from({length:30},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
     fields.endHD.innerHTML=fields.startHD.innerHTML;
     fields.startHM.innerHTML=HIJRI_MONTHS.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
@@ -1879,8 +2242,6 @@
 
     fields.startGregPicker.addEventListener('change', ()=>syncFromGreg('start'));
     fields.endGregPicker.addEventListener('change', ()=>syncFromGreg('end'));
-    ['startHD','startHM','startHY'].forEach(id=>fields[id].addEventListener('change', ()=>syncFromHijri('start')));
-    ['endHD','endHM','endHY'].forEach(id=>fields[id].addEventListener('change', ()=>syncFromHijri('end')));
 
     let t; const tick=()=>{ clearTimeout(t); t=setTimeout(render,120); };
     form.addEventListener('input', tick);
@@ -1891,7 +2252,7 @@
     $('copyBtn').addEventListener('click', copyText);
     $('resetBtn').addEventListener('click', resetForm);
 
-    // ===== Auto-save (localStorage) =====
+    // ---- الحفظ التلقائي ----
     const SAVE_KEY='ijaza_autosave_v1';
     let saveTimer;
     function collectState(){
@@ -1911,7 +2272,7 @@
             logoPos:$('logoPos').value, logoPos2:$('logoPos2').value, logoSize:$('logoSize').value };
         const extraStudents=Array.from(studentList.querySelectorAll('.student-row')).map(r=>({name:r.querySelector('.student-name').value, gender:r.querySelector('.student-gender').value}));
         const extraBooks=Array.from(bookList.querySelectorAll('.book-row')).map(r=>({name:r.querySelector('.book-name').value, edition:r.querySelector('.book-edition').value}));
-        return { v, sheikhs, app, sig:signatureDataUrl, logo:logoDataUrl, stamp:stampDataUrl, tabaq:getTabaqRows(), extraStudents, extraBooks, rosterData:getRosterData(), auto:$('autoSave').checked };
+        return { v, sheikhs, app, sig:signatureDataUrl, logo:logoDataUrl, stamp:stampDataUrl, tabaq:getTabaqRows(), extraStudents, extraBooks, rosterData:getRosterData(), auto:$('autoSave').checked, hidePages, rosterPagination };
     }
     function saveState(){
         if(!$('autoSave').checked) return;
@@ -1962,20 +2323,22 @@
             const rows=$('tabaqList').querySelectorAll('.tab-row');
             data.tabaq.forEach((t,i)=>{ if(rows[i]){ rows[i].querySelector('.tab-greg').value=t.greg||''; rows[i].querySelector('.tab-start').value=t.start||''; rows[i].querySelector('.tab-end').value=t.end||''; const der=tabaqDerive(t.greg||''); if(der.hij) rows[i].querySelector('.tab-derived').textContent=der.day+' '+der.hij+' / '+der.greg; } });
         }
+        if(Array.isArray(data.hidePages)) hidePages = data.hidePages;
+        updateHidePagesList();
+        if(Array.isArray(data.rosterPagination)) rosterPagination = data.rosterPagination;
         return true;
     }
     $('autoSave').addEventListener('change', ()=>{ if($('autoSave').checked) saveState(); });
     $('clearSaved').addEventListener('click', ()=>{ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} const s=$('saveStatus'); if(s) s.textContent=''; showToast('تم مسح المحفوظ'); });
     window.addEventListener('beforeunload', saveState);
 
-    // ===== Initialize (with restore) =====
+    // ---- التهيئة ----
     fields.issueDate.value=hijriToday();
     loadState();
     updateIsnadMode();
     updateMethodLabel();
     render();
 
-    // attach broad auto-save listeners AFTER restore
     document.addEventListener('input', scheduleSave);
     document.addEventListener('change', scheduleSave);
 })();
