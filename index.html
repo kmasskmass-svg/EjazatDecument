@@ -3755,42 +3755,102 @@
     });
 
     // ---- تصدير صورة ----
+    // تحديد نوع الجهاز
+    const _isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const _isIOS    = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
     function saveCanvas(canvas){
-        canvas.toBlob((blob)=>{
+        canvas.toBlob(function(blob){
             if(!blob){ showToast('تعذّر إنشاء الصورة', false); return; }
-            const file=new File([blob], 'ijaza.png', {type:'image/png'});
-            if(navigator.canShare && navigator.canShare({files:[file]})){
-                navigator.share({ files:[file], title:'وثيقة إثبات سماع' })
-                    .then(()=>showToast('تم'))
-                    .catch(()=>fallbackDownload(blob));
-            } else {
-                fallbackDownload(blob);
+
+            // iOS: لا يدعم تحميل الملفات عبر blob — افتح في تبويب جديد
+            if(_isIOS){
+                const reader = new FileReader();
+                reader.onloadend = function(){
+                    const win = window.open('', '_blank');
+                    if(!win){ showToast('السماح بالنوافذ المنبثقة لتصدير الصورة', false); return; }
+                    win.document.write(
+                        '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">' +
+                        '<title>وثيقة إثبات سماع</title></head><body style="margin:0;background:#111;text-align:center">' +
+                        '<p style="color:#fff;font-family:sans-serif;padding:12px;font-size:.9rem">' +
+                        'اضغط مطوّلاً على الصورة ثم اختر «حفظ الصورة»</p>' +
+                        '<img src="'+reader.result+'" style="max-width:100%;display:block;margin:0 auto">' +
+                        '</body></html>'
+                    );
+                    win.document.close();
+                    showToast('افتح التبويب الجديد واحفظ الصورة');
+                };
+                reader.readAsDataURL(blob);
+                return;
             }
+
+            // Android + تدعم Web Share API مع ملفات
+            const file = new File([blob], 'ijaza.png', {type:'image/png'});
+            if(_isMobile && navigator.canShare && navigator.canShare({files:[file]})){
+                navigator.share({files:[file], title:'وثيقة إثبات سماع'})
+                    .then(function(){ showToast('تمت المشاركة'); })
+                    .catch(function(){ _fallbackDownload(blob); });
+                return;
+            }
+
+            // سطح المكتب أو Android بدون Share API
+            _fallbackDownload(blob);
         }, 'image/png');
     }
-    function fallbackDownload(blob){
-        const url=URL.createObjectURL(blob);
-        const a=document.createElement('a'); a.href=url; a.download='ijaza.png';
-        document.body.appendChild(a); a.click(); a.remove();
-        setTimeout(()=>URL.revokeObjectURL(url), 5000);
+
+    function _fallbackDownload(blob){
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'وثيقة_إثبات_سماع.png';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){ a.remove(); URL.revokeObjectURL(url); }, 5000);
         showToast('تم تصدير الصورة');
     }
-    $('imageBtn').addEventListener('click', async ()=>{
-        if(typeof html2canvas!=='function'){ showToast('تعذّر تحميل أداة الصورة (تحقّق من الإنترنت)', false); return; }
+
+    $('imageBtn').addEventListener('click', async function(){
+        if(typeof html2canvas !== 'function'){
+            showToast('تعذّر تحميل أداة الصورة — تحقق من الاتصال', false);
+            return;
+        }
         showToast('جارٍ إنشاء الصورة…');
+        $('imageBtn').disabled = true;
         ijazaBox.classList.add('exporting');
-        const w=ijazaBox.scrollWidth||ijazaBox.offsetWidth||800, h=ijazaBox.scrollHeight||ijazaBox.offsetHeight||1100;
-        let scale=2; const maxSide=8000, maxArea=16e6;
-        while(scale>1 && ((w*scale>maxSide)||(h*scale>maxSide)||(w*scale*h*scale>maxArea))) scale-=0.25;
-        if(scale<1) scale=1;
-        const opts={ backgroundColor:'#ffffff', useCORS:true, logging:false, scale, windowWidth:document.documentElement.scrollWidth };
-        try{
+
+        const w = ijazaBox.scrollWidth  || ijazaBox.offsetWidth  || 800;
+        const h = ijazaBox.scrollHeight || ijazaBox.offsetHeight || 1100;
+
+        // تقليل المقياس على الجوال لتجنب نفاد الذاكرة
+        let scale = _isMobile ? 1.5 : 2;
+        const maxSide = _isMobile ? 4000 : 8000;
+        const maxArea = _isMobile ? 8e6  : 16e6;
+        while(scale > 1 && (w*scale > maxSide || h*scale > maxSide || w*scale*h*scale > maxArea)) scale -= 0.25;
+        if(scale < 1) scale = 1;
+
+        const opts = {
+            backgroundColor: '#ffffff', useCORS: true,
+            logging: false, scale: scale,
+            width: w, height: h,
+            scrollX: 0, scrollY: -window.scrollY,
+            windowWidth: w
+        };
+
+        try {
             let canvas;
-            try{ canvas=await html2canvas(ijazaBox, opts); }
-            catch(e1){ canvas=await html2canvas(ijazaBox, Object.assign({}, opts, {scale:1})); }
+            try { canvas = await html2canvas(ijazaBox, opts); }
+            catch(e1) {
+                // محاولة ثانية بمقياس أقل عند الفشل
+                canvas = await html2canvas(ijazaBox, Object.assign({}, opts, {scale: 1}));
+            }
             saveCanvas(canvas);
-        }catch(e){ showToast('تعذّر إنشاء الصورة'+(e&&e.message?'؛ '+e.message:''), false); }
-        finally{ ijazaBox.classList.remove('exporting'); }
+        } catch(err) {
+            showToast('تعذّر إنشاء الصورة' + (err && err.message ? '؛ ' + err.message : ''), false);
+        } finally {
+            ijazaBox.classList.remove('exporting');
+            $('imageBtn').disabled = false;
+        }
     });
 
     // ---- التشكيل ----
@@ -4322,10 +4382,7 @@
     }
 
     // ============================================================
-    // تصدير PDF مباشر
     // ============================================================
-
-        // ============================================================
     // الإدخال الصوتي - نسخة محسّنة ومستقرة
     // ============================================================
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -4442,14 +4499,35 @@
         if(!btn) return;
         e.preventDefault();
         if(btn.classList.contains('listening')){ _stopVoice(); return; }
-        const tid = btn.dataset.voiceTarget;
-        const el = document.getElementById(tid);
-        if(!el) return;
+        const tid = btn.dataset.voiceTarget;   // احتفظ بالمعرّف لا بالعنصر
+        const elCheck = document.getElementById(tid);
+        if(!elCheck) return;
         _doVoiceInput(btn, function(text){
-            el.value = text;
-            el.dispatchEvent(new Event('input',{bubbles:true}));
-            el.dispatchEvent(new Event('change',{bubbles:true}));
-            render(); scheduleSave();
+            // أعد الحصول على العنصر لضمان المرجع الحي (مهم للجوال)
+            const target = document.getElementById(tid);
+            if(!target) return;
+            // تعيين القيمة بثلاث طرق لضمان عمل الجوال
+            target.value = text;
+            try {
+                // InputEvent أكثر موثوقية من Event على Android/iOS
+                target.dispatchEvent(new InputEvent('input', {
+                    bubbles: true, cancelable: true,
+                    data: text, inputType: 'insertText'
+                }));
+            } catch(_) {
+                target.dispatchEvent(new Event('input', {bubbles:true}));
+            }
+            target.dispatchEvent(new Event('change', {bubbles:true}));
+            // تأخير بسيط للجوال: يتيح للمتصفح تسجيل القيمة قبل render
+            setTimeout(function(){
+                render();
+                scheduleSave();
+                // تحديث بصري إضافي: أزل focus ثم أعده لإجبار الجوال على الإعادة
+                if(document.activeElement !== target){
+                    target.focus();
+                    target.blur();
+                }
+            }, 80);
         });
     });
 
@@ -4465,8 +4543,10 @@
         if(!inputEl) return;
         _doVoiceInput(btn, function(text){
             inputEl.value = text;
-            inputEl.dispatchEvent(new Event('input',{bubbles:true}));
-            render(); scheduleSave();
+            try {
+                inputEl.dispatchEvent(new InputEvent('input',{bubbles:true,cancelable:true,data:text,inputType:'insertText'}));
+            } catch(_){ inputEl.dispatchEvent(new Event('input',{bubbles:true})); }
+            setTimeout(function(){ render(); scheduleSave(); }, 80);
         });
     });
 
@@ -4885,8 +4965,10 @@
                 const cur = ta.value;
                 ta.value = cur ? (cur + '\n' + text) : text;
             }
-            ta.dispatchEvent(new Event('input',{bubbles:true}));
-            render(); scheduleSave();
+            try {
+                ta.dispatchEvent(new InputEvent('input',{bubbles:true,cancelable:true,data:text,inputType:'insertText'}));
+            } catch(_){ ta.dispatchEvent(new Event('input',{bubbles:true})); }
+            setTimeout(function(){ render(); scheduleSave(); }, 80);
         });
     }
     const _freeVAppend = document.getElementById('freeIjazaVoiceAppend');
