@@ -400,6 +400,93 @@
         .autosave-bar label{ display:flex; align-items:center; gap:.4rem; font-weight:700; color:#065f46; cursor:pointer; }
         #saveStatus{ color:#059669; font-size:.66rem; }
 
+
+        /* ===== أزرار الإدخال الصوتي ===== */
+        .voice-btn {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            border-radius: 50%;
+            border: 1.5px solid #d1d5db;
+            background: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: .15s;
+            color: #6b7280;
+            flex-shrink: 0;
+            margin-right: 2px;
+        }
+        .voice-btn:hover { border-color: #059669; background: #ecfdf5; color: #047857; }
+        .voice-btn.listening {
+            border-color: #dc2626 !important;
+            background: #fee2e2 !important;
+            color: #dc2626 !important;
+            animation: voice-pulse 1s infinite;
+        }
+        @keyframes voice-pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.15);} }
+        .voice-field-wrap { display: flex; align-items: center; gap: 4px; }
+        .voice-field-wrap input,
+        .voice-field-wrap textarea { flex: 1; min-width: 0; }
+
+        /* بانر الإدخال الصوتي */
+        .voice-banner {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 6px 10px;
+            margin-bottom: 8px;
+            font-size: .72rem;
+            color: #92400e;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            line-height: 1.6;
+        }
+        .voice-banner-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+        @media print { .voice-btn, .voice-banner { display: none !important; } }
+
+        /* ===== تحسين عرض إعدادات البرواز ===== */
+        .page-frame-row { transition: background .15s; }
+        .page-frame-row:has(.extra-page-show:not(:checked)) { background: #fff7ed; border-color: #fed7aa; }
+        #page1ShowFrame:not(:checked) ~ span { text-decoration: line-through; opacity: .6; }
+        .page-border-preview {
+            display: inline-block;
+            width: 18px; height: 22px;
+            border-radius: 2px;
+            flex-shrink: 0;
+            vertical-align: middle;
+        }
+        .page-border-preview.ornate { border: 2px double var(--border-c,#10b981); }
+        .page-border-preview.double { border: 3px double var(--border-c,#10b981); }
+        .page-border-preview.simple { border: 1.5px solid var(--border-c,#10b981); }
+        .page-border-preview.none   { border: 1px dashed #d1d5db; }
+
+        /* ===== برواز صفحات الملاحق (مستقل عن برواز الصفحة الأولى) ===== */
+        .appendix-page-frame {
+            position: relative;
+        }
+        .appendix-page-frame.with-border {
+            border: 3px double var(--border-c);
+            box-shadow: 0 0 0 1px var(--gold) inset;
+            border-radius: 4px;
+            padding: 1.2rem;
+            margin: 0;
+        }
+        .appendix-page-frame.with-border.brd-double { border-width: 4px; }
+        .appendix-page-frame.with-border.brd-simple { border-width: 2px; box-shadow: none; }
+        @media print {
+            .appendix-page-frame.with-border {
+                border: 3px double var(--border-c) !important;
+                box-shadow: 0 0 0 1px var(--gold) inset !important;
+                padding: 6mm !important;
+                min-height: 246mm;
+            }
+            .appendix-page-frame.with-border.brd-double { border-width: 4px !important; }
+            .appendix-page-frame.with-border.brd-simple { border-width: 2px !important; box-shadow: none !important; }
+        }
         @media (prefers-reduced-motion: reduce){ *,*::before,*::after{transition:none!important;animation:none!important} }
         :focus-visible { outline:2px solid #10b981; outline-offset:2px; }
 
@@ -544,6 +631,7 @@
         a:focus-visible { outline: 3px solid #047857 !important; }
         /* skip-link */
         .skip-link:focus { top: 0 !important; }
+        @media print { .skip-link { display:none!important; } }
 
         /* ===== شارة إمكانية الوصول ===== */
         .a11y-badge {
@@ -618,8 +706,8 @@
 <body class="min-h-screen p-4 md:p-8">
 
 <!-- روابط التخطي للكفيف — Skip Links -->
-<a href="#formPanel" class="skip-link" style="position:fixed;top:-100px;right:0;z-index:9999;background:#047857;color:#fff;padding:8px 18px;border-radius:0 0 8px 8px;font-family:Tajawal,sans-serif;font-size:1rem;font-weight:700;transition:top .2s;text-decoration:none;" onfocus="this.style.top='0'" onblur="this.style.top='-100px'">انتقل إلى لوحة التحكم</a>
-<a href="#previewPanel" class="skip-link" style="position:fixed;top:-100px;right:140px;z-index:9999;background:#047857;color:#fff;padding:8px 18px;border-radius:0 0 8px 8px;font-family:Tajawal,sans-serif;font-size:1rem;font-weight:700;transition:top .2s;text-decoration:none;" onfocus="this.style.top='0'" onblur="this.style.top='-100px'">انتقل إلى الوثيقة</a>
+<a href="#formPanel" class="skip-link no-print" style="position:fixed;top:-100px;right:0;z-index:9999;background:#047857;color:#fff;padding:8px 18px;border-radius:0 0 8px 8px;font-family:Tajawal,sans-serif;font-size:1rem;font-weight:700;transition:top .2s;text-decoration:none;" onfocus="this.style.top='0'" onblur="this.style.top='-100px'">انتقل إلى لوحة التحكم</a>
+<a href="#previewPanel" class="skip-link no-print" style="position:fixed;top:-100px;right:140px;z-index:9999;background:#047857;color:#fff;padding:8px 18px;border-radius:0 0 8px 8px;font-family:Tajawal,sans-serif;font-size:1rem;font-weight:700;transition:top .2s;text-decoration:none;" onfocus="this.style.top='0'" onblur="this.style.top='-100px'">انتقل إلى الوثيقة</a>
 
 
 <!-- Hamburger + drawer overlay -->
@@ -643,6 +731,20 @@
             <label><input type="checkbox" id="autoSave" checked aria-label="تفعيل الحفظ التلقائي"> الحفظ التلقائي</label>
             <span id="saveStatus"></span>
             <button type="button" id="clearSaved" class="opt-btn" aria-label="مسح البيانات المحفوظة في المتصفح">مسح المحفوظ</button>
+        </div>
+        <div class="voice-banner no-print" role="note" aria-label="تنبيهات الإدخال الصوتي">
+            <span class="voice-banner-icon">🎤</span>
+            <div style="font-size:.71rem;line-height:1.85;color:#92400e;">
+                <b>الإدخال الصوتي</b> — اضغط الزر 🎤 بجوار الحقل ثم تكلّم وسيُملأ الحقل تلقائياً.<br>
+                <b>⚠️ تنبيهات مهمة:</b>
+                <ul style="margin:.2rem 0 0 1rem;padding:0;list-style:disc;">
+                    <li>تكلّم <b>بسرعة طبيعية</b> وبوضوح — إذا توقفت أكثر من <b>2–4 ثوانٍ</b> قد يتوقف التعرف تلقائياً.</li>
+                    <li>بعد توقف الميكروفون (يتحول أحمر ثم يرجع لطبيعته) <b>انتظر لحظة</b> حتى يُلصق النص في الخانة.</li>
+                    <li>يعتمد على <b>جودة الإنترنت</b> ودقة التعرف في المتصفح — قد يحتاج إعادة المحاولة أحياناً.</li>
+                    <li>يعمل على <b>Chrome وEdge</b> فقط — غير مدعوم في Firefox وSafari.</li>
+                    <li>يطلب إذن الميكروفون مرة واحدة — اضغط <b>«تفعيل الميكروفون»</b> أعلاه أولاً.</li>
+                </ul>
+            </div>
         </div>
 
         <!-- مظهر الوثيقة -->
@@ -716,15 +818,37 @@
                     </select>
                 </div>
 
-                <!-- إخفاء البرواز من الصفحات -->
+                <!-- إعدادات البرواز لكل صفحة -->
                 <div class="border-t border-gray-200 pt-2 mt-2">
-                    <span class="block text-xs font-bold text-emerald-800 mb-2">إخفاء البرواز من الصفحات</span>
-                    <div class="flex gap-2 flex-wrap items-center">
-                        <input type="text" id="hidePagesInput" aria-label="أرقام الصفحات المراد إخفاء برواز منها (مثال: 2,4 أو 3-5)" class="flex-1 min-w-[120px] px-2 py-1 border border-gray-300 rounded text-sm" placeholder="أرقام الصفحات (مثال: 1,3,5 أو 2-4)">
-                        <button type="button" id="addHidePageRule" class="opt-btn">إضافة</button>
+                    <span class="block text-xs font-bold text-emerald-800 mb-2">إعدادات البرواز لكل صفحة</span>
+                    <!-- الصفحة الأولى -->
+                    <div class="page-frame-row border border-emerald-100 rounded-lg p-2 mb-2 bg-emerald-50/30">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <div class="flex items-center gap-1.5">
+                                <span id="page1BorderPreview" class="page-border-preview ornate" aria-hidden="true" role="presentation"></span>
+                                <span class="text-xs font-bold text-emerald-700">الصفحة الأولى</span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <div class="flex items-center gap-1">
+                                    <span class="text-[10px] text-gray-500 shrink-0">نوع:</span>
+                                    <select id="page1BorderType" class="px-1 py-1 border border-gray-300 rounded text-[11px]" aria-label="نوع برواز الصفحة الأولى">
+                                        <option value="ornate">مزخرف</option>
+                                        <option value="double">مزدوج</option>
+                                        <option value="simple">بسيط</option>
+                                        <option value="none">بدون</option>
+                                    </select>
+                                </div>
+                                <label class="flex items-center gap-1 text-[11px] cursor-pointer font-semibold text-emerald-800">
+                                    <input type="checkbox" id="page1ShowFrame" checked class="w-4 h-4 text-emerald-600" aria-label="إظهار برواز الصفحة الأولى">
+                                    إظهار
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <div id="hidePagesList" class="flex flex-wrap gap-1 mt-2"></div>
-                    <p class="text-[10px] text-gray-500 mt-1">الاخفاء يستخدم عند وجود جداول تتعارض حدودها مع حدود زخرفة الصفحة.</p>
+                    <!-- الصفحات الإضافية -->
+                    <div id="extraPagesContainer" class="space-y-2"></div>
+                    <button type="button" id="addPageFrameRule" class="opt-btn text-[11px] mt-1" aria-label="إضافة صفحة جديدة لإعدادات البرواز">+ إضافة صفحة</button>
+                    <p class="text-[10px] text-gray-500 mt-1">يُستخدم لضبط البرواز لكل صفحة عند وجود جداول تتعارض حدودها مع البرواز.</p>
                 </div>
             </div>
         </details>
@@ -825,24 +949,138 @@
                     <p class="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
                         <span id="freeIjazaDesc">عند تفعيل هذا الخيار، ستختفي كل النصوص التلقائية (الحمد لله، متن السماع، الإجازة، الدعاء، الخاتمة) ويظهر مكانها النص الذي تكتبه أو تلصقه هنا.</span>
                     </p>
-                    <textarea id="freeIjazaText" rows="8" aria-label="نص الإجازة الحرة" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 text-sm leading-relaxed" placeholder="اكتب أو الصق نص الإجازة التي تريدها هنا..." dir="rtl"></textarea>
+                    <div class="relative">
+                        <textarea id="freeIjazaText" rows="8" aria-label="نص الإجازة الحرة" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 text-sm leading-relaxed" placeholder="اكتب أو الصق نص الإجازة التي تريدها هنا..." dir="rtl"></textarea>
+                        <div class="flex gap-1 mt-1 no-print">
+                            <button type="button" id="freeIjazaVoiceAppend" class="voice-btn" role="button" aria-label="إدخال صوتي — يُضاف إلى النص الحالي" aria-pressed="false" style="width:auto;border-radius:6px;padding:2px 8px;font-size:.7rem;gap:4px;display:flex;align-items:center;" title="إدخال صوتي — يُضاف للنص الموجود" aria-label="إدخال صوتي للإجازة الحرة">🎤 إضافة صوتياً</button>
+                            <button type="button" id="freeIjazaVoiceReplace" class="voice-btn" role="button" aria-label="إدخال صوتي — يستبدل النص الحالي" aria-pressed="false" style="width:auto;border-radius:6px;padding:2px 8px;font-size:.7rem;gap:4px;display:flex;align-items:center;border-color:#ef4444;color:#dc2626;" title="إدخال صوتي — يستبدل النص الحالي" aria-label="استبدال نص الإجازة الحرة بالصوت">🎤 استبدال بالصوت</button>
+                        </div>
+                    </div>
                     <p class="text-[10px] text-gray-500 mt-1">
                         ⚠️ إذا أردت كتابة إجازة بألفاظ خاصة فقم بتفعيل هذا الأمر (إجازة حرة).
                     </p>
 
-                    <!-- خيارات الملاحق في الإجازة الحرة -->
-                    <div class="border border-emerald-100 rounded-lg p-3 bg-emerald-50/40 space-y-2">
-                        <p class="text-xs font-bold text-emerald-800 mb-1">إلحاق ملاحق بالإجازة الحرة</p>
-                        <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700">
-                            <input type="checkbox" id="freeEnableTabaq" aria-label="إلحاق الطِّباق بالإجازة الحرة" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
-                            إضافة طِباق المجالس (يُستخدم ما أُعِدَّ في قسم «الطِّباق والحضور»)
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700">
-                            <input type="checkbox" id="freeEnableRoster" aria-label="إلحاق مسرد الحاضرين بالإجازة الحرة" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
-                            إضافة مسرد الحاضرين (يُستخدم ما أُعِدَّ في قسم «الطِّباق والحضور»)
-                        </label>
-                        <p class="text-[10px] text-gray-500">لضبط بيانات الطباق والمسرد افتح قسم «الطِّباق والحضور والتسلسل والصفحات» أدناه وفعِّل كلاً منهما وأدخل بياناته.</p>
-                    </div>
+                    <!-- خيارات الملاحق الكاملة في الإجازة الحرة -->
+                    <details id="sec-free-extras" class="acc" style="margin:0;">
+                        <summary style="list-style:none;cursor:pointer;padding:.55rem .8rem;font-weight:700;font-size:.82rem;color:#065f46;background:#f0fdf4;display:flex;align-items:center;justify-content:space-between;border-radius:8px;" aria-label="إلحاق ملاحق بالإجازة الحرة — انقر للتوسيع أو الطي" role="button">
+                            <span>📎 إلحاق ملاحق بالإجازة الحرة</span>
+                            <span style="font-size:.9rem;">⌄</span>
+                        </summary>
+                        <div class="space-y-3 pt-2 px-1">
+                            <!-- تفعيل الطباق والمسرد للإجازة الحرة -->
+                            <div class="flex flex-wrap gap-3">
+                                <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700 font-semibold">
+                                    <input type="checkbox" id="freeEnableTabaq" aria-label="إلحاق الطِّباق بالإجازة الحرة" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                    تفعيل الطِّباق
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700 font-semibold">
+                                    <input type="checkbox" id="freeEnableRoster" aria-label="إلحاق مسرد الحاضرين بالإجازة الحرة" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                    تفعيل المسرد
+                                </label>
+                            </div>
+
+                            <!-- فصل الصفحات -->
+                            <div class="border-t border-gray-100 pt-2">
+                                <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700">
+                                    <input type="checkbox" id="splitPages" aria-label="تقسيم المسرد عند الطباعة" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                    فصل الأقسام في صفحات مستقلّة (المتن، الطِّباق، الإسناد، الحضور)
+                                </label>
+                            </div>
+
+                            <!-- رقم التسلسل -->
+                            <div class="border-t border-gray-100 pt-2 space-y-2">
+                                <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700">
+                                    <input type="checkbox" id="serialShow" aria-label="إظهار رقم التسلسل" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                    إظهار رقم تسلسل الإجازة
+                                </label>
+                                <div id="serialWrap" class="hidden space-y-2 pr-2">
+                                    <input type="text" id="serialNum" aria-label="رقم تسلسل الوثيقة" class="w-full px-3 py-1.5 border border-gray-300 rounded-md text-xs" placeholder="اكتب رقم التسلسل">
+                                    <div>
+                                        <label class="block text-[10px] text-gray-500 mb-0.5">عبارة التسلسل (اختياري)</label>
+                                        <input type="text" id="serialLabel" aria-label="تسمية رقم التسلسل" class="w-full px-3 py-1.5 border border-gray-300 rounded-md text-xs" placeholder="تسلسل الإجازة">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-500 mb-0.5">موضع التسلسل</label>
+                                        <select id="serialPos" aria-label="موضع رقم التسلسل في الوثيقة" class="w-full px-2 py-1.5 border border-gray-300 rounded-md text-xs">
+                                            <option value="bottom-left">أسفل اليسار (تلقائي)</option>
+                                            <option value="bottom-center">أسفل الوسط</option>
+                                            <option value="bottom-right">أسفل اليمين</option>
+                                            <option value="inline">داخل نص الوثيقة</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- الطِّباق الكامل -->
+                            <div class="border-t border-gray-100 pt-2 space-y-2">
+                                <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700">
+                                    <input type="checkbox" id="tabaqEnable" aria-label="تفعيل جدول الطِّباق" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                    إضافة طِباق المجالس (جدول: رقم المجلس، التاريخ، البداية، النهاية)
+                                </label>
+                                <div id="tabaqWrap" class="hidden space-y-2 pr-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[10px] text-gray-600">عدد المجالس:</span>
+                                        <input type="number" id="tabaqRows" aria-label="عدد صفوف جدول الطِّباق" min="1" max="40" value="2" class="w-20 px-2 py-1 border border-gray-300 rounded-md text-xs">
+                                    </div>
+                                    <div id="tabaqList" class="space-y-2"></div>
+                                    <!-- تقسيم الطباق لصفحات -->
+                                    <div class="border-t border-gray-100 pt-2 mt-1 space-y-1">
+                                        <label class="block text-[10px] font-bold text-emerald-800">خيارات الصفحات للطِّباق</label>
+                                        <div class="flex flex-wrap gap-2 items-center text-[10px] text-gray-600">
+                                            <span>صفوف في كل صفحة:</span>
+                                            <input type="number" id="tabaqRowsPerPage" aria-label="عدد صفوف الطباق في كل صفحة" min="1" max="40" value="10" class="w-16 px-1 py-1 border border-gray-300 rounded text-xs">
+                                            <button type="button" id="applyTabaqPagination" class="opt-btn !text-[10px]" aria-label="تطبيق تقسيم صفحات الطباق">تطبيق</button>
+                                            <button type="button" id="resetTabaqPagination" class="opt-btn !text-[10px] text-gray-500" aria-label="إلغاء تقسيم صفحات الطباق">إلغاء التقسيم</button>
+                                        </div>
+                                        <p class="text-[9px] text-gray-400">يُستخدم عند كثرة المجالس — يكرر عنوان الطباق في رأس كل صفحة</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- المسرد الكامل -->
+                            <div class="border-t border-gray-100 pt-2 space-y-2">
+                                <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700">
+                                    <input type="checkbox" id="rosterEnable" aria-label="تفعيل مسرد الحاضرين" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                    إضافة مسرد بأسماء الحاضرين (جدول)
+                                </label>
+                                <div id="rosterWrap" class="hidden space-y-2 pr-2">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="block text-[10px] text-gray-500 mb-0.5">عدد الأعمدة</label>
+                                            <input type="number" id="rosterCols" aria-label="عدد أعمدة مسرد الحاضرين" min="1" max="10" value="3" class="w-full px-2 py-1 border border-gray-300 rounded-md text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] text-gray-500 mb-0.5">عدد الصفوف</label>
+                                            <input type="number" id="rosterRows" aria-label="عدد صفوف مسرد الحاضرين" min="1" max="500" value="10" class="w-full px-2 py-1 border border-gray-300 rounded-md text-xs">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-500 mb-0.5">أسماء الأعمدة (افصل بفاصلة)</label>
+                                        <input type="text" id="rosterColNames" aria-label="عناوين أعمدة المسرد" class="w-full px-2 py-1 border border-gray-300 rounded-md text-xs" placeholder="م، الاسم، البلد، التوقيع">
+                                    </div>
+                                    <div class="flex flex-wrap gap-1.5">
+                                        <button type="button" id="rosterBuild" class="opt-btn !text-[10px]">توليد حقول التعبئة</button>
+                                        <button type="button" id="rosterExport" class="opt-btn !text-[10px]">تصدير CSV</button>
+                                        <button type="button" id="rosterImportBtn" class="opt-btn !text-[10px]">استيراد كشف</button>
+                                        <input type="file" id="rosterImport" accept=".csv,text/csv" class="hidden" aria-hidden="true" tabindex="-1">
+                                    </div>
+                                    <div class="border-t border-gray-100 pt-2 space-y-1">
+                                        <div class="flex flex-wrap gap-2 items-center text-[10px] text-gray-600">
+                                            <span>صفوف في كل صفحة:</span>
+                                            <input type="number" id="rosterRowsPerPage" aria-label="عدد الصفوف في كل صفحة" min="1" max="50" value="10" class="w-16 px-1 py-1 border border-gray-300 rounded text-xs">
+                                            <button type="button" id="applyRosterPagination" class="opt-btn !text-[10px]" aria-label="تطبيق تقسيم صفحات المسرد">تطبيق</button>
+                                        </div>
+                                        <label class="flex items-center gap-1.5 cursor-pointer text-[10px] text-gray-700">
+                                            <input type="checkbox" id="rosterNoBorder" aria-label="إزالة حدود جدول المسرد" class="w-3.5 h-3.5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                            إزالة حدود الجدول عند الطباعة
+                                        </label>
+                                    </div>
+                                    <div id="rosterGrid" class="space-y-1 max-h-64 overflow-auto"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </details>
 
                     <!-- ====== السطر الجديد: بيانات التوقيع للإجازة الحرة ====== -->
                     <div class="border-t border-gray-200 pt-3 mt-3">
@@ -851,7 +1089,10 @@
                             <!-- العمود الأول: المجيز -->
                             <div class="border border-gray-200 rounded p-3 bg-gray-50/50">
                                 <p class="text-xs font-bold text-emerald-700 mb-2">المجيز</p>
-                                <input type="text" id="freeMujizName" aria-label="اسم المجيز في الإجازة الحرة" class="w-full px-3 py-1.5 border border-gray-300 rounded text-sm mb-2" placeholder="اسم المجيز">
+                                <div class="voice-field-wrap mb-2">
+                                    <input type="text" id="freeMujizName" aria-label="اسم المجيز في الإجازة الحرة" class="w-full px-3 py-1.5 border border-gray-300 rounded text-sm" placeholder="اسم المجيز">
+                                    <button type="button" class="voice-btn no-print" data-voice-target="freeMujizName" title="إدخال صوتي" aria-label="إدخال صوتي لاسم المجيز">🎤</button>
+                                </div>
                                 <div class="flex flex-wrap gap-1 items-center mb-2">
                                     <button type="button" class="opt-btn !text-[10px] free-mujiz-sig-btn">رفع توقيع</button>
                                     <span class="free-mujiz-sig-ok text-[10px] text-emerald-600 font-bold hidden">✓</span>
@@ -881,25 +1122,27 @@
                                     <!-- الهجري: يوم + شهر + سنة + زائد/ناقص -->
                                     <div>
                                         <label class="block text-[10px] text-gray-500 mb-1">الهجري</label>
-                                        <div class="grid grid-cols-3 gap-1">
+                                        <div class="space-y-1.5">
                                             <div>
-                                                <label for="freeIssueHD" class="block text-[10px] text-gray-400 mb-0.5">يوم</label>
-                                                <div class="flex items-center gap-0.5">
-                                                    <select id="freeIssueHD" class="flex-1 px-1 py-1.5 border border-gray-300 rounded text-sm" aria-label="يوم التاريخ الهجري للإصدار"></select>
-                                                    <button type="button" class="hbtn free-issue-hijri-adj" data-delta="1"  title="زيادة اليوم"  aria-label="زيادة يوم الإصدار">+</button>
-                                                    <button type="button" class="hbtn free-issue-hijri-adj" data-delta="-1" title="نقص اليوم"   aria-label="نقص يوم الإصدار">−</button>
+                                                <label for="freeIssueHD" class="block text-[10px] text-gray-400 mb-0.5">اليوم الهجري</label>
+                                                <div class="flex items-center gap-1">
+                                                    <select id="freeIssueHD" class="flex-1 px-2 py-1.5 border border-gray-300 rounded text-sm" aria-label="يوم التاريخ الهجري للإصدار"></select>
+                                                    <button type="button" class="hbtn free-issue-hijri-adj" data-delta="1" title="زيادة اليوم" aria-label="زيادة يوم الإصدار" style="min-width:36px;padding:.3rem .6rem;font-size:1.1rem;">+</button>
+                                                    <button type="button" class="hbtn free-issue-hijri-adj" data-delta="-1" title="نقص اليوم" aria-label="نقص يوم الإصدار" style="min-width:36px;padding:.3rem .6rem;font-size:1.1rem;">−</button>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <label for="freeIssueHM" class="block text-[10px] text-gray-400 mb-0.5">شهر</label>
-                                                <select id="freeIssueHM" class="w-full px-1 py-1.5 border border-gray-300 rounded text-sm" aria-label="شهر التاريخ الهجري للإصدار"></select>
-                                            </div>
-                                            <div>
-                                                <label for="freeIssueHY" class="block text-[10px] text-gray-400 mb-0.5">سنة</label>
-                                                <input type="number" id="freeIssueHY" class="w-full px-1 py-1.5 border border-gray-300 rounded text-sm" placeholder="1446" aria-label="سنة التاريخ الهجري للإصدار">
+                                            <div class="grid grid-cols-2 gap-1">
+                                                <div>
+                                                    <label for="freeIssueHM" class="block text-[10px] text-gray-400 mb-0.5">الشهر الهجري</label>
+                                                    <select id="freeIssueHM" class="w-full px-1 py-1.5 border border-gray-300 rounded text-sm" aria-label="شهر التاريخ الهجري للإصدار"></select>
+                                                </div>
+                                                <div>
+                                                    <label for="freeIssueHY" class="block text-[10px] text-gray-400 mb-0.5">السنة الهجرية</label>
+                                                    <input type="number" id="freeIssueHY" class="w-full px-1 py-1.5 border border-gray-300 rounded text-sm" placeholder="1446" aria-label="سنة التاريخ الهجري للإصدار">
+                                                </div>
                                             </div>
                                         </div>
-                                        <p class="text-[9px] text-gray-400 mt-1">الزائد والناقص عند اختلاف التاريخ الهجري عن الميلادي</p>
+                                        <p class="text-[9px] text-gray-400 mt-1">استخدم (+) و(−) عند اختلاف اليوم الهجري عن التحويل التلقائي</p>
                                     </div>
                                     <!-- حقول مخفية تُبنى منها النصوص النهائية -->
                                     <input type="hidden" id="freeIssueDateHijri">
@@ -910,7 +1153,10 @@
                             <!-- العمود الثالث: وكتبه -->
                             <div class="border border-gray-200 rounded p-3 bg-gray-50/50">
                                 <p class="text-xs font-bold text-emerald-700 mb-2">وكتبه</p>
-                                <input type="text" id="freeWroteName" aria-label="اسم كاتب الإجازة الحرة" class="w-full px-3 py-1.5 border border-gray-300 rounded text-sm mb-2" placeholder="اسم كاتبه">
+                                <div class="voice-field-wrap mb-2">
+                                    <input type="text" id="freeWroteName" aria-label="اسم كاتب الإجازة الحرة" class="w-full px-3 py-1.5 border border-gray-300 rounded text-sm" placeholder="اسم كاتبه">
+                                    <button type="button" class="voice-btn no-print" data-voice-target="freeWroteName" title="إدخال صوتي" aria-label="إدخال صوتي لاسم الكاتب">🎤</button>
+                                </div>
                                 <div class="flex flex-wrap gap-1 items-center mb-2">
                                     <button type="button" class="opt-btn !text-[10px] free-wrote-sig-btn">رفع توقيع</button>
                                     <button type="button" class="opt-btn !text-[10px] free-wrote-sig-draw">رسم توقيع</button>
@@ -943,7 +1189,10 @@
                 <div class="acc-body space-y-4">
                     <div>
                         <label for="studentName" class="block text-sm font-medium text-gray-700 mb-1">اسم الطالب / الطالبة كاملاً <span class="text-red-500">*</span></label>
-                        <input type="text" id="studentName" required data-tash-label="الطالب" class="tash w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: كليب بن أحمد الزهراني">
+                        <div class="voice-field-wrap">
+                            <input type="text" id="studentName" required data-tash-label="الطالب" class="tash w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: كليب بن أحمد الزهراني">
+                            <button type="button" class="voice-btn no-print" data-voice-target="studentName" title="إدخال صوتي لاسم الطالب" aria-label="إدخال صوتي لاسم الطالب">🎤</button>
+                        </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -957,7 +1206,10 @@
                             </div>
                             <input type="text" id="bookTypeCustom" class="w-full px-3 py-1.5 border border-amber-300 rounded-md text-sm mb-1.5 hidden" placeholder="اكتب نوع المسموع (مثال: جزء، مختصر، رسالة…)" aria-label="نوع المسموع المخصص">
                             <input type="hidden" id="bookType" value="كتاب">
-                            <input type="text" id="bookName" required data-tash-label="الكتاب" class="tash w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: إتمام المطالب بتكميل دليل الطالب">
+                            <div class="voice-field-wrap">
+                                <input type="text" id="bookName" required data-tash-label="الكتاب" class="tash w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: إتمام المطالب بتكميل دليل الطالب">
+                                <button type="button" class="voice-btn no-print" data-voice-target="bookName" title="إدخال صوتي لاسم الكتاب" aria-label="إدخال صوتي لاسم الكتاب">🎤</button>
+                            </div>
                         </div>
                         <div>
                             <label for="studentGender" class="block text-sm font-medium text-gray-700 mb-1">جنس الطالب</label>
@@ -968,7 +1220,10 @@
                     </div>
                     <div>
                         <label for="bookEdition" class="block text-sm font-medium text-gray-700 mb-1">النسخة المعتمدة من الكتاب عند القراءة (اختياري)</label>
-                        <input type="text" id="bookEdition" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: طبعة دار طيبة الخضراء">
+                        <div class="voice-field-wrap">
+                            <input type="text" id="bookEdition" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: طبعة دار طيبة الخضراء">
+                            <button type="button" class="voice-btn no-print" data-voice-target="bookEdition" title="إدخال صوتي للنسخة" aria-label="إدخال صوتي">🎤</button>
+                        </div>
                     </div>
                     <div>
                         <div class="flex items-center justify-between mb-1">
@@ -994,7 +1249,10 @@
                 <div class="acc-body space-y-3">
                     <div>
                         <label for="customTitle" class="block text-sm font-medium text-gray-700 mb-1">عنوان الوثيقة (اختياري — يُترك فارغاً للعنوان التلقائي)</label>
-                        <input type="text" id="customTitle" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: وثيقة سماع وإجازة صادرة عن قناة…">
+                        <div class="voice-field-wrap">
+                            <input type="text" id="customTitle" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: وثيقة سماع وإجازة صادرة عن قناة…">
+                            <button type="button" class="voice-btn no-print" data-voice-target="customTitle" title="إدخال صوتي لعنوان الوثيقة" aria-label="إدخال صوتي">🎤</button>
+                        </div>
                     </div>
                     
                     <div class="flex items-center justify-between flex-wrap gap-2 mt-4 border-t border-gray-200 pt-3">
@@ -1179,7 +1437,10 @@
                         </div>
                         <div>
                             <label for="method" id="methodLabel" class="block text-sm font-medium text-gray-700 mb-1">المنصة / الوسيلة / المكان</label>
-                            <input type="text" id="method" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: تطبيق زووم / قناة تليجرام / جامع كذا">
+                            <div class="voice-field-wrap">
+                                <input type="text" id="method" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: تطبيق زووم / قناة تليجرام / جامع كذا">
+                                <button type="button" class="voice-btn no-print" data-voice-target="method" title="إدخال صوتي" aria-label="إدخال صوتي للوسيلة">🎤</button>
+                            </div>
                             <select id="methodMode" aria-label="طريقة ملء خانة المكان أو الوسيلة" class="mt-2 w-full px-2 py-2 border border-gray-300 rounded-md text-sm">
                                 <option value="auto">ملء تلقائي (يظهر ما كُتب أعلاه)</option>
                                 <option value="blank">تركه فارغاً ليُملأ يدوياً</option>
@@ -1189,11 +1450,17 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="organizer" class="block text-sm font-medium text-gray-700 mb-1">رتّب اللقاء ونظّمه (اختياري)</label>
-                            <input type="text" id="organizer" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: ملتقى طلبة العلم">
+                            <div class="voice-field-wrap">
+                                <input type="text" id="organizer" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: ملتقى طلبة العلم">
+                                <button type="button" class="voice-btn no-print" data-voice-target="organizer" title="إدخال صوتي" aria-label="إدخال صوتي للمنظم">🎤</button>
+                            </div>
                         </div>
                         <div>
                             <label for="reader" class="block text-sm font-medium text-gray-700 mb-1">وقرأ فيه (القارئ — اختياري)</label>
-                            <input type="text" id="reader" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: الشيخ عبد العزيز بن باز">
+                            <div class="voice-field-wrap">
+                                <input type="text" id="reader" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: الشيخ عبد العزيز بن باز">
+                                <button type="button" class="voice-btn no-print" data-voice-target="reader" title="إدخال صوتي" aria-label="إدخال صوتي للقارئ">🎤</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1252,92 +1519,13 @@
             <!-- خيارات إضافية: طباق / حضور / تسلسل / صفحات -->
             <details id="sec-extras" class="acc">
                 <summary class="acc-h">الطِّباق والحضور والتسلسل والصفحات</summary>
-                <div class="acc-body space-y-3">
-                    <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
-                        <input type="checkbox" id="splitPages" aria-label="تقسيم المسرد عند الطباعة" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
-                        فصل الأقسام في صفحات مستقلّة (المتن، الطِّباق، الإسناد، الحضور)
-                    </label>
-
-                    <div class="border-t border-gray-200 pt-2 space-y-2">
-                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
-                            <input type="checkbox" id="serialShow" aria-label="إظهار رقم التسلسل" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
-                            إظهار رقم تسلسل الإجازة
-                        </label>
-                        <div id="serialWrap" class="hidden space-y-2">
-                            <input type="text" id="serialNum" aria-label="رقم تسلسل الوثيقة" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm" placeholder="اكتب رقم التسلسل الذي تريده">
-                            <div>
-                                <label class="block text-xs text-gray-600 mb-1">عبارة التسلسل (اختياري)</label>
-                                <input type="text" id="serialLabel" aria-label="تسمية رقم التسلسل" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="تسلسل الإجازة (اترك فارغاً للعبارة التلقائية)">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-600 mb-1">موضع التسلسل</label>
-                                <select id="serialPos" aria-label="موضع رقم التسلسل في الوثيقة" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
-                                    <option value="bottom-left">أسفل اليسار (تلقائي)</option>
-                                    <option value="bottom-center">أسفل الوسط</option>
-                                    <option value="bottom-right">أسفل اليمين</option>
-                                    <option value="inline">داخل نص الوثيقة (نهاية المتن)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-gray-200 pt-2 space-y-2">
-                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
-                            <input type="checkbox" id="tabaqEnable" aria-label="تفعيل جدول الطِّباق" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
-                            إضافة طِباق المجالس (جدول: رقم المجلس وتاريخه الهجري والميلادي وبدايته ونهايته)
-                        </label>
-                        <div id="tabaqWrap" class="hidden space-y-2">
-                            <div class="flex items-center gap-2"><span class="text-xs text-gray-600">عدد المجالس:</span>
-                                <input type="number" id="tabaqRows" aria-label="عدد صفوف جدول الطِّباق" min="1" max="40" value="2" class="w-24 px-2 py-1 border border-gray-300 rounded-md text-sm"></div>
-                            <div id="tabaqList" class="space-y-2"></div>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-gray-200 pt-2 space-y-2">
-                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
-                            <input type="checkbox" id="rosterEnable" aria-label="تفعيل مسرد الحاضرين" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
-                            إضافة مسرد بأسماء الحاضرين (جدول فارغ)
-                        </label>
-                        <div id="rosterWrap" class="hidden space-y-2">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="block text-xs text-gray-600 mb-1">عدد الأعمدة <span class="text-[10px] text-gray-400">(تظهر عدد الأعمدة وأسماء الأعمدة وعدد الصفوف التي حددتها بعد الضغط على "توليد حقول التعبئة" في الأسفل)</span></label>
-                                    <input type="number" id="rosterCols" aria-label="عدد أعمدة مسرد الحاضرين" min="1" max="10" value="3" class="w-full px-2 py-1 border border-gray-300 rounded-md text-sm">
-                                </div>
-                                <div>
-                                    <label class="block text-xs text-gray-600 mb-1">عدد الصفوف</label>
-                                    <input type="number" id="rosterRows" aria-label="عدد صفوف مسرد الحاضرين" min="1" max="500" value="10" class="w-full px-2 py-1 border border-gray-300 rounded-md text-sm">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-600 mb-1">أسماء الأعمدة (افصل بفاصلة)</label>
-                                <input type="text" id="rosterColNames" aria-label="عناوين أعمدة المسرد (مفصولة بفاصلة)" class="w-full px-2 py-1 border border-gray-300 rounded-md text-sm" placeholder="م، الاسم، البلد، التوقيع">
-                            </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button type="button" id="rosterBuild" class="opt-btn">توليد حقول التعبئة</button>
-                                <button type="button" id="rosterExport" class="opt-btn">تصدير كشف Excel/CSV</button>
-                                <button type="button" id="rosterImportBtn" class="opt-btn">استيراد كشف معبّأ</button>
-                                <input type="file" id="rosterImport" accept=".csv,text/csv" class="hidden" aria-hidden="true" tabindex="-1">
-                            </div>
-                            <!-- خيارات الطباعة للمسرد -->
-                            <div class="border-t border-gray-200 pt-2 mt-2">
-                                <label class="block text-xs font-bold text-emerald-800 mb-1">خيارات الطباعة للمسرد</label>
-                                <div class="flex flex-wrap gap-2 items-center">
-                                    <span class="text-xs text-gray-600">عدد الصفوف في كل صفحة:</span>
-                                    <input type="number" id="rosterRowsPerPage" aria-label="عدد الصفوف في كل صفحة عند الطباعة" min="1" max="50" value="10" class="w-20 px-2 py-1 border border-gray-300 rounded text-sm">
-                                    <button type="button" id="applyRosterPagination" class="opt-btn">تطبيق التقسيم</button>
-                                </div>
-                                <div class="mt-2">
-                                    <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700">
-                                        <input type="checkbox" id="rosterNoBorder" aria-label="إزالة حدود جدول المسرد" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
-                                        إزالة حدود الجدول (تظهر بدون حدود أثناء الطباعة)
-                                    </label>
-                                </div>
-                                <p class="text-[10px] text-gray-500 mt-1">هذا الخيار يستخدم لمعالجة تداخل البرواز مع حد الجدول.</p>
-                            </div>
-                            <p class="text-[11px] text-gray-500">املأ الحقول لتظهر بالأسماء داخل المسرد، أو صدّر الكشف وأرسله للطلاب عبر رابط درايف، وبعد تعبئته استورده ليُنسَّق تلقائياً في الجدول.</p>
-                            <div id="rosterGrid" class="space-y-1 max-h-72 overflow-auto"></div>
-                        </div>
+                <div class="acc-body">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-center">
+                        <p class="text-sm text-emerald-800 font-bold mb-1">📎 هذه الإعدادات انتقلت إلى قسم «الإجازة الحرة»</p>
+                        <p class="text-xs text-emerald-700 mb-2">افتح قسم «الإجازة الحرة» ثم «إلحاق ملاحق بالإجازة الحرة» للوصول إلى كامل إعدادات الطِّباق والمسرد والتسلسل وفصل الصفحات.</p>
+                        <button type="button" onclick="document.getElementById('sec-free-ijaza').open=true;document.getElementById('sec-free-extras').open=true;document.getElementById('sec-free-ijaza').scrollIntoView({behavior:'smooth'});" class="opt-btn text-emerald-700 border-emerald-300">
+                            🔗 الانتقال المباشر إلى الإعدادات
+                        </button>
                     </div>
                 </div>
             </details>
@@ -1454,7 +1642,7 @@
             <div id="actionBar" class="flex flex-wrap gap-2 pt-3 mt-1 border-t border-gray-200">
                 <button type="button" id="printBtn" class="flex-1 min-w-[120px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm" aria-label="طباعة الوثيقة أو حفظها بصيغة PDF">طباعة / PDF</button>
                 <button type="button" id="imageBtn" class="flex-1 min-w-[110px] bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm" aria-label="تصدير الوثيقة كصورة PNG">تصدير صورة</button>
-                <p class="text-[10px] text-gray-500 text-center w-full mt-1">هذا مثالي عندما تكون الإجازة صفحة واحدة فقط</p>
+                <p class="text-[10px] text-gray-500 text-center w-full mt-1">«طباعة / PDF» لحفظ ملف PDF | «تصدير صورة» مثالي للصفحة الواحدة</p>
                 <button type="button" id="copyBtn" class="flex-1 min-w-[100px] bg-gray-800 hover:bg-gray-900 text-white font-bold py-2.5 px-3 rounded-md transition shadow-md text-sm" aria-label="نسخ نص الوثيقة إلى الحافظة">نسخ النص</button>
                 <button type="button" id="resetBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 px-3 rounded-md transition border border-gray-300 text-sm" aria-label="تفريغ جميع حقول النموذج">تفريغ</button>
             </div>
@@ -1571,7 +1759,7 @@
 <!-- Modal Overlay -->
 <div id="modalOverlay" class="modal-overlay no-print" role="dialog" aria-modal="true" aria-label="نافذة حوار">
     <!-- Guide Modal -->
-    <div id="guideModal" class="modal hidden" aria-labelledby="guideModalTitle">
+    <div id="guideModal" class="modal no-print hidden" aria-labelledby="guideModalTitle">
         <h3 id="guideModalTitle">📖 دليل الاستخدام التفصيلي <button type="button" class="x" aria-label="إغلاق نافذة الدليل">✕</button></h3>
 
         <!-- مقدمة -->
@@ -1902,7 +2090,7 @@
     </div>
 
     <!-- Contact Modal -->
-    <div id="contactModal" class="modal hidden" aria-labelledby="contactModalTitle">
+    <div id="contactModal" class="modal no-print hidden" aria-labelledby="contactModalTitle">
         <h3 id="contactModalTitle">للتواصل والمقترحات <button type="button" class="x" aria-label="إغلاق نافذة التواصل">✕</button></h3>
         <p style="font-size:.88rem;color:#065f46;font-weight:700;margin-bottom:.7rem;">إعداد: كليب بن أحمد ضيف الله الزهراني</p>
         <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:.5rem;font-size:.92rem;color:#334155;">
@@ -1938,7 +2126,7 @@
     </div>
 
     <!-- نافذة إمكانية الوصول -->
-    <div id="a11yModal" class="modal hidden" aria-labelledby="a11yModalTitle" aria-modal="true">
+    <div id="a11yModal" class="modal no-print hidden" aria-labelledby="a11yModalTitle" aria-modal="true">
         <h3 id="a11yModalTitle">♿ إمكانية الوصول <button type="button" class="x" aria-label="إغلاق نافذة إمكانية الوصول">✕</button></h3>
 
         <div class="a11y-intro">
@@ -1991,6 +2179,9 @@
 
 </div>
 
+
+<div id="sr-announce" aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;" class="no-print"></div>
+<div id="sr-announce-assertive" aria-live="assertive" aria-atomic="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;" class="no-print"></div>
 <div id="toast" class="toast no-print bg-emerald-600 text-white text-sm font-semibold py-2.5 px-5 rounded-full shadow-lg" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script>
@@ -2014,7 +2205,7 @@
         bookEdition:$('bookEdition'),
         splitPages:$('splitPages'), serialShow:$('serialShow'), serialNum:$('serialNum'),
         serialLabel:$('serialLabel'), serialPos:$('serialPos'),
-        tabaqEnable:$('tabaqEnable'), tabaqRows:$('tabaqRows'),
+        tabaqEnable:$('tabaqEnable'), tabaqRows:$('tabaqRows'), tabaqRowsPerPage:$('tabaqRowsPerPage'),
         rosterEnable:$('rosterEnable'), rosterCols:$('rosterCols'), rosterRows:$('rosterRows'), rosterColNames:$('rosterColNames'),
         startGregPicker:$('startGregPicker'), startHD:$('startHD'), startHM:$('startHM'), startHY:$('startHY'), startDay:$('startDay'), startTime:$('startTime'),
         endGregPicker:$('endGregPicker'), endHD:$('endHD'), endHM:$('endHM'), endHY:$('endHY'), endDay:$('endDay'), endTime:$('endTime'),
@@ -2067,6 +2258,7 @@
     // ---- قائمة الصفحات التي سيُخفى فيها البرواز ----
     let hidePages = [];
     let rosterPagination = [];
+    let tabaqPagination = []; // صفحات الطِّباق المقسّمة
     // ---- تواقيع المنظمين الإضافية ----
     let orgSignatures = []; // [{name, dataUrl}]
 
@@ -2227,18 +2419,49 @@
             end:r.querySelector('.tab-end').value.trim()
         }));
     }
+    function applyTabaqPagination(){
+        const rpp = parseInt(($('tabaqRowsPerPage') || {value:'10'}).value, 10) || 10;
+        const rows = getTabaqRows();
+        if(!rows.length){ showToast('لا توجد بيانات في الطباق', false); return; }
+        const pages = [];
+        for(let i = 0; i < rows.length; i += rpp) pages.push(rows.slice(i, i + rpp));
+        tabaqPagination = pages;
+        showToast('تم تقسيم الطباق إلى ' + pages.length + ' صفحة');
+        render(); scheduleSave();
+    }
+
     function buildTabaqBlock(){
         if(!$('tabaqEnable').checked) return '';
-        const rows=getTabaqRows();
-        if(!rows.length) return '';
-        let header = '<thead><tr><th>المجلس</th><th>التاريخ الهجري</th><th>الميلادي</th><th>بداية المجلس</th><th>انتهاء المجلس</th></tr></thead>';
-        let body = '<tbody>';
-        rows.forEach((r,i)=>{ const d=tabaqDerive(r.greg);
-            body+=`<tr><td>المجلس ${ordinal(i+1)}</td><td>${d.day} ${esc(d.hij)}</td><td>${esc(d.greg)}</td><td>${esc(r.start)||'—'}</td><td>${esc(r.end)||'—'}</td></tr>`;
+        const allRows = getTabaqRows();
+        if(!allRows.length) return '';
+        const header = '<thead><tr><th>المجلس</th><th>التاريخ الهجري</th><th>الميلادي</th><th>بداية المجلس</th><th>انتهاء المجلس</th></tr></thead>';
+        // تحديد الصفحات
+        let pages = [];
+        if(tabaqPagination.length > 0){
+            const pTotal = tabaqPagination.reduce((s,p)=>s+p.length, 0);
+            pages = pTotal === allRows.length ? tabaqPagination : (tabaqPagination=[], null);
+        }
+        if(!pages || pages.length === 0) pages = [allRows];
+        const multiPage = pages.length > 1;
+        let html = '';
+        let globalOffset = 0;
+        pages.forEach((pageRows, pageIndex) => {
+            const isFirst = pageIndex === 0;
+            const titleHtml = (multiPage || isFirst)
+                ? `<h3 class="appendix-h">طِباقُ المجالس${multiPage ? ` (${pageIndex+1}/${pages.length})` : ''}</h3>`
+                : '';
+            const pageBreak = !isFirst ? ' style="break-before:page"' : '';
+            let body = '<tbody>';
+            pageRows.forEach((r, i) => {
+                const globalIdx = globalOffset + i;   // ← عداد تراكمي صحيح
+                const d = tabaqDerive(r.greg);
+                body += `<tr><td>المجلس ${ordinal(globalIdx+1)}</td><td>${d.day} ${esc(d.hij)}</td><td>${esc(d.greg)}</td><td>${esc(r.start)||'—'}</td><td>${esc(r.end)||'—'}</td></tr>`;
+            });
+            body += '</tbody>';
+            html += `<div class="appendix"${pageBreak}>${titleHtml}<table class="doc-table">${header}${body}</table></div>`;
+            globalOffset += pageRows.length;          // ← تحديث الإزاحة
         });
-        body += '</tbody>';
-        return `<div class="appendix"><h3 class="appendix-h">طِباقُ المجالس</h3>`
-            +`<table class="doc-table">${header}${body}</table></div>`;
+        return html;
     }
 
     function rosterCfg(){
@@ -2294,14 +2517,22 @@
                 pages = rosterPagination;
             } else {
                 rosterPagination = [];
+        tabaqPagination  = [];
             }
         }
         if (pages.length === 0) {
             pages = [data];
         }
-        let noBorderClass = v.rosterNoBorder ? ' no-border' : '';
-        let html = `<div class="appendix"><h3 class="appendix-h">مَسْرَدُ الحاضرين للسماع</h3>`;
+        const noBorderClass = v.rosterNoBorder ? ' no-border' : '';
+        const multiPage = pages.length > 1;
+        let html = '';
         pages.forEach((pageData, pageIndex) => {
+            const isFirst = pageIndex === 0;
+            // عنوان القسم يتكرر في كل صفحة عند وجود تقسيم
+            const titleHtml = (multiPage || isFirst)
+                ? `<h3 class="appendix-h">مَسْرَدُ الحاضرين للسماع${multiPage ? ` (${pageIndex+1}/${pages.length})` : ''}</h3>`
+                : '';
+            const pageBreak = !isFirst ? ' style="break-before:page"' : '';
             let head = '<thead><tr>';
             for(let c=0;c<cols;c++){ head+=`<th>${esc(names[c])}</th>`; }
             head+='</tr></thead>';
@@ -2315,12 +2546,8 @@
                 body += '</tr>';
             });
             body += '</tbody>';
-            if (pageIndex > 0) {
-                html += `<div style="break-before:page; margin-top:2rem;"></div>`;
-            }
-            html += `<table class="doc-table roster${noBorderClass}">${head}${body}</table>`;
+            html += `<div class="appendix"${pageBreak}>${titleHtml}<table class="doc-table roster${noBorderClass}">${head}${body}</table></div>`;
         });
-        html += '</div>';
         return html;
     }
 
@@ -2654,7 +2881,7 @@
     }
     function addStudentRow(d){ d=d||{}; const row=document.createElement('div'); row.className='student-row flex gap-2 items-center'; row.innerHTML='<input type="text" class="tash student-name flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الطالب" placeholder="اسم الطالب / الطالبة"><select class="student-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="student-del opt-btn" title="حذف">✕</button>'; row.querySelector('.student-name').value=d.name||''; row.querySelector('.student-gender').value=d.gender||'male'; studentList.appendChild(row); }
     function getStudents(){ const list=[]; const n=fields.studentName.value.trim(); if(n) list.push({name:n, gender:fields.studentGender.value}); Array.from(studentList.querySelectorAll('.student-row')).forEach(r=>{ const nm=r.querySelector('.student-name').value.trim(); if(nm) list.push({name:nm, gender:r.querySelector('.student-gender').value}); }); return list; }
-    function addSheikhRow(d){ d=d||{}; const row=document.createElement('div'); row.className='sheikh-row border border-gray-200 rounded-md p-2.5 space-y-2 bg-white'; row.innerHTML='<div class="flex gap-2 items-center"><input type="text" class="tash sheikh-name flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الشيخ" placeholder="اسم الشيخ / الشيخة"><select class="sheikh-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="sheikh-del opt-btn" title="حذف هذا الشيخ">✕</button></div><div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-700 pr-1"><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-khassa" checked> إجازة خاصة (بالكتاب)</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-amma" checked> إجازة عامة</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-family"> الأزواج والذرية</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-works" checked> بمؤلفاته خاصة</label></div><input type="text" class="sh-custom w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="إضافة حرّة لإجازة هذا الشيخ (اختياري)"><textarea class="sh-isnad hidden w-full px-3 py-2 border border-gray-300 rounded-md text-sm leading-relaxed" rows="2" placeholder="سند هذا الشيخ (اختياري)..."></textarea><div class="flex flex-wrap gap-2 items-center text-[11px] text-gray-600"><button type="button" class="sh-sigbtn opt-btn">توقيع الشيخ</button><span class="sh-sigok"></span><button type="button" class="sh-stampbtn opt-btn">ختم الشيخ</button><span class="sh-stampok"></span><button type="button" class="sh-imgclear opt-btn">مسح التوقيع/الختم</button><input type="file" class="sh-sigfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"><input type="file" class="sh-stampfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"></div>'; row.querySelector('.sheikh-name').value=d.name||''; row.querySelector('.sheikh-gender').value=d.gender||'male'; if(d.khassa===false) row.querySelector('.sh-khassa').checked=false; if(d.amma===false) row.querySelector('.sh-amma').checked=false; if(d.family===true) row.querySelector('.sh-family').checked=true; if(d.works===false) row.querySelector('.sh-works').checked=false; row.querySelector('.sh-custom').value=d.custom||''; row.querySelector('.sh-isnad').value=d.isnad||''; row.querySelector('.sh-isnad').classList.toggle('hidden', fields.isnadMode.value!=='per'); row._sig=d.sig||null; row._stamp=d.stamp||null; if(row._sig) row.querySelector('.sh-sigok').textContent='✓'; if(row._stamp) row.querySelector('.sh-stampok').textContent='✓'; sheikhList.appendChild(row); }
+    function addSheikhRow(d){ d=d||{}; const row=document.createElement('div'); row.className='sheikh-row border border-gray-200 rounded-md p-2.5 space-y-2 bg-white'; row.innerHTML='<div class="flex gap-2 items-center"><div class="voice-field-wrap flex-1"><input type="text" class="tash sheikh-name w-full px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الشيخ" placeholder="اسم الشيخ / الشيخة"><button type="button" class="voice-btn no-print sheikh-voice-btn" title="إدخال صوتي لاسم الشيخ" aria-label="إدخال صوتي">🎤</button></div><select class="sheikh-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="sheikh-del opt-btn" title="حذف هذا الشيخ">✕</button></div><div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-700 pr-1"><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-khassa" checked> إجازة خاصة (بالكتاب)</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-amma" checked> إجازة عامة</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-family"> الأزواج والذرية</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-works" checked> بمؤلفاته خاصة</label></div><input type="text" class="sh-custom w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="إضافة حرّة لإجازة هذا الشيخ (اختياري)"><textarea class="sh-isnad hidden w-full px-3 py-2 border border-gray-300 rounded-md text-sm leading-relaxed" rows="2" placeholder="سند هذا الشيخ (اختياري)..."></textarea><div class="flex flex-wrap gap-2 items-center text-[11px] text-gray-600"><button type="button" class="sh-sigbtn opt-btn">توقيع الشيخ</button><span class="sh-sigok"></span><button type="button" class="sh-stampbtn opt-btn">ختم الشيخ</button><span class="sh-stampok"></span><button type="button" class="sh-imgclear opt-btn">مسح التوقيع/الختم</button><input type="file" class="sh-sigfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"><input type="file" class="sh-stampfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"></div>'; row.querySelector('.sheikh-name').value=d.name||''; row.querySelector('.sheikh-gender').value=d.gender||'male'; if(d.khassa===false) row.querySelector('.sh-khassa').checked=false; if(d.amma===false) row.querySelector('.sh-amma').checked=false; if(d.family===true) row.querySelector('.sh-family').checked=true; if(d.works===false) row.querySelector('.sh-works').checked=false; row.querySelector('.sh-custom').value=d.custom||''; row.querySelector('.sh-isnad').value=d.isnad||''; row.querySelector('.sh-isnad').classList.toggle('hidden', fields.isnadMode.value!=='per'); row._sig=d.sig||null; row._stamp=d.stamp||null; if(row._sig) row.querySelector('.sh-sigok').textContent='✓'; if(row._stamp) row.querySelector('.sh-stampok').textContent='✓'; sheikhList.appendChild(row); }
     function getSheikhs(){ return Array.from(sheikhList.querySelectorAll('.sheikh-row')).map(r=>({ name:r.querySelector('.sheikh-name').value.trim(), gender:r.querySelector('.sheikh-gender').value, khassa:r.querySelector('.sh-khassa').checked, amma:r.querySelector('.sh-amma').checked, family:r.querySelector('.sh-family').checked, works:r.querySelector('.sh-works').checked, custom:r.querySelector('.sh-custom').value.trim(), isnad:r.querySelector('.sh-isnad').value.trim(), sig:r._sig||null, stamp:r._stamp||null })).filter(s=>s.name); }
     function sheikhForms(sheikhs){ const n=sheikhs.length; const allF = n>0 && sheikhs.every(s=>s.gender==='female'); const ajazaV = allF?'أجازت':'أجاز'; const akhbaraV = allF?'أخبرت':'أخبر'; if(n>=3){ return { hu:allF?'هنّ':'هم', noun:allF?'الشيخاتُ':'المشايخُ', honor:allF?'فضيلة الشيخات /':'فضيلة المشايخ /', ajazaV, akhbaraV, ajaza:allF?'أجازْنَ':'أجازوا', qaala:allF?'فقُلن':'فقالوا', mujiz:allF?'المجيزات':'المجيزون', musammi:allF?'الشيخات المُسمِّعات':'المشايخ المُسمِّعون' }; } if(n===2){ return { hu:'هما', noun:allF?'الشيختان':'الشيخان', honor:allF?'فضيلتي الشيختين /':'فضيلتي الشيخين /', ajazaV, akhbaraV, ajaza:allF?'أجازتا':'أجازا', qaala:allF?'فقالتا':'فقالا', mujiz:allF?'المجيزتان':'المجيزان', musammi:allF?'الشيختان المُسمِّعتان':'الشيخان المُسمِّعان' }; } const F=allF; return { hu:F?'ها':'ه', noun:F?'الشيخةُ':'الشيخُ', honor:F?'فضيلة الشيخة /':'فضيلة الشيخ /', ajazaV, akhbaraV, ajaza:F?'أجازت':'أجاز', qaala:F?'فقالت':'فقال', mujiz:F?'المجيزة':'المجيز', musammi:F?'الشيخة المُسمِّعة':'الشيخ المُسمِّع' }; }
 
@@ -3017,9 +3244,13 @@
         const mainWrapped = (v.splitPages||v.onePageText) ? `<div style="break-inside:avoid">${mainCore}</div>` : mainCore;
 
         let fullHtml = mainWrapped;
-        fullHtml += appx.map(a=> a.newPage
-            ? `<div style="break-before:page" class="mt-8">${a.html}</div>`
-            : `<div class="mt-8">${a.html}</div>`).join('');
+        fullHtml += appx.map((a, _appxIdx)=> {
+            const _pageNum = _appxIdx + 2;
+            const _cls = `appendix-page-frame`;
+            return a.newPage
+                ? `<div style="break-before:page" class="mt-8"><div class="${_cls}" data-doc-page="${_pageNum}">${a.html}</div></div>`
+                : `<div class="mt-8"><div class="${_cls}" data-doc-page="${_pageNum}">${a.html}</div></div>`;
+        }).join('');
 
         const sigHtml = `<div id="signatureContent">${document.getElementById('signatureArea').innerHTML}</div>`;
         const placement = v.signaturePlacement || 'afterClosing';
@@ -3054,12 +3285,17 @@
         $('tabaqWrap').classList.toggle('hidden', !fields.tabaqEnable.checked);
         $('rosterWrap').classList.toggle('hidden', !fields.rosterEnable.checked);
         // في الإجازة الحرة: إظهار الطباق/المسرد إذا كانا مفعَّلَين من خياري الإجازة الحرة
+        // ربط freeEnable ↔ main Enable (مزامنة تلقائية)
         if (fields.freeIjaza.checked) {
-            if (fields.freeEnableTabaq.checked) { $('tabaqWrap').classList.remove('hidden'); if(fields.tabaqEnable.checked) buildTabaqRows(); else { /* سيُبنى لاحقاً */ } }
-            if (fields.freeEnableRoster.checked) { $('rosterWrap').classList.remove('hidden'); if(!$('rosterGrid').children.length) buildRosterGrid(false); }
+            if (fields.freeEnableTabaq.checked && !fields.tabaqEnable.checked) {
+                fields.tabaqEnable.checked = true;
+            }
+            if (fields.freeEnableRoster.checked && !fields.rosterEnable.checked) {
+                fields.rosterEnable.checked = true;
+            }
         }
         if(fields.rosterEnable.checked && !$('rosterGrid').children.length) buildRosterGrid(false);
-        if(fields.tabaqEnable.checked || (fields.freeIjaza.checked && fields.freeEnableTabaq.checked)) buildTabaqRows();
+        if(fields.tabaqEnable.checked) buildTabaqRows();
         // toggle serialWrap
         $('serialWrap') && $('serialWrap').classList.toggle('hidden', !fields.serialShow.checked);
 
@@ -3284,6 +3520,7 @@
         const v2 = readValues();
         ijazaOutput.innerHTML = buildHtml(v2);
         applyHideFrame();
+        applyAppendixBorders();
 
         arabicizeTextNodes(ijazaOutput);
         arabicizeTextNodes(serialBox);
@@ -3291,83 +3528,63 @@
 
     // ---- تطبيق إخفاء البرواز ----
     function applyHideFrame(){
-        ijazaBox.classList.remove('hide-frame');
-        if (printFrame) printFrame.classList.remove('hide-frame');
-        for(let p=1; p<=10; p++){
-            ijazaBox.classList.remove(`page-${p}`);
-        }
-
-        if (hidePages.length > 0) {
+        // الصفحة الأولى فقط — الملاحق تُعالَج في applyAppendixBorders
+        const hidePage1 = hidePages.includes(1);
+        if(hidePage1){
             ijazaBox.classList.add('hide-frame');
             if (printFrame) printFrame.classList.add('hide-frame');
-            hidePages.forEach(page => {
-                ijazaBox.classList.add(`page-${page}`);
-            });
+        } else {
+            ijazaBox.classList.remove('hide-frame');
+            if (printFrame) printFrame.classList.remove('hide-frame');
         }
     }
 
-    // ---- إدارة قائمة الصفحات المخفية ----
-    function updateHidePagesList(){
-        const list = document.getElementById('hidePagesList');
-        list.innerHTML = '';
-        hidePages.forEach((page, index) => {
-            const span = document.createElement('span');
-            span.className = 'inline-flex items-center gap-1 bg-gray-100 rounded-full px-2 py-0.5 text-xs';
-            span.innerHTML = `صفحة ${page} <button type="button" class="text-red-500 hover:text-red-700" data-remove="${index}">✕</button>`;
-            list.appendChild(span);
-        });
-        list.querySelectorAll('[data-remove]').forEach(btn => {
-            btn.addEventListener('click', function(){
-                const idx = parseInt(this.dataset.remove);
-                hidePages.splice(idx, 1);
-                updateHidePagesList();
-                render();
-                scheduleSave();
-            });
-        });
-    }
-
-    // ---- ربط زر إضافة الصفحات ----
-    document.getElementById('addHidePageRule').addEventListener('click', function(){
-        const input = document.getElementById('hidePagesInput');
-        const val = input.value.trim();
-        if (!val) {
-            showToast('الرجاء إدخال أرقام الصفحات', false);
-            return;
-        }
-        const parts = val.split(',').map(s => s.trim());
-        let newPages = [];
-        parts.forEach(p => {
-            if (p.includes('-')) {
-                const range = p.split('-').map(Number);
-                if (range.length === 2 && !isNaN(range[0]) && !isNaN(range[1])) {
-                    const start = Math.min(range[0], range[1]);
-                    const end = Math.max(range[0], range[1]);
-                    for (let i = start; i <= end; i++) {
-                        if (!hidePages.includes(i)) newPages.push(i);
-                    }
+    // تطبيق البرواز على صفحات الملاحق بشكل مستقل
+    function applyAppendixBorders(){
+        if(!extraPagesContainer) return;
+        document.querySelectorAll('#ijazaOutput .appendix-page-frame').forEach(function(div){
+            const pageNum = parseInt(div.dataset.docPage);
+            const row = extraPagesContainer.querySelector('[data-page="'+pageNum+'"]');
+            div.classList.remove('with-border','brd-ornate','brd-double','brd-simple');
+            if(row){
+                const showCB = row.querySelector('.extra-page-show');
+                const borderSel = row.querySelector('.extra-page-border');
+                if(showCB && showCB.checked){
+                    div.classList.add('with-border');
+                    const brdVal = borderSel ? borderSel.value : 'default';
+                    if(brdVal === 'double') div.classList.add('brd-double');
+                    else if(brdVal === 'simple') div.classList.add('brd-simple');
+                    // ornate و default: لا كلاس إضافي (الافتراضي)
                 }
             } else {
-                const num = Number(p);
-                if (!isNaN(num) && num > 0 && !hidePages.includes(num)) {
-                    newPages.push(num);
-                }
+                // إذا لم يوجد صف إعداد → أظهر البرواز بشكل افتراضي
+                div.classList.add('with-border');
             }
         });
-        if (newPages.length === 0) {
-            showToast('لم يتم التعرف على أرقام صحيحة أو أنها مكررة', false);
-            return;
-        }
-        hidePages = hidePages.concat(newPages);
-        hidePages.sort((a,b) => a - b);
-        input.value = '';
-        updateHidePagesList();
-        render();
-        scheduleSave();
-    });
+    }
+
+    // ---- إدارة قائمة الصفحات المخفية (محدَّثة لتعمل مع واجهة الصفحات الجديدة) ----
+    function updateHidePagesList(){
+        // لا يوجد عنصر hidePagesList في الواجهة الجديدة - يُدار عبر checkboxes
+        // نحدّث فقط applyHideFrame
+        applyHideFrame();
+    }
+
+    // ---- ربط زر إضافة الصفحات (مُهاجَر إلى addExtraPageRow) ----
 
     document.getElementById('applyRosterPagination').addEventListener('click', function(){
         applyRosterPagination();
+    });
+    // ربط تقسيم الطباق
+    const _applyTabaqBtn = document.getElementById('applyTabaqPagination');
+    const _resetTabaqBtn = document.getElementById('resetTabaqPagination');
+    if(_applyTabaqBtn) _applyTabaqBtn.addEventListener('click', function(){
+        applyTabaqPagination();
+    });
+    if(_resetTabaqBtn) _resetTabaqBtn.addEventListener('click', function(){
+        tabaqPagination = [];
+        showToast('تم إلغاء تقسيم الطباق');
+        render(); scheduleSave();
     });
 
     // ---- دوال أخرى (نسخ، طباعة، صورة) ----
@@ -3405,7 +3622,12 @@
         fontSize.value=1.2; lineHeight.value=2.1; applyType();
         updateIsnadMode();
         updateMethodLabel(); fields.issueDate.value=hijriToday();
-        hidePages = []; updateHidePagesList();
+        hidePages = [];
+        // إعادة تعيين واجهة البرواز للصفحات
+        if($('page1ShowFrame')) $('page1ShowFrame').checked = true;
+        if($('page1BorderType')) { $('page1BorderType').value = 'ornate'; applyPage1Border('ornate'); }
+        if(typeof extraPagesContainer !== 'undefined' && extraPagesContainer) extraPagesContainer.innerHTML = '';
+        if(typeof updateHidePagesFromRows === 'function') updateHidePagesFromRows();
         rosterPagination = [];
         // مسح النص الحر
         fields.freeIjazaText.value = '';
@@ -3957,6 +4179,298 @@
     form.addEventListener('change', tick);
     fields.attendanceType.addEventListener('change', ()=>{ updateMethodLabel(); render(); });
 
+
+    // ============================================================
+    // إعادة تصميم قسم البرواز لكل صفحة
+    // ============================================================
+    const page1BorderType = $('page1BorderType');
+    const page1ShowFrame  = $('page1ShowFrame');
+    const extraPagesContainer = $('extraPagesContainer');
+    let pageFrameRules = []; // [{page:2, borderType:'none', show:false}, ...]
+
+    // ربط نوع البرواز للصفحة الأولى بالكلاسات الرئيسية
+    function applyPage1Border(val) {
+        ['brd-ornate','brd-double','brd-simple','brd-none'].forEach(c=>ijazaBox.classList.remove(c));
+        ijazaBox.classList.add('brd-'+val);
+        // مزامنة أزرار المظهر
+        document.querySelectorAll('[data-opt=border] button').forEach(b=>{
+            b.classList.toggle('active', b.dataset.brd===val);
+            b.setAttribute('aria-pressed', b.dataset.brd===val ? 'true' : 'false');
+        });
+    }
+    // مزامنة عكسية: عند الضغط على أزرار المظهر، حدّث الصفحة الأولى
+    document.querySelectorAll('[data-opt=border] button').forEach(b=>{
+        b.addEventListener('click', ()=>{
+            if(page1BorderType) page1BorderType.value = b.dataset.brd || 'ornate';
+        });
+    });
+    if(page1BorderType){
+        const curBrd = (ijazaBox.className.match(/brd-([a-z]+)/)||['','ornate'])[1];
+        page1BorderType.value = curBrd;
+        function _updatePage1Preview(val){
+            const prev = document.getElementById('page1BorderPreview');
+            if(prev) prev.className = 'page-border-preview ' + (val||'ornate');
+        }
+        _updatePage1Preview(curBrd);
+        page1BorderType.addEventListener('change', function(){
+            applyPage1Border(this.value);
+            _updatePage1Preview(this.value);
+            scheduleSave();
+        });
+    }
+    if(page1ShowFrame){
+        page1ShowFrame.addEventListener('change', function(){
+            if(this.checked){
+                ijazaBox.classList.remove('hide-frame');
+                if(printFrame) printFrame.classList.remove('hide-frame');
+            } else {
+                ijazaBox.classList.add('hide-frame');
+                if(printFrame) printFrame.classList.add('hide-frame');
+            }
+            scheduleSave();
+        });
+    }
+
+    function addExtraPageRow(data) {
+        data = data || {};
+        const row = document.createElement('div');
+        row.className = 'page-frame-row border border-gray-200 rounded-lg p-2 bg-white';
+        const pageNum = data.page || (document.querySelectorAll('#extraPagesContainer .page-frame-row').length + 2);
+        row.dataset.page = pageNum;
+        row.setAttribute('role', 'group');
+        row.setAttribute('aria-label', 'إعدادات برواز الصفحة ' + pageNum);
+        row.innerHTML = `
+            <div class="flex items-center justify-between flex-wrap gap-2">
+                <div class="flex items-center gap-1.5">
+                    <span class="page-border-preview extra-prev default" aria-hidden="true" role="presentation"></span>
+                    <span class="text-xs font-bold text-gray-600">صفحة <span class="page-num-label">${pageNum}</span></span>
+                </div>
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <div class="flex items-center gap-1">
+                        <span class="text-[10px] text-gray-500 shrink-0">نوع:</span>
+                        <select class="extra-page-border px-1 py-1 border border-gray-300 rounded text-[11px]" aria-label="نوع برواز الصفحة">
+                            <option value="default">مثل الرئيسي</option>
+                            <option value="ornate">مزخرف</option>
+                            <option value="double">مزدوج</option>
+                            <option value="simple">بسيط</option>
+                            <option value="none">بدون</option>
+                        </select>
+                    </div>
+                    <label class="flex items-center gap-1 text-[11px] cursor-pointer font-semibold">
+                        <input type="checkbox" class="extra-page-show w-4 h-4 text-emerald-600" aria-label="إظهار برواز الصفحة ${pageNum}" ${data.show !== false ? 'checked' : ''}>
+                        <span class="${data.show !== false ? 'text-emerald-800' : 'text-red-500'}">إظهار</span>
+                    </label>
+                    <button type="button" class="extra-page-del opt-btn !text-red-500 !border-red-200 !text-[10px]" title="حذف الصفحة ${pageNum}" aria-label="حذف إعدادات الصفحة ${pageNum}">✕</button>
+                </div>
+            </div>
+        `;
+        row.querySelector('.extra-page-border').value = data.borderType || 'default';
+        // إضافة الحدث
+        row.querySelector('.extra-page-show').addEventListener('change', function(){
+            updateHidePagesFromRows();
+            render(); scheduleSave();
+        });
+        row.querySelector('.extra-page-border').addEventListener('change', function(){
+            const prev = row.querySelector('.extra-prev');
+            if(prev){ prev.className = 'page-border-preview extra-prev ' + (this.value||'default'); }
+            applyAppendixBorders();
+            scheduleSave();
+        });
+        row.querySelector('.extra-page-del').addEventListener('click', function(){
+            row.remove();
+            renumberExtraPages();
+            updateHidePagesFromRows();
+            render(); scheduleSave();
+        });
+        extraPagesContainer.appendChild(row);
+    }
+
+    function renumberExtraPages(){
+        Array.from(extraPagesContainer.querySelectorAll('.page-frame-row')).forEach((row, i)=>{
+            row.dataset.page = i + 2;
+            const lbl = row.querySelector('.page-num-label');
+            if(lbl) lbl.textContent = i + 2;
+        });
+    }
+
+    function updateHidePagesFromRows(){
+        hidePages = [];
+        // الصفحة الأولى
+        if(page1ShowFrame && !page1ShowFrame.checked){
+            hidePages.push(1);
+        }
+        // الصفحات الإضافية (للحفظ فقط)
+        Array.from(extraPagesContainer ? extraPagesContainer.querySelectorAll('.page-frame-row') : []).forEach(row=>{
+            const showCB = row.querySelector('.extra-page-show');
+            if(showCB && !showCB.checked){
+                hidePages.push(parseInt(row.dataset.page));
+            }
+        });
+        hidePages.sort((a,b)=>a-b);
+        applyHideFrame();         // تطبيق على الصفحة 1
+        applyAppendixBorders();   // تطبيق على الملاحق مستقلاً
+    }
+
+    // تجاوز منطق addHidePageRule القديم (لم يعد يُستخدم)
+    const addPageFrameBtn = $('addPageFrameRule');
+    if(addPageFrameBtn){
+        addPageFrameBtn.addEventListener('click', function(){
+            addExtraPageRow();
+            updateHidePagesFromRows();
+            scheduleSave();
+        });
+    }
+
+    // ============================================================
+    // تصدير PDF مباشر
+    // ============================================================
+
+        // ============================================================
+    // الإدخال الصوتي - نسخة محسّنة ومستقرة
+    // ============================================================
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let _activeVoiceBtn = null;
+    let _activeRec = null;
+    let _voiceTimeoutId = null;
+
+    // === زر تفعيل الصوت العالمي ===
+    const voiceActivateBtn = document.createElement('button');
+    voiceActivateBtn.type = 'button';
+    voiceActivateBtn.id = 'voiceActivateBtn';
+    voiceActivateBtn.className = 'opt-btn no-print';
+    voiceActivateBtn.style.cssText = 'background:#fffbeb;border-color:#fcd34d;color:#92400e;font-size:.7rem;width:100%;margin-bottom:4px;';
+    voiceActivateBtn.innerHTML = SpeechRec
+        ? '🎤 فعِّل الميكروفون أولاً (مرة واحدة لكل جلسة)'
+        : '⚠️ متصفحك لا يدعم الإدخال الصوتي';
+    voiceActivateBtn.disabled = !SpeechRec;
+    voiceActivateBtn.setAttribute('aria-label', SpeechRec ? 'تفعيل الميكروفون — مطلوب مرة واحدة في كل جلسة (الملف المحلي لا يحفظ الأذونات تلقائياً)' : 'الإدخال الصوتي غير مدعوم في هذا المتصفح');
+
+    // إضافة الزر أعلى البانر الصوتي
+    const voiceBanner = document.querySelector('.voice-banner');
+    if(voiceBanner && voiceBanner.parentNode){
+        voiceBanner.parentNode.insertBefore(voiceActivateBtn, voiceBanner);
+    }
+
+    let _voiceReady = false; // هل تم منح الإذن؟
+
+    voiceActivateBtn.addEventListener('click', async function(){
+        if(!SpeechRec){ showToast('المتصفح لا يدعم الإدخال الصوتي - استخدم Chrome أو Edge', false); return; }
+        if(_voiceReady){ showToast('الميكروفون مفعَّل بالفعل ✓'); return; }
+        // طلب صلاحية getUserMedia للحصول على الإذن مرة واحدة فقط
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+            // نُبقي البث حياً (مُعطَّل الصوت) حتى لا يُطلب الإذن مرة أخرى في نفس الجلسة
+            stream.getAudioTracks().forEach(t => { t.enabled = false; }); // صامت
+            window._keepMicStream = stream; // احتفظ بالمرجع لمنع إغلاقه
+            _voiceReady = true;
+            voiceActivateBtn.innerHTML = '✅ الميكروفون مفعَّل — اضغط 🎤 بجوار أي حقل';
+            voiceActivateBtn.style.background = '#ecfdf5';
+            voiceActivateBtn.style.borderColor = '#6ee7b7';
+            voiceActivateBtn.style.color = '#065f46';
+            showToast('✅ تم تفعيل الميكروفون — لن يُطلب مجدداً في هذه الجلسة');
+        } catch(err){
+            showToast('لم يُمنح إذن الميكروفون: ' + (err.message||err.name), false);
+        }
+    });
+
+    function _stopVoice(){
+        if(_activeRec){ try{ _activeRec.abort(); }catch(e){} _activeRec = null; }
+        if(_activeVoiceBtn){ _activeVoiceBtn.classList.remove('listening'); _activeVoiceBtn = null; }
+        if(_voiceTimeoutId){ clearTimeout(_voiceTimeoutId); _voiceTimeoutId = null; }
+    }
+
+    function _doVoiceInput(btn, fillFn){
+        if(!SpeechRec){
+            showToast('المتصفح لا يدعم الإدخال الصوتي — استخدم Chrome أو Edge', false);
+            return;
+        }
+        // إيقاف جلسة سابقة
+        _stopVoice();
+
+        const rec = new SpeechRec();
+        rec.lang = 'ar-SA';
+        rec.continuous = false;
+        rec.interimResults = false;
+        rec.maxAlternatives = 3;
+
+        btn.classList.add('listening');
+        _activeVoiceBtn = btn;
+        _activeRec = rec;
+
+        // مهلة 8 ثوانٍ
+        _voiceTimeoutId = setTimeout(function(){
+            if(_activeRec === rec){
+                rec.stop();
+                showToast('انتهت المهلة — لم يُكتشف كلام', false);
+            }
+        }, 8000);
+
+        rec.onresult = function(e){
+            clearTimeout(_voiceTimeoutId);
+            const text = e.results[0][0].transcript.trim();
+            fillFn(text);
+            showToast('✓ ' + text.substring(0,35) + (text.length>35?'…':''));
+        };
+        rec.onerror = function(e){
+            clearTimeout(_voiceTimeoutId);
+            if(e.error === 'not-allowed'){
+                showToast('يجب منح إذن الميكروفون أولاً — اضغط الزر الأصفر أعلاه', false);
+            } else if(e.error !== 'aborted'){
+                const msgs = {'no-speech':'لم يُكتشف صوت','network':'تحقق من الاتصال','audio-capture':'تعذّر الميكروفون'};
+                showToast(msgs[e.error] || 'خطأ: ' + e.error, false);
+            }
+        };
+        rec.onend = function(){
+            clearTimeout(_voiceTimeoutId);
+            btn.classList.remove('listening');
+            if(_activeVoiceBtn === btn) _activeVoiceBtn = null;
+            if(_activeRec === rec) _activeRec = null;
+        };
+
+        try{ rec.start(); }
+        catch(err){
+            btn.classList.remove('listening');
+            _activeRec = null;
+            _activeVoiceBtn = null;
+            showToast('تعذّر تشغيل الميكروفون — حاول الضغط على زر التفعيل أولاً', false);
+        }
+    }
+
+    // ربط أزرار الصوت - الحقول الثابتة
+    document.addEventListener('click', function(e){
+        const btn = e.target.closest('.voice-btn[data-voice-target]');
+        if(!btn) return;
+        e.preventDefault();
+        if(btn.classList.contains('listening')){ _stopVoice(); return; }
+        const tid = btn.dataset.voiceTarget;
+        const el = document.getElementById(tid);
+        if(!el) return;
+        _doVoiceInput(btn, function(text){
+            el.value = text;
+            el.dispatchEvent(new Event('input',{bubbles:true}));
+            el.dispatchEvent(new Event('change',{bubbles:true}));
+            render(); scheduleSave();
+        });
+    });
+
+    // ربط أزرار الصوت - أسماء المشايخ (ديناميكية)
+    sheikhList.addEventListener('click', function(e){
+        const btn = e.target.closest('.sheikh-voice-btn');
+        if(!btn) return;
+        e.preventDefault();
+        if(btn.classList.contains('listening')){ _stopVoice(); return; }
+        const inputEl = btn.closest('.voice-field-wrap')
+                        ? btn.closest('.voice-field-wrap').querySelector('input')
+                        : btn.closest('.sheikh-row').querySelector('.sheikh-name');
+        if(!inputEl) return;
+        _doVoiceInput(btn, function(text){
+            inputEl.value = text;
+            inputEl.dispatchEvent(new Event('input',{bubbles:true}));
+            render(); scheduleSave();
+        });
+    });
+
+
     $('printBtn').addEventListener('click', printIjaza);
     $('copyBtn').addEventListener('click', copyText);
     $('resetBtn').addEventListener('click', resetForm);
@@ -3986,7 +4500,7 @@
         return { 
             v, sheikhs, app, sig:signatureDataUrl, stamp:stampDataUrl, 
             tabaq:getTabaqRows(), extraStudents, extraBooks, mainBookType, rosterData:getRosterData(), 
-            auto:$('autoSave').checked, hidePages, rosterPagination, orgsData:orgsData,
+            auto:$('autoSave').checked, hidePages, rosterPagination, tabaqPagination, orgsData:orgsData,
             orgSigs: orgSigs,
             freeText: fields.freeIjazaText.value,
             freeMujizName: fields.freeMujizName.value,
@@ -4065,9 +4579,18 @@
             const rows=$('tabaqList').querySelectorAll('.tab-row');
             data.tabaq.forEach((t,i)=>{ if(rows[i]){ rows[i].querySelector('.tab-greg').value=t.greg||''; rows[i].querySelector('.tab-start').value=t.start||''; rows[i].querySelector('.tab-end').value=t.end||''; const der=tabaqDerive(t.greg||''); if(der.hij) rows[i].querySelector('.tab-derived').textContent=der.day+' '+der.hij+' / '+der.greg; } });
         }
-        if(Array.isArray(data.hidePages)) hidePages = data.hidePages;
-        updateHidePagesList();
+        if(Array.isArray(data.hidePages)) {
+            hidePages = data.hidePages;
+            // استعادة حالة واجهة البرواز
+            if($('page1ShowFrame')) $('page1ShowFrame').checked = !hidePages.includes(1);
+            // إنشاء صفوف للصفحات المحفوظة (من 2 فأكثر)
+            const savedExtraPages = hidePages.filter(p => p > 1);
+            if(typeof extraPagesContainer !== 'undefined' && extraPagesContainer && savedExtraPages.length) {
+                savedExtraPages.forEach(p => addExtraPageRow({page: p, show: false, borderType: 'default'}));
+            }
+        }
         if(Array.isArray(data.rosterPagination)) rosterPagination = data.rosterPagination;
+        if(Array.isArray(data.tabaqPagination))  tabaqPagination  = data.tabaqPagination;
         if (Array.isArray(data.orgSigs)) {
             orgSignatures = data.orgSigs;
             document.getElementById('orgSigList').innerHTML = '';
@@ -4335,8 +4858,41 @@
     // ---- ربط الإجازة الحرة ----
     fields.freeIjaza.addEventListener('change', render);
     fields.freeIjazaText.addEventListener('input', render);
-    fields.freeEnableTabaq.addEventListener('change', render);
-    fields.freeEnableRoster.addEventListener('change', render);
+    fields.freeEnableTabaq.addEventListener('change', function(){
+        // مزامنة تلقائية مع tabaqEnable
+        if(this.checked) fields.tabaqEnable.checked = true;
+        render(); scheduleSave();
+    });
+    fields.freeEnableRoster.addEventListener('change', function(){
+        // مزامنة تلقائية مع rosterEnable
+        if(this.checked) fields.rosterEnable.checked = true;
+        render(); scheduleSave();
+    });
+
+    // ===== أزرار الصوت للإجازة الحرة =====
+    function _voiceFreeIjaza(mode){
+        const ta = document.getElementById('freeIjazaText');
+        if(!ta) return;
+        const appendBtn = document.getElementById('freeIjazaVoiceAppend');
+        const replaceBtn = document.getElementById('freeIjazaVoiceReplace');
+        const btn = mode === 'append' ? appendBtn : replaceBtn;
+        if(!btn) return;
+        if(btn.classList.contains('listening')){ _stopVoice(); return; }
+        _doVoiceInput(btn, function(text){
+            if(mode === 'replace'){
+                ta.value = text;
+            } else {
+                const cur = ta.value;
+                ta.value = cur ? (cur + '\n' + text) : text;
+            }
+            ta.dispatchEvent(new Event('input',{bubbles:true}));
+            render(); scheduleSave();
+        });
+    }
+    const _freeVAppend = document.getElementById('freeIjazaVoiceAppend');
+    const _freeVReplace = document.getElementById('freeIjazaVoiceReplace');
+    if(_freeVAppend) _freeVAppend.addEventListener('click', function(e){ e.preventDefault(); _voiceFreeIjaza('append'); });
+    if(_freeVReplace) _freeVReplace.addEventListener('click', function(e){ e.preventDefault(); _voiceFreeIjaza('replace'); });
 
 })();
 </script>
@@ -4488,7 +5044,7 @@
     const skipLink = document.createElement('a');
     skipLink.href = '#formPanel';
     skipLink.textContent = 'انتقل إلى لوحة التحكم';
-    skipLink.setAttribute('class','skip-link');
+    skipLink.setAttribute('class','skip-link no-print');
     skipLink.style.cssText = [
         'position:fixed','top:-100px','right:0','z-index:9999',
         'background:#047857','color:#fff','padding:8px 18px',
@@ -4503,7 +5059,7 @@
     const skipLink2 = document.createElement('a');
     skipLink2.href = '#previewPanel';
     skipLink2.textContent = 'انتقل إلى معاينة الوثيقة';
-    skipLink2.setAttribute('class','skip-link');
+    skipLink2.setAttribute('class','skip-link no-print');
     skipLink2.style.cssText = skipLink.style.cssText;
     skipLink2.addEventListener('focus', function(){ this.style.top='0'; });
     skipLink2.addEventListener('blur', function(){ this.style.top='-100px'; });
