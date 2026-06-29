@@ -3763,51 +3763,38 @@
         canvas.toBlob(function(blob){
             if(!blob){ showToast('تعذّر إنشاء الصورة', false); return; }
 
-            // iOS: لا يدعم تحميل الملفات عبر blob — افتح في تبويب جديد
+            const url = URL.createObjectURL(blob);
+            const a   = document.createElement('a');
+            a.href    = url;
+            a.download = 'وثيقة_إثبات_سماع.png';
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function(){ a.remove(); URL.revokeObjectURL(url); }, 5000);
+
+            // iOS لا يُنفّذ الـ download — افتح الصورة في تبويب للحفظ يدوياً
             if(_isIOS){
                 const reader = new FileReader();
                 reader.onloadend = function(){
                     const win = window.open('', '_blank');
-                    if(!win){ showToast('السماح بالنوافذ المنبثقة لتصدير الصورة', false); return; }
+                    if(!win){ showToast('فعِّل النوافذ المنبثقة لتصدير الصورة', false); return; }
                     win.document.write(
                         '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">' +
-                        '<title>وثيقة إثبات سماع</title></head><body style="margin:0;background:#111;text-align:center">' +
-                        '<p style="color:#fff;font-family:sans-serif;padding:12px;font-size:.9rem">' +
-                        'اضغط مطوّلاً على الصورة ثم اختر «حفظ الصورة»</p>' +
+                        '<title>وثيقة إثبات سماع</title></head>' +
+                        '<body style="margin:0;background:#111;text-align:center">' +
+                        '<p style="color:#fff;font-family:sans-serif;padding:14px;font-size:1rem;margin:0">' +
+                        '📥 اضغط مطوّلاً على الصورة ← «حفظ في الصور»</p>' +
                         '<img src="'+reader.result+'" style="max-width:100%;display:block;margin:0 auto">' +
                         '</body></html>'
                     );
                     win.document.close();
-                    showToast('افتح التبويب الجديد واحفظ الصورة');
+                    showToast('اضغط مطوّلاً على الصورة في التبويب الجديد للحفظ');
                 };
                 reader.readAsDataURL(blob);
-                return;
+            } else {
+                showToast('✓ تم حفظ الصورة');
             }
-
-            // Android + تدعم Web Share API مع ملفات
-            const file = new File([blob], 'ijaza.png', {type:'image/png'});
-            if(_isMobile && navigator.canShare && navigator.canShare({files:[file]})){
-                navigator.share({files:[file], title:'وثيقة إثبات سماع'})
-                    .then(function(){ showToast('تمت المشاركة'); })
-                    .catch(function(){ _fallbackDownload(blob); });
-                return;
-            }
-
-            // سطح المكتب أو Android بدون Share API
-            _fallbackDownload(blob);
         }, 'image/png');
-    }
-
-    function _fallbackDownload(blob){
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'وثيقة_إثبات_سماع.png';
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function(){ a.remove(); URL.revokeObjectURL(url); }, 5000);
-        showToast('تم تصدير الصورة');
     }
 
     $('imageBtn').addEventListener('click', async function(){
@@ -3822,27 +3809,69 @@
         const w = ijazaBox.scrollWidth  || ijazaBox.offsetWidth  || 800;
         const h = ijazaBox.scrollHeight || ijazaBox.offsetHeight || 1100;
 
-        // تقليل المقياس على الجوال لتجنب نفاد الذاكرة
         let scale = _isMobile ? 1.5 : 2;
         const maxSide = _isMobile ? 4000 : 8000;
         const maxArea = _isMobile ? 8e6  : 16e6;
         while(scale > 1 && (w*scale > maxSide || h*scale > maxSide || w*scale*h*scale > maxArea)) scale -= 0.25;
         if(scale < 1) scale = 1;
 
-        const opts = {
-            backgroundColor: '#ffffff', useCORS: true,
-            logging: false, scale: scale,
+        // دالة تُزيل التدرجات عن العناصر ذات الأبعاد الصفرية (سبب خطأ addColorStop non-finite)
+        function fixZeroGradients(clonedDoc) {
+            clonedDoc.querySelectorAll('*').forEach(function(el) {
+                try {
+                    const cs = clonedDoc.defaultView
+                        ? clonedDoc.defaultView.getComputedStyle(el)
+                        : null;
+                    const bg = (cs && cs.backgroundImage) || el.style.backgroundImage || '';
+                    if (!bg.includes('gradient')) return;
+                    const bw = el.offsetWidth || el.getBoundingClientRect().width;
+                    const bh = el.offsetHeight || el.getBoundingClientRect().height;
+                    if (bw === 0 || bh === 0 || !isFinite(bw) || !isFinite(bh)) {
+                        el.style.backgroundImage = 'none';
+                        el.style.background = 'transparent';
+                    }
+                } catch(_) {}
+            });
+        }
+
+        const baseOpts = {
+            backgroundColor: '#ffffff',
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            scale: scale,
             width: w, height: h,
             scrollX: 0, scrollY: -window.scrollY,
-            windowWidth: w
+            windowWidth: w,
+            onclone: function(clonedDoc) { fixZeroGradients(clonedDoc); }
         };
 
         try {
             let canvas;
-            try { canvas = await html2canvas(ijazaBox, opts); }
-            catch(e1) {
-                // محاولة ثانية بمقياس أقل عند الفشل
-                canvas = await html2canvas(ijazaBox, Object.assign({}, opts, {scale: 1}));
+            // المحاولة 1: الإعدادات الكاملة مع إصلاح التدرجات
+            try {
+                canvas = await html2canvas(ijazaBox, baseOpts);
+            } catch(e1) {
+                // المحاولة 2: مقياس أقل
+                try {
+                    canvas = await html2canvas(ijazaBox, Object.assign({}, baseOpts, {scale: 1}));
+                } catch(e2) {
+                    // المحاولة 3: بدون تدرجات الخلفية نهائياً
+                    canvas = await html2canvas(ijazaBox, Object.assign({}, baseOpts, {
+                        scale: 1,
+                        onclone: function(clonedDoc) {
+                            // إزالة جميع التدرجات في النسخة المؤقتة فقط
+                            clonedDoc.querySelectorAll('*').forEach(function(el) {
+                                try {
+                                    const bg = el.style.backgroundImage || '';
+                                    if (bg.includes('gradient')) {
+                                        el.style.backgroundImage = 'none';
+                                    }
+                                } catch(_) {}
+                            });
+                        }
+                    }));
+                }
             }
             saveCanvas(canvas);
         } catch(err) {
