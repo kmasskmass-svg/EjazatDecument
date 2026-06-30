@@ -4588,12 +4588,18 @@
 
         rec.onresult = function(e){
             resetSilenceTimer();
-            for(let i = e.resultIndex; i < e.results.length; i++){
+            // إعادة بناء النص الكامل من الصفر في كل مرة (بدل التراكم بالاعتماد على
+            // e.resultIndex) — بعض متصفحات الجوال (أندرويد) تُعيد إرسال نتائج
+            // نهائية سبق إرسالها، فيتكرر النص لو اعتمدنا على الإضافة التراكمية فقط.
+            // إعادة البناء الكامل من e.results يضمن نتيجة صحيحة دائماً مهما تكرر الحدث.
+            let combined = '';
+            for(let i = 0; i < e.results.length; i++){
                 if(e.results[i].isFinal){
                     const piece = e.results[i][0].transcript.trim();
-                    if(piece) finalText += (finalText ? ' ' : '') + piece;
+                    if(piece) combined += (combined ? ' ' : '') + piece;
                 }
             }
+            finalText = combined;
         };
 
         rec.onerror = function(e){
@@ -4620,7 +4626,10 @@
             if(_activeVoiceBtn === btn) _activeVoiceBtn = null;
             if(_activeRec === rec) _activeRec = null;
 
-            const out = finalText.trim();
+            // إزالة النقطة (وعلامات وقف مشابهة) التي تُضيفها بعض متصفحات الجوال
+            // تلقائياً في نهاية الجملة المُتعرَّف عليها صوتياً
+            let out = finalText.trim();
+            out = out.replace(/[.。\s]+$/u, '').trim();
             if(out){
                 fillFn(out);
                 showToast('✓ ' + out.substring(0,35) + (out.length>35?'…':''));
