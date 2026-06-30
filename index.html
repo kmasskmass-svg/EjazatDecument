@@ -258,6 +258,27 @@
         .fab.menu{ background:#6d28d9; }
         .fab.alert{ background:#f59e0b; }
         .fab.thamarat{ background:#8b5cf6; }
+        .fab.voice{ background:#dc2626; }
+        .voice-btn.unsupported {
+            opacity:.4; cursor:not-allowed; border-color:#d1d5db!important; color:#9ca3af!important;
+        }
+        .voice-btn.unsupported:hover{ background:#fff!important; }
+        #voiceTipsModal .vt-step{
+            display:flex; align-items:flex-start; gap:.6rem; margin-bottom:.55rem;
+            font-size:.85rem; color:#374151; line-height:1.7;
+        }
+        #voiceTipsModal .vt-num{
+            min-width:22px; height:22px; background:#dc2626; color:#fff;
+            border-radius:50%; font-size:.7rem; font-weight:800;
+            display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;
+        }
+        #voiceTipsModal .vt-device{
+            background:#f9fafb; border:1px solid #e5e7eb; border-radius:10px;
+            padding:.7rem .9rem; margin-top:.7rem; font-size:.8rem; line-height:1.75;
+        }
+        #voiceTipsModal .vt-device.ios{ background:#fef2f2; border-color:#fecaca; color:#991b1b; }
+        #voiceTipsModal .vt-device.android{ background:#f0fdf4; border-color:#bbf7d0; color:#065f46; }
+        #voiceTipsModal .vt-device h4{ font-weight:800; margin-bottom:.3rem; font-size:.85rem; }
 
         .thamarat-dropdown {
             position: fixed;
@@ -432,21 +453,7 @@
         .voice-field-wrap textarea { flex: 1; min-width: 0; }
 
         /* بانر الإدخال الصوتي */
-        .voice-banner {
-            background: #fffbeb;
-            border: 1px solid #fcd34d;
-            border-radius: 8px;
-            padding: 6px 10px;
-            margin-bottom: 8px;
-            font-size: .72rem;
-            color: #92400e;
-            display: flex;
-            align-items: flex-start;
-            gap: 6px;
-            line-height: 1.6;
-        }
-        .voice-banner-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
-        @media print { .voice-btn, .voice-banner { display: none !important; } }
+        @media print { .voice-btn { display: none !important; } }
 
         /* ===== تحسين عرض إعدادات البرواز ===== */
         .page-frame-row { transition: background .15s; }
@@ -732,20 +739,7 @@
             <span id="saveStatus"></span>
             <button type="button" id="clearSaved" class="opt-btn" aria-label="مسح البيانات المحفوظة في المتصفح">مسح المحفوظ</button>
         </div>
-        <div class="voice-banner no-print" role="note" aria-label="تنبيهات الإدخال الصوتي">
-            <span class="voice-banner-icon">🎤</span>
-            <div style="font-size:.71rem;line-height:1.85;color:#92400e;">
-                <b>الإدخال الصوتي</b> — اضغط الزر 🎤 بجوار الحقل ثم تكلّم وسيُملأ الحقل تلقائياً.<br>
-                <b>⚠️ تنبيهات مهمة:</b>
-                <ul style="margin:.2rem 0 0 1rem;padding:0;list-style:disc;">
-                    <li>تكلّم <b>بسرعة طبيعية</b> وبوضوح — إذا توقفت أكثر من <b>2–4 ثوانٍ</b> قد يتوقف التعرف تلقائياً.</li>
-                    <li>بعد توقف الميكروفون (يتحول أحمر ثم يرجع لطبيعته) <b>انتظر لحظة</b> حتى يُلصق النص في الخانة.</li>
-                    <li>يعتمد على <b>جودة الإنترنت</b> ودقة التعرف في المتصفح — قد يحتاج إعادة المحاولة أحياناً.</li>
-                    <li>يعمل على <b>Chrome وEdge</b> فقط — غير مدعوم في Firefox وSafari.</li>
-                    <li>يطلب إذن الميكروفون مرة واحدة — اضغط <b>«تفعيل الميكروفون»</b> أعلاه أولاً.</li>
-                </ul>
-            </div>
-        </div>
+<!-- البانر الثابت أصبح كرة عائمة 🎤 -->
 
         <!-- مظهر الوثيقة -->
         <details id="sec-appearance" class="acc" open>
@@ -994,10 +988,10 @@
                                     إظهار رقم تسلسل الإجازة
                                 </label>
                                 <div id="serialWrap" class="hidden space-y-2 pr-2">
-                                    <input type="text" id="serialNum" aria-label="رقم تسلسل الوثيقة" class="w-full px-3 py-1.5 border border-gray-300 rounded-md text-xs" placeholder="اكتب رقم التسلسل">
+                                    <div class="voice-field-wrap"><input type="text" id="serialNum" aria-label="رقم تسلسل الوثيقة" class="w-full px-3 py-1.5 border border-gray-300 rounded-md text-xs" placeholder="اكتب رقم التسلسل"><button type="button" class="voice-btn no-print" data-voice-target="serialNum" title="إدخال صوتي" aria-label="إدخال صوتي لرقم التسلسل">🎤</button></div>
                                     <div>
                                         <label class="block text-[10px] text-gray-500 mb-0.5">عبارة التسلسل (اختياري)</label>
-                                        <input type="text" id="serialLabel" aria-label="تسمية رقم التسلسل" class="w-full px-3 py-1.5 border border-gray-300 rounded-md text-xs" placeholder="تسلسل الإجازة">
+                                        <div class="voice-field-wrap"><input type="text" id="serialLabel" aria-label="تسمية رقم التسلسل" class="w-full px-3 py-1.5 border border-gray-300 rounded-md text-xs" placeholder="تسلسل الإجازة"><button type="button" class="voice-btn no-print" data-voice-target="serialLabel" title="إدخال صوتي" aria-label="إدخال صوتي لتسمية التسلسل">🎤</button></div>
                                     </div>
                                     <div>
                                         <label class="block text-[10px] text-gray-500 mb-0.5">موضع التسلسل</label>
@@ -1056,7 +1050,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-[10px] text-gray-500 mb-0.5">أسماء الأعمدة (افصل بفاصلة)</label>
-                                        <input type="text" id="rosterColNames" aria-label="عناوين أعمدة المسرد" class="w-full px-2 py-1 border border-gray-300 rounded-md text-xs" placeholder="م، الاسم، البلد، التوقيع">
+                                        <div class="voice-field-wrap"><input type="text" id="rosterColNames" aria-label="عناوين أعمدة المسرد" class="w-full px-2 py-1 border border-gray-300 rounded-md text-xs" placeholder="م، الاسم، البلد، التوقيع"><button type="button" class="voice-btn no-print" data-voice-target="rosterColNames" title="إدخال صوتي" aria-label="إدخال صوتي لعناوين الأعمدة">🎤</button></div>
                                     </div>
                                     <div class="flex flex-wrap gap-1.5">
                                         <button type="button" id="rosterBuild" class="opt-btn !text-[10px]">توليد حقول التعبئة</button>
@@ -1204,7 +1198,7 @@
                                 <button type="button" class="book-type-btn opt-btn"        data-btype="منظومة" aria-pressed="false" aria-label="نوع المسموع: منظومة">منظومة</button>
                                 <button type="button" class="book-type-btn opt-btn"        data-btype="custom" aria-pressed="false" aria-label="نوع المسموع: مخصص">مخصص…</button>
                             </div>
-                            <input type="text" id="bookTypeCustom" class="w-full px-3 py-1.5 border border-amber-300 rounded-md text-sm mb-1.5 hidden" placeholder="اكتب نوع المسموع (مثال: جزء، مختصر، رسالة…)" aria-label="نوع المسموع المخصص">
+                            <div class="voice-field-wrap hidden"><input type="text" id="bookTypeCustom" class="w-full px-3 py-1.5 border border-amber-300 rounded-md text-sm mb-1.5" placeholder="اكتب نوع المسموع (مثال: جزء، مختصر، رسالة…)" aria-label="نوع المسموع المخصص"><button type="button" class="voice-btn no-print" data-voice-target="bookTypeCustom" title="إدخال صوتي" aria-label="إدخال صوتي لنوع المسموع">🎤</button></div>
                             <input type="hidden" id="bookType" value="كتاب">
                             <div class="voice-field-wrap">
                                 <input type="text" id="bookName" required data-tash-label="الكتاب" class="tash w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="مثال: إتمام المطالب بتكميل دليل الطالب">
@@ -1288,7 +1282,7 @@
                     <!-- عبارة بداية الإجازة (جديد) -->
                     <div class="mt-3">
                         <label class="block text-sm font-medium text-gray-700 mb-1">عبارة بداية الإجازة (اختياري)</label>
-                        <input type="text" id="sheikhIjazaPrefix" aria-label="عبارة بداية الإجازة المخصصة" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="وقد أجاز الشيخ/الشيخة" value="وقد أجاز الشيخ/الشيخة">
+                        <div class="voice-field-wrap"><input type="text" id="sheikhIjazaPrefix" aria-label="عبارة بداية الإجازة المخصصة" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="وقد أجاز الشيخ/الشيخة" value="وقد أجاز الشيخ/الشيخة"><button type="button" class="voice-btn no-print" data-voice-target="sheikhIjazaPrefix" title="إدخال صوتي" aria-label="إدخال صوتي لعبارة بداية الإجازة">🎤</button></div>
                         <p class="text-[11px] text-gray-500 mt-1">يمكنك تعديل هذه العبارة التي تظهر قبل ذكر الإجازة.</p>
                     </div>
                 </div>
@@ -1308,7 +1302,7 @@
                             <option value="حضر عندي">حضر عندي (بصيغة الشيخ)</option>
                             <option value="اتصل بي">اتصل بي (بصيغة الشيخ)</option>
                         </select>
-                        <input type="text" id="actionCustom" aria-label="صيغة السماع المخصصة" class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="أو اكتب طبيعة العمل بنفسك">
+                        <div class="voice-field-wrap"><input type="text" id="actionCustom" aria-label="صيغة السماع المخصصة" class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="أو اكتب طبيعة العمل بنفسك"><button type="button" class="voice-btn no-print" data-voice-target="actionCustom" title="إدخال صوتي" aria-label="إدخال صوتي لصيغة السماع">🎤</button></div>
                         <p class="text-[11px] text-gray-500 mt-1">إن لم تجد العبارة المناسبة في القائمة فاكتبها هنا، وستُعتمد بدلاً من الخيار أعلاه.</p>
                         <select id="actionSub" class="hidden mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500">
                             <option value="وقرأ عليّ حفظًا">وقرأ عليّ حفظًا</option>
@@ -1330,12 +1324,12 @@
                                 <option value="fawt_range">مع فوتٍ من … إلى …</option>
                                 <option value="upto">سماع إلى نهاية قوله… (مع الإجازة لباقيه)</option>
                             </select>
-                            <input type="text" id="uptoText" class="hidden mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="اكتب موضع الانتهاء، مثل: باب كذا">
-                            <input type="text" id="completenessCustom" aria-label="نص اكتمال السماع المخصص" class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="أو اكتب حالة السماع بنفسك">
+                            <div class="voice-field-wrap hidden" id="uptoTextWrap"><input type="text" id="uptoText" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="اكتب موضع الانتهاء، مثل: باب كذا"><button type="button" class="voice-btn no-print" data-voice-target="uptoText" title="إدخال صوتي" aria-label="إدخال صوتي لموضع الانتهاء">🎤</button></div>
+                            <div class="voice-field-wrap"><input type="text" id="completenessCustom" aria-label="نص اكتمال السماع المخصص" class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="أو اكتب حالة السماع بنفسك"><button type="button" class="voice-btn no-print" data-voice-target="completenessCustom" title="إدخال صوتي" aria-label="إدخال صوتي لحالة السماع">🎤</button></div>
                             <p class="text-[11px] text-gray-500 mt-1">إن لم تجد الحالة المناسبة في القائمة فاكتبها هنا، وستُعتمد بدلاً من الخيار أعلاه.</p>
                             <div id="fawtRangeWrap" class="hidden mt-2 grid grid-cols-2 gap-2">
-                                <input type="text" id="fawtFrom" aria-label="بداية الفوت (من)" class="px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="الفوت من: …">
-                                <input type="text" id="fawtTo" aria-label="نهاية الفوت (إلى)" class="px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="إلى: …">
+                                <div class="voice-field-wrap"><input type="text" id="fawtFrom" aria-label="بداية الفوت (من)" class="px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="الفوت من: …"><button type="button" class="voice-btn no-print" data-voice-target="fawtFrom" title="إدخال صوتي" aria-label="إدخال صوتي لبداية الفوت">🎤</button></div>
+                                <div class="voice-field-wrap"><input type="text" id="fawtTo" aria-label="نهاية الفوت (إلى)" class="px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="إلى: …"><button type="button" class="voice-btn no-print" data-voice-target="fawtTo" title="إدخال صوتي" aria-label="إدخال صوتي لنهاية الفوت">🎤</button></div>
                             </div>
                         </div>
                         <div>
@@ -1345,7 +1339,7 @@
                                 <option value="2">في مجلسين</option>
                                 <option value="many">في (عدد) مجلساً…</option>
                             </select>
-                            <input type="text" id="sessionNum" class="hidden mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="اكتب العدد رقماً (يُحوَّل حروفاً) أو اكتب العبارة كاملة">
+                            <div class="voice-field-wrap hidden" id="sessionNumWrap"><input type="text" id="sessionNum" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="اكتب العدد رقماً (يُحوَّل حروفاً) أو اكتب العبارة كاملة"><button type="button" class="voice-btn no-print" data-voice-target="sessionNum" title="إدخال صوتي" aria-label="إدخال صوتي لعدد المجالس">🎤</button></div>
                             <p class="text-[11px] text-gray-500 mt-1">يُكتب العدد حروفاً تلقائياً: ٣–١٠ «مجالس»، وما زاد «مجلساً». ويمكنك كتابة العبارة بنفسك.</p>
                         </div>
                     </div>
@@ -1389,7 +1383,7 @@
                                     <option>الأحد</option><option>الإثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option><option>السبت</option>
                                 </select></div>
                             <div><label for="startTime" class="block text-xs text-gray-600 mb-1">الساعة <span class="text-red-500">*</span></label>
-                                <input type="text" id="startTime" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="مثال: بعد العصر"></div>
+                                <div class="voice-field-wrap"><input type="text" id="startTime" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="مثال: بعد العصر"><button type="button" class="voice-btn no-print" data-voice-target="startTime" title="إدخال صوتي" aria-label="إدخال صوتي لوقت البداية">🎤</button></div></div>
                         </div>
                     </div>
                     <div id="endGroup" class="bg-emerald-50/50 border border-emerald-100 rounded-lg p-4 space-y-3 hidden">
@@ -1417,7 +1411,7 @@
                                     <option>الأحد</option><option>الإثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option><option>السبت</option>
                                 </select></div>
                             <div><label for="endTime" class="block text-xs text-gray-600 mb-1">الساعة</label>
-                                <input type="text" id="endTime" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="مثال: بعد المغرب"></div>
+                                <div class="voice-field-wrap"><input type="text" id="endTime" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="مثال: بعد المغرب"><button type="button" class="voice-btn no-print" data-voice-target="endTime" title="إدخال صوتي" aria-label="إدخال صوتي لوقت النهاية">🎤</button></div></div>
                         </div>
                     </div>
                 </div>
@@ -1498,14 +1492,14 @@
                         </div>
                         <div id="sharedIsnadWrap">
                             <p class="text-xs text-gray-500 mb-2">يُذكر مع اسم الكتاب يتبعه «فقال/فقالوا:». افصل بـ «عن / حدثنا».</p>
-                            <textarea id="isnad" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 leading-relaxed text-sm" aria-label="نص سلسلة الإسناد" placeholder="أخبرنا فلان، عن فلان، عن فلان..."></textarea>
+                            <div class="voice-field-wrap"><textarea id="isnad" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 leading-relaxed text-sm" aria-label="نص سلسلة الإسناد" placeholder="أخبرنا فلان، عن فلان، عن فلان..."></textarea><button type="button" class="voice-btn no-print" data-voice-target="isnad" title="إدخال صوتي" aria-label="إدخال صوتي لسلسلة الإسناد">🎤</button></div>
                             <p class="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded p-2 mt-2">ملاحظة: اكتب أسماء شيوخ السند متتابعةً في سياقٍ واحد (لا تضع كل شيخ في سطرٍ مستقل)، ليظهر السند نصّاً متّصلاً.</p>
                         </div>
                         <p id="perIsnadHint" class="hidden text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">في وضع «سند مستقل لكل شيخ»: أدخِل سند كلِّ شيخ من حقل الإسناد داخل بطاقته في قسم «المشايخ»، وتُخفى الحقول المشتركة. وسيظهر سند كلِّ شيخ في صفحةٍ مستقلّة، مع كتابة الأسماء متتابعةً في سياق واحد.</p>
                         <!-- عبارة بداية الإسناد (جديد) -->
                         <div class="mt-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">عبارة بداية الإسناد (اختياري)</label>
-                            <input type="text" id="isnadPrefix" aria-label="مقدمة الإسناد المخصصة" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="وقد أخبر الشيخ بسلسلة إسناده لـ '...' فقال...">
+                            <div class="voice-field-wrap"><input type="text" id="isnadPrefix" aria-label="مقدمة الإسناد المخصصة" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" placeholder="وقد أخبر الشيخ بسلسلة إسناده لـ '...' فقال..."><button type="button" class="voice-btn no-print" data-voice-target="isnadPrefix" title="إدخال صوتي" aria-label="إدخال صوتي لمقدمة الإسناد">🎤</button></div>
                             <p class="text-[11px] text-gray-500 mt-1">يمكنك تعديل النص الافتتاحي للإسناد.</p>
                         </div>
                         <label class="flex items-center gap-2 cursor-pointer pt-1">
@@ -1580,7 +1574,7 @@
                         </div>
                         <div class="border-t border-gray-200 pt-2 mt-2">
                             <label for="duaCustom" class="block text-xs font-bold text-emerald-800 mb-1">تعديل صيغة الدعاء (اختياري)</label>
-                            <input type="text" id="duaCustom" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="اكتب صيغة الدعاء كما تريد لتحلّ محلّ الصيغة التلقائية">
+                            <div class="voice-field-wrap"><input type="text" id="duaCustom" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="اكتب صيغة الدعاء كما تريد لتحلّ محلّ الصيغة التلقائية"><button type="button" class="voice-btn no-print" data-voice-target="duaCustom" title="إدخال صوتي" aria-label="إدخال صوتي لصيغة الدعاء">🎤</button></div>
                         </div>
                         <!-- خيارات وضع التوقيع (3 خيارات) -->
                         <div class="border-t border-gray-200 pt-2 mt-2">
@@ -1600,11 +1594,11 @@
                             <div id="officialLineWrap" class="space-y-2 hidden">
                                 <div>
                                     <label class="block text-[10px] text-gray-500 mb-0.5">عبارة المسؤول (العنوان)</label>
-                                    <input type="text" id="officialLineText" aria-label="نص سطر المسؤول" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="المسؤول (يمكنك تغيير النص)" value="المسؤول">
+                                    <div class="voice-field-wrap"><input type="text" id="officialLineText" aria-label="نص سطر المسؤول" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="المسؤول (يمكنك تغيير النص)" value="المسؤول"><button type="button" class="voice-btn no-print" data-voice-target="officialLineText" title="إدخال صوتي" aria-label="إدخال صوتي لسطر المسؤول">🎤</button></div>
                                 </div>
                                 <div>
                                     <label class="block text-[10px] text-gray-500 mb-0.5">اسم المسؤول</label>
-                                    <input type="text" id="officialName" aria-label="اسم المسؤول" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="اكتب اسم المسؤول هنا (اختياري)">
+                                    <div class="voice-field-wrap"><input type="text" id="officialName" aria-label="اسم المسؤول" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="اكتب اسم المسؤول هنا (اختياري)"><button type="button" class="voice-btn no-print" data-voice-target="officialName" title="إدخال صوتي" aria-label="إدخال صوتي لاسم المسؤول">🎤</button></div>
                                 </div>
                                 <div class="flex flex-wrap gap-2 items-center">
                                     <span class="text-[10px] text-gray-500">توقيع المسؤول:</span>
@@ -1624,7 +1618,7 @@
                         <!-- تغيير عبارة "والله خير الشاهدين" -->
                         <div class="border-t border-gray-200 pt-2 mt-2">
                             <label class="block text-xs font-bold text-emerald-800 mb-1">تغيير عبارة «والله خير الشاهدين»</label>
-                            <input type="text" id="closingCustom" aria-label="عبارة الخاتمة المخصصة" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="اكتب العبارة التي تريدها بدلاً من «والله خير الشاهدين»">
+                            <div class="voice-field-wrap"><input type="text" id="closingCustom" aria-label="عبارة الخاتمة المخصصة" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="اكتب العبارة التي تريدها بدلاً من «والله خير الشاهدين»"><button type="button" class="voice-btn no-print" data-voice-target="closingCustom" title="إدخال صوتي" aria-label="إدخال صوتي لعبارة الخاتمة">🎤</button></div>
                             <p class="text-[10px] text-gray-500 mt-1">يمكنك تغيير العبارة بالكتابة هنا، وعند ترك الخانة فارغة تعتمد الموجودة في الوثيقة.</p>
                         </div>
                     </div>
@@ -1635,7 +1629,7 @@
             <details id="sec-issue" class="acc">
                 <summary class="acc-h">تاريخ الإصدار</summary>
                 <div class="acc-body">
-                    <input type="text" id="issueDate" aria-label="تاريخ إصدار الوثيقة هجري" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="هجري تلقائي — قابل للتعديل">
+                    <div class="voice-field-wrap"><input type="text" id="issueDate" aria-label="تاريخ إصدار الوثيقة هجري" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="هجري تلقائي — قابل للتعديل"><button type="button" class="voice-btn no-print" data-voice-target="issueDate" title="إدخال صوتي" aria-label="إدخال صوتي لتاريخ الإصدار">🎤</button></div>
                 </div>
             </details>
 
@@ -1742,6 +1736,7 @@
     <button type="button" id="fabContact" class="fab contact" title="للتواصل والمقترحات" aria-label="فتح نافذة التواصل والمقترحات">✉</button>
     <button type="button" id="fabAlert" class="fab alert" title="تنبيهات مهمة" aria-label="فتح التنبيهات المهمة">⚠️</button>
     <button type="button" id="fabThamarat" class="fab thamarat" title="ثمرات" aria-label="فتح قائمة الثمرات" aria-haspopup="true" aria-expanded="false">🌿</button>
+    <button type="button" id="fabVoiceTips" class="fab voice" title="تعليمات الإدخال الصوتي" aria-label="فتح تعليمات الإدخال الصوتي وتفعيل الميكروفون">🎤</button>
 </div>
 
 <!-- قائمة الثمرات المنسدلة -->
@@ -2126,6 +2121,25 @@
     </div>
 
     <!-- نافذة إمكانية الوصول -->
+    <div id="voiceTipsModal" class="modal no-print hidden" aria-labelledby="voiceTipsModalTitle" aria-modal="true">
+        <h3 id="voiceTipsModalTitle">🎤 الإدخال الصوتي <button type="button" class="x" aria-label="إغلاق نافذة تعليمات الصوت">✕</button></h3>
+        <div id="voiceActivateSlot"></div>
+        <div class="vt-step"><span class="vt-num">١</span><span>اضغط زر 🎤 الموجود بجوار أي حقل نصّي ثم <b>تكلّم بصوت مرتفع وواضح</b>.</span></div>
+        <div class="vt-step"><span class="vt-num">٢</span><span>قُل نحو <b>أربع كلمات ثم توقف</b> قليلاً، ويمكن أن يصل التوقف إلى <b>4–5 ثوانٍ</b> حتى يُلصق التطبيق الكلام في الخانة — لا تتكلم بسرعة متواصلة دون فواصل.</span></div>
+        <div class="vt-step"><span class="vt-num">٣</span><span>الدقة تعتمد على <b>جودة اتصال الإنترنت</b> ونوع المتصفح وإصداره — قد تحتاج لإعادة المحاولة أحياناً، وهذا أمر خارج عن إرادة التطبيق.</span></div>
+        <div class="vt-step"><span class="vt-num">٤</span><span>يعمل على متصفحي <b>Chrome وEdge</b> فقط؛ غير مدعوم في Firefox، وغير مدعوم غالباً على متصفحات iOS (آيفون/آيباد) لأنها جميعاً تستخدم محرك Safari الداخلي الذي لا يدعم هذه الميزة بعد.</span></div>
+
+        <div class="vt-device ios">
+            <h4>🍏 ملاحظة لمستخدمي آيفون / آيباد</h4>
+            ميزة الإدخال الصوتي غير مدعومة حالياً في أي متصفح على iOS (حتى Chrome على آيفون يستخدم محرك Safari). إن ظهر الزر باهتاً فهذا يعني عدم الدعم — يمكنك الكتابة يدوياً، أو استخدام لوحة المفاتيح الصوتية المدمجة في نظام iOS نفسه (أيقونة الميكروفون في لوحة المفاتيح) كحل بديل.
+        </div>
+
+        <div class="vt-device android">
+            <h4>🤖 ملاحظة لمستخدمي أندرويد</h4>
+            يعمل الإدخال الصوتي على Chrome في أندرويد، لكن: (1) إن كنت تفتح الملف مباشرة من الجهاز (بدون رفعه على موقع)، فقد يطلب المتصفح إذن الميكروفون من جديد كل مرة تُعاد فيها فتح الصفحة — هذا قيد أمني من Google لا يمكن للتطبيق تجاوزه بالكامل. (2) إذا توقّف التعرّف فوراً دون نتيجة، تحقق من اتصال الإنترنت أو أعد تحميل الصفحة وحاول مجدداً.
+        </div>
+    </div>
+
     <div id="a11yModal" class="modal no-print hidden" aria-labelledby="a11yModalTitle" aria-modal="true">
         <h3 id="a11yModalTitle">♿ إمكانية الوصول <button type="button" class="x" aria-label="إغلاق نافذة إمكانية الوصول">✕</button></h3>
 
@@ -2188,6 +2202,8 @@
 (function () {
     "use strict";
     const $ = (id) => document.getElementById(id);
+    // يُعرَّف هنا أولاً (قبل أي استخدام) لتجنّب استدعائه من دوال تُنفَّذ عند تحميل الصفحة قبل تعريفه
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     const HIJRI_MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
     const WD=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
@@ -2597,8 +2613,8 @@
             </div>
             <p class="text-[10px] text-gray-500 mt-1">الزائد والناقص تستخدم عند اختلاف التاريخ الهجري عن الميلادي</p>
             <div class="grid grid-cols-2 gap-2">
-                <input type="text" class="tab-start px-2 py-1 border border-gray-300 rounded text-sm" placeholder="بداية المجلس (نص)" value="${d.start||''}">
-                <input type="text" class="tab-end px-2 py-1 border border-gray-300 rounded text-sm" placeholder="انتهاء المجلس (نص)" value="${d.end||''}">
+                <div class="voice-field-wrap"><input type="text" class="tab-start px-2 py-1 border border-gray-300 rounded text-sm" placeholder="بداية المجلس (نص)" value="${d.start||''}"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لبداية المجلس">🎤</button></div>
+                <div class="voice-field-wrap"><input type="text" class="tab-end px-2 py-1 border border-gray-300 rounded text-sm" placeholder="انتهاء المجلس (نص)" value="${d.end||''}"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لانتهاء المجلس">🎤</button></div>
             </div>
             <span class="tab-derived block text-[11px] text-gray-500"></span>
         `;
@@ -2613,6 +2629,7 @@
         const old=Array.from(rows).map(r=>({greg:r.querySelector('.tab-greg').value, start:r.querySelector('.tab-start').value, end:r.querySelector('.tab-end').value}));
         list.innerHTML='';
         for(let i=0;i<N;i++) list.appendChild(makeTabRow(i, old[i]));
+        _markVoiceUnsupported(list);
         list.querySelectorAll('.tab-row').forEach(row => {
             const greg = row.querySelector('.tab-greg').value;
             if (greg) {
@@ -2662,7 +2679,7 @@
         row.innerHTML=`
             <div class="flex gap-2 items-start">
                 <div class="flex-1 space-y-2">
-                    <input type="text" class="org-name w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="اسم الجهة / القناة المنظمة">
+                    <div class="voice-field-wrap"><input type="text" class="org-name w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="اسم الجهة / القناة المنظمة"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لاسم الجهة المنظمة">🎤</button></div>
                     <div class="grid grid-cols-2 gap-2">
                         <div class="flex items-center gap-1 border border-gray-200 p-1 rounded">
                             <span class="text-[10px] text-gray-500 w-8">لون:</span>
@@ -2783,7 +2800,7 @@
         });
         row._sigPadClear = orgPad.clear;
         
-        orgList.appendChild(row);
+        orgList.appendChild(row); _markVoiceUnsupported(row);
     }
     
     function getOrgs() {
@@ -2813,28 +2830,36 @@
             <button type="button" class="book-type-btn opt-btn${btype==='منظومة'?' active':''}" data-btype="منظومة" aria-pressed="${btype==='منظومة'}">منظومة</button>
             <button type="button" class="book-type-btn opt-btn${isCustom?' active':''}" data-btype="custom" aria-pressed="${isCustom}">مخصص…</button>
         </div>
-        <input type="text" class="book-type-custom w-full px-3 py-1.5 border border-amber-300 rounded-md text-sm${isCustom?'':' hidden'}" placeholder="اكتب نوع المسموع…" aria-label="نوع المسموع المخصص" value="${isCustom?btype:''}">
+        <div class="voice-field-wrap${isCustom?'':' hidden'}" id="bookTypeCustomWrap-${Math.random().toString(36).slice(2,8)}">
+            <input type="text" class="book-type-custom w-full px-3 py-1.5 border border-amber-300 rounded-md text-sm" placeholder="اكتب نوع المسموع…" aria-label="نوع المسموع المخصص" value="${isCustom?btype:''}">
+            <button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لنوع المسموع المخصص">🎤</button>
+        </div>
         <input type="hidden" class="book-type-val" value="${btype}">
-        <div class="flex gap-2 items-center"><input type="text" class="tash book-name flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الكتاب" placeholder="اسم الكتاب المسموع" aria-label="اسم الكتاب المسموع"><button type="button" class="book-del opt-btn" title="حذف" aria-label="حذف هذا الكتاب">✕</button></div>
-        <input type="text" class="book-edition w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="النسخة المعتمدة لهذا الكتاب (اختياري)" aria-label="النسخة المعتمدة">`;
+        <div class="flex gap-2 items-center">
+            <div class="voice-field-wrap flex-1"><input type="text" class="tash book-name w-full px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الكتاب" placeholder="اسم الكتاب المسموع" aria-label="اسم الكتاب المسموع"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لاسم الكتاب">🎤</button></div>
+            <button type="button" class="book-del opt-btn" title="حذف" aria-label="حذف هذا الكتاب">✕</button>
+        </div>
+        <div class="voice-field-wrap"><input type="text" class="book-edition w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="النسخة المعتمدة لهذا الكتاب (اختياري)" aria-label="النسخة المعتمدة"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي للنسخة المعتمدة">🎤</button></div>`;
         row.querySelector('.book-name').value=d.name||'';
         row.querySelector('.book-edition').value=d.edition||'';
         // book type toggle logic for this row
         initBookTypeGroup(row.querySelector('[role="radiogroup"]'), row.querySelector('.book-type-custom'), row.querySelector('.book-type-val'));
-        bookList.appendChild(row); }
+        bookList.appendChild(row); _markVoiceUnsupported(row); }
     // ---- نوع المسموع: دالة تهيئة مجموعة الأزرار ----
     function initBookTypeGroup(group, customInput, hiddenVal){
+        // الغلاف الذي قد يحوي زر الصوت — يُتحكم بإظهاره/إخفائه إن وُجد، وإلا الحقل نفسه
+        const customWrap = customInput.closest('.voice-field-wrap') || customInput;
         group.querySelectorAll('.book-type-btn').forEach(function(btn){
             btn.addEventListener('click', function(){
                 group.querySelectorAll('.book-type-btn').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
                 btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
                 const btype = btn.dataset.btype;
                 if(btype === 'custom'){
-                    customInput.classList.remove('hidden');
+                    customWrap.classList.remove('hidden');
                     customInput.focus();
                     hiddenVal.value = customInput.value || '';
                 } else {
-                    customInput.classList.add('hidden');
+                    customWrap.classList.add('hidden');
                     hiddenVal.value = btype;
                 }
                 if(typeof render === 'function') render();
@@ -2879,9 +2904,9 @@
         });
         return list;
     }
-    function addStudentRow(d){ d=d||{}; const row=document.createElement('div'); row.className='student-row flex gap-2 items-center'; row.innerHTML='<input type="text" class="tash student-name flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الطالب" placeholder="اسم الطالب / الطالبة"><select class="student-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="student-del opt-btn" title="حذف">✕</button>'; row.querySelector('.student-name').value=d.name||''; row.querySelector('.student-gender').value=d.gender||'male'; studentList.appendChild(row); }
+    function addStudentRow(d){ d=d||{}; const row=document.createElement('div'); row.className='student-row flex gap-2 items-center'; row.innerHTML='<div class="voice-field-wrap flex-1"><input type="text" class="tash student-name w-full px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الطالب" placeholder="اسم الطالب / الطالبة"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لاسم الطالب">🎤</button></div><select class="student-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="student-del opt-btn" title="حذف">✕</button>'; row.querySelector('.student-name').value=d.name||''; row.querySelector('.student-gender').value=d.gender||'male'; studentList.appendChild(row); _markVoiceUnsupported(row); }
     function getStudents(){ const list=[]; const n=fields.studentName.value.trim(); if(n) list.push({name:n, gender:fields.studentGender.value}); Array.from(studentList.querySelectorAll('.student-row')).forEach(r=>{ const nm=r.querySelector('.student-name').value.trim(); if(nm) list.push({name:nm, gender:r.querySelector('.student-gender').value}); }); return list; }
-    function addSheikhRow(d){ d=d||{}; const row=document.createElement('div'); row.className='sheikh-row border border-gray-200 rounded-md p-2.5 space-y-2 bg-white'; row.innerHTML='<div class="flex gap-2 items-center"><div class="voice-field-wrap flex-1"><input type="text" class="tash sheikh-name w-full px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الشيخ" placeholder="اسم الشيخ / الشيخة"><button type="button" class="voice-btn no-print sheikh-voice-btn" title="إدخال صوتي لاسم الشيخ" aria-label="إدخال صوتي">🎤</button></div><select class="sheikh-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="sheikh-del opt-btn" title="حذف هذا الشيخ">✕</button></div><div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-700 pr-1"><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-khassa" checked> إجازة خاصة (بالكتاب)</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-amma" checked> إجازة عامة</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-family"> الأزواج والذرية</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-works" checked> بمؤلفاته خاصة</label></div><input type="text" class="sh-custom w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="إضافة حرّة لإجازة هذا الشيخ (اختياري)"><textarea class="sh-isnad hidden w-full px-3 py-2 border border-gray-300 rounded-md text-sm leading-relaxed" rows="2" placeholder="سند هذا الشيخ (اختياري)..."></textarea><div class="flex flex-wrap gap-2 items-center text-[11px] text-gray-600"><button type="button" class="sh-sigbtn opt-btn">توقيع الشيخ</button><span class="sh-sigok"></span><button type="button" class="sh-stampbtn opt-btn">ختم الشيخ</button><span class="sh-stampok"></span><button type="button" class="sh-imgclear opt-btn">مسح التوقيع/الختم</button><input type="file" class="sh-sigfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"><input type="file" class="sh-stampfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"></div>'; row.querySelector('.sheikh-name').value=d.name||''; row.querySelector('.sheikh-gender').value=d.gender||'male'; if(d.khassa===false) row.querySelector('.sh-khassa').checked=false; if(d.amma===false) row.querySelector('.sh-amma').checked=false; if(d.family===true) row.querySelector('.sh-family').checked=true; if(d.works===false) row.querySelector('.sh-works').checked=false; row.querySelector('.sh-custom').value=d.custom||''; row.querySelector('.sh-isnad').value=d.isnad||''; row.querySelector('.sh-isnad').classList.toggle('hidden', fields.isnadMode.value!=='per'); row._sig=d.sig||null; row._stamp=d.stamp||null; if(row._sig) row.querySelector('.sh-sigok').textContent='✓'; if(row._stamp) row.querySelector('.sh-stampok').textContent='✓'; sheikhList.appendChild(row); }
+    function addSheikhRow(d){ d=d||{}; const row=document.createElement('div'); row.className='sheikh-row border border-gray-200 rounded-md p-2.5 space-y-2 bg-white'; row.innerHTML='<div class="flex gap-2 items-center"><div class="voice-field-wrap flex-1"><input type="text" class="tash sheikh-name w-full px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الشيخ" placeholder="اسم الشيخ / الشيخة"><button type="button" class="voice-btn no-print sheikh-voice-btn" title="إدخال صوتي لاسم الشيخ" aria-label="إدخال صوتي">🎤</button></div><select class="sheikh-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="sheikh-del opt-btn" title="حذف هذا الشيخ">✕</button></div><div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-700 pr-1"><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-khassa" checked> إجازة خاصة (بالكتاب)</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-amma" checked> إجازة عامة</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-family"> الأزواج والذرية</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-works" checked> بمؤلفاته خاصة</label></div><div class="voice-field-wrap"><input type="text" class="sh-custom w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="إضافة حرّة لإجازة هذا الشيخ (اختياري)"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لإضافة حرة لإجازة الشيخ">🎤</button></div><div class="voice-field-wrap sh-isnad-wrap hidden"><textarea class="sh-isnad w-full px-3 py-2 border border-gray-300 rounded-md text-sm leading-relaxed" rows="2" placeholder="سند هذا الشيخ (اختياري)..."></textarea><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لسند الشيخ">🎤</button></div><div class="flex flex-wrap gap-2 items-center text-[11px] text-gray-600"><button type="button" class="sh-sigbtn opt-btn">توقيع الشيخ</button><span class="sh-sigok"></span><button type="button" class="sh-stampbtn opt-btn">ختم الشيخ</button><span class="sh-stampok"></span><button type="button" class="sh-imgclear opt-btn">مسح التوقيع/الختم</button><input type="file" class="sh-sigfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"><input type="file" class="sh-stampfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"></div>'; row.querySelector('.sheikh-name').value=d.name||''; row.querySelector('.sheikh-gender').value=d.gender||'male'; if(d.khassa===false) row.querySelector('.sh-khassa').checked=false; if(d.amma===false) row.querySelector('.sh-amma').checked=false; if(d.family===true) row.querySelector('.sh-family').checked=true; if(d.works===false) row.querySelector('.sh-works').checked=false; row.querySelector('.sh-custom').value=d.custom||''; row.querySelector('.sh-isnad').value=d.isnad||''; row.querySelector('.sh-isnad-wrap').classList.toggle('hidden', fields.isnadMode.value!=='per'); row._sig=d.sig||null; row._stamp=d.stamp||null; if(row._sig) row.querySelector('.sh-sigok').textContent='✓'; if(row._stamp) row.querySelector('.sh-stampok').textContent='✓'; sheikhList.appendChild(row); _markVoiceUnsupported(row); }
     function getSheikhs(){ return Array.from(sheikhList.querySelectorAll('.sheikh-row')).map(r=>({ name:r.querySelector('.sheikh-name').value.trim(), gender:r.querySelector('.sheikh-gender').value, khassa:r.querySelector('.sh-khassa').checked, amma:r.querySelector('.sh-amma').checked, family:r.querySelector('.sh-family').checked, works:r.querySelector('.sh-works').checked, custom:r.querySelector('.sh-custom').value.trim(), isnad:r.querySelector('.sh-isnad').value.trim(), sig:r._sig||null, stamp:r._stamp||null })).filter(s=>s.name); }
     function sheikhForms(sheikhs){ const n=sheikhs.length; const allF = n>0 && sheikhs.every(s=>s.gender==='female'); const ajazaV = allF?'أجازت':'أجاز'; const akhbaraV = allF?'أخبرت':'أخبر'; if(n>=3){ return { hu:allF?'هنّ':'هم', noun:allF?'الشيخاتُ':'المشايخُ', honor:allF?'فضيلة الشيخات /':'فضيلة المشايخ /', ajazaV, akhbaraV, ajaza:allF?'أجازْنَ':'أجازوا', qaala:allF?'فقُلن':'فقالوا', mujiz:allF?'المجيزات':'المجيزون', musammi:allF?'الشيخات المُسمِّعات':'المشايخ المُسمِّعون' }; } if(n===2){ return { hu:'هما', noun:allF?'الشيختان':'الشيخان', honor:allF?'فضيلتي الشيختين /':'فضيلتي الشيخين /', ajazaV, akhbaraV, ajaza:allF?'أجازتا':'أجازا', qaala:allF?'فقالتا':'فقالا', mujiz:allF?'المجيزتان':'المجيزان', musammi:allF?'الشيختان المُسمِّعتان':'الشيخان المُسمِّعان' }; } const F=allF; return { hu:F?'ها':'ه', noun:F?'الشيخةُ':'الشيخُ', honor:F?'فضيلة الشيخة /':'فضيلة الشيخ /', ajazaV, akhbaraV, ajaza:F?'أجازت':'أجاز', qaala:F?'فقالت':'فقال', mujiz:F?'المجيزة':'المجيز', musammi:F?'الشيخة المُسمِّعة':'الشيخ المُسمِّع' }; }
 
@@ -2911,7 +2936,7 @@
         row.className = 'org-sig-row border border-gray-200 rounded p-2 space-y-2';
         row.innerHTML = `
             <div class="flex gap-2 items-center">
-                <input type="text" class="org-sig-name flex-1 px-3 py-1 border border-gray-300 rounded text-sm" placeholder="اسم المنظم (مثال: قناة كذا)" value="${esc(d.name||'')}">
+                <div class="voice-field-wrap flex-1"><input type="text" class="org-sig-name w-full px-3 py-1 border border-gray-300 rounded text-sm" placeholder="اسم المنظم (مثال: قناة كذا)" value="${esc(d.name||'')}"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لاسم المنظم">🎤</button></div>
                 <button type="button" class="org-sig-upload opt-btn !text-[10px]">رفع توقيع</button>
                 <button type="button" class="org-sig-draw opt-btn !text-[10px]">رسم توقيع</button>
                 <span class="org-sig-ok text-[10px] text-emerald-600 font-bold hidden">✓</span>
@@ -3277,8 +3302,8 @@
         const sessions=getSessions();
         endGroup.classList.toggle('hidden', sessions<=1);
         startTitle.textContent = sessions>1 ? 'تاريخ بداية المجالس' : 'تاريخ المجلس';
-        fields.sessionNum.classList.toggle('hidden', fields.sessionMode.value!=='many');
-        fields.uptoText.classList.toggle('hidden', fields.completeness.value!=='upto');
+        (document.getElementById('sessionNumWrap')||fields.sessionNum).classList.toggle('hidden', fields.sessionMode.value!=='many');
+        (document.getElementById('uptoTextWrap')||fields.uptoText).classList.toggle('hidden', fields.completeness.value!=='upto');
         $('fawtRangeWrap').classList.toggle('hidden', fields.completeness.value!=='fawt_range');
         $('actionSub').classList.toggle('hidden', !(fields.actionType.value==='حضر عندي'||fields.actionType.value==='اتصل بي'));
         fields.attendedNum.classList.toggle('hidden', !fields.attendedSome.checked);
@@ -3741,7 +3766,7 @@
         const per=fields.isnadMode.value==='per';
         $('sharedIsnadWrap').classList.toggle('hidden', per);
         $('perIsnadHint').classList.toggle('hidden', !per);
-        sheikhList.querySelectorAll('.sh-isnad').forEach(t=>t.classList.toggle('hidden', !per));
+        sheikhList.querySelectorAll('.sh-isnad-wrap').forEach(t=>t.classList.toggle('hidden', !per));
         render();
     }
     fields.isnadMode.addEventListener('change', updateIsnadMode);
@@ -4034,6 +4059,7 @@
 
     $('fabContact').addEventListener('click', ()=>openModal('contactModal'));
     $('fabAlert').addEventListener('click', ()=>openModal('alertModal'));
+    $('fabVoiceTips') && $('fabVoiceTips').addEventListener('click', ()=>openModal('voiceTipsModal'));
     modalOverlay.addEventListener('click', e=>{ if(e.target===modalOverlay) closeModal(); });
     document.querySelectorAll('#modalOverlay .x').forEach(b=>b.addEventListener('click', closeModal));
     document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
@@ -4414,7 +4440,6 @@
     // ============================================================
     // الإدخال الصوتي - نسخة محسّنة ومستقرة
     // ============================================================
-    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     let _activeVoiceBtn = null;
     let _activeRec = null;
     let _voiceTimeoutId = null;
@@ -4431,13 +4456,22 @@
     voiceActivateBtn.disabled = !SpeechRec;
     voiceActivateBtn.setAttribute('aria-label', SpeechRec ? 'تفعيل الميكروفون — مطلوب مرة واحدة في كل جلسة (الملف المحلي لا يحفظ الأذونات تلقائياً)' : 'الإدخال الصوتي غير مدعوم في هذا المتصفح');
 
-    // إضافة الزر أعلى البانر الصوتي
-    const voiceBanner = document.querySelector('.voice-banner');
-    if(voiceBanner && voiceBanner.parentNode){
-        voiceBanner.parentNode.insertBefore(voiceActivateBtn, voiceBanner);
+    // إدراج زر التفعيل داخل نافذة تعليمات الصوت العائمة
+    const voiceActivateSlot = document.getElementById('voiceActivateSlot');
+    if(voiceActivateSlot){
+        voiceActivateSlot.appendChild(voiceActivateBtn);
     }
 
     let _voiceReady = false; // هل تم منح الإذن؟
+
+    // تعطيل بصري لجميع أزرار الصوت إذا كانت الميزة غير مدعومة في هذا المتصفح
+    if(!SpeechRec){
+        document.querySelectorAll('.voice-btn').forEach(function(b){
+            b.classList.add('unsupported');
+            b.setAttribute('aria-disabled','true');
+            b.title = _isIOS ? 'غير مدعوم على iOS — افتح تعليمات 🎤 للتفاصيل' : 'غير مدعوم في هذا المتصفح';
+        });
+    }
 
     voiceActivateBtn.addEventListener('click', async function(){
         if(!SpeechRec){ showToast('المتصفح لا يدعم الإدخال الصوتي - استخدم Chrome أو Edge', false); return; }
@@ -4459,15 +4493,31 @@
         }
     });
 
+    let _voiceHardStopId = null;
+
     function _stopVoice(){
-        if(_activeRec){ try{ _activeRec.abort(); }catch(e){} _activeRec = null; }
-        if(_activeVoiceBtn){ _activeVoiceBtn.classList.remove('listening'); _activeVoiceBtn = null; }
+        if(_activeRec){ try{ _activeRec.stop(); }catch(e){} _activeRec = null; }
+        if(_activeVoiceBtn){
+            _activeVoiceBtn.classList.remove('listening');
+            _activeVoiceBtn.setAttribute('aria-pressed','false');
+            if(_activeVoiceBtn._prevAriaLabel) _activeVoiceBtn.setAttribute('aria-label', _activeVoiceBtn._prevAriaLabel);
+            _activeVoiceBtn = null;
+        }
         if(_voiceTimeoutId){ clearTimeout(_voiceTimeoutId); _voiceTimeoutId = null; }
+        if(_voiceHardStopId){ clearTimeout(_voiceHardStopId); _voiceHardStopId = null; }
+    }
+
+    // فحص سياق غير آمن على الجوال — كثير من متصفحات أندرويد تحجب خدمة
+    // التعرّف الصوتي السحابية على صفحات file:// أو http:// غير الآمنة
+    function _insecureMobileContext(){
+        return _isMobile && location.protocol !== 'https:' && location.hostname !== 'localhost';
     }
 
     function _doVoiceInput(btn, fillFn){
         if(!SpeechRec){
-            showToast('المتصفح لا يدعم الإدخال الصوتي — استخدم Chrome أو Edge', false);
+            showToast(_isIOS
+                ? 'الإدخال الصوتي غير مدعوم على متصفحات iOS — جرّب لوحة المفاتيح الصوتية في نظام آيفون نفسه'
+                : 'المتصفح لا يدعم الإدخال الصوتي — استخدم Chrome أو Edge', false);
             return;
         }
         // إيقاف جلسة سابقة
@@ -4475,52 +4525,124 @@
 
         const rec = new SpeechRec();
         rec.lang = 'ar-SA';
-        rec.continuous = false;
-        rec.interimResults = false;
-        rec.maxAlternatives = 3;
+        rec.continuous = true;       // يبقى مستمعاً عبر فواصل الصمت القصيرة
+        rec.interimResults = true;   // يلتقط نتائج جزئية لإعادة ضبط مؤقّت الصمت
+        rec.maxAlternatives = 1;
 
         btn.classList.add('listening');
+        btn.setAttribute('aria-pressed','true');
+        const _prevLabel = btn.getAttribute('aria-label') || 'إدخال صوتي';
+        btn._prevAriaLabel = _prevLabel;
+        btn.setAttribute('aria-label', 'جارٍ الاستماع — تكلّم الآن، اضغط للإيقاف');
+        { const _a = document.getElementById('sr-announce-assertive'); if(_a){ _a.textContent=''; setTimeout(()=>_a.textContent='بدأ الاستماع، تكلّم الآن',50); } }
+
         _activeVoiceBtn = btn;
         _activeRec = rec;
 
-        // مهلة 8 ثوانٍ
-        _voiceTimeoutId = setTimeout(function(){
-            if(_activeRec === rec){
-                rec.stop();
-                showToast('انتهت المهلة — لم يُكتشف كلام', false);
-            }
-        }, 8000);
+        let finalText = '';
+        const SILENCE_MS = 5000;  // مهلة صمت قبل إنهاء الاستماع تلقائياً
+        const MAX_MS     = 45000; // سقف زمني أقصى للجلسة الواحدة
+
+        function resetSilenceTimer(){
+            clearTimeout(_voiceTimeoutId);
+            _voiceTimeoutId = setTimeout(function(){ try{ rec.stop(); }catch(_){} }, SILENCE_MS);
+        }
+        resetSilenceTimer();
+        _voiceHardStopId = setTimeout(function(){ try{ rec.stop(); }catch(_){} }, MAX_MS);
 
         rec.onresult = function(e){
-            clearTimeout(_voiceTimeoutId);
-            const text = e.results[0][0].transcript.trim();
-            fillFn(text);
-            showToast('✓ ' + text.substring(0,35) + (text.length>35?'…':''));
-        };
-        rec.onerror = function(e){
-            clearTimeout(_voiceTimeoutId);
-            if(e.error === 'not-allowed'){
-                showToast('يجب منح إذن الميكروفون أولاً — اضغط الزر الأصفر أعلاه', false);
-            } else if(e.error !== 'aborted'){
-                const msgs = {'no-speech':'لم يُكتشف صوت','network':'تحقق من الاتصال','audio-capture':'تعذّر الميكروفون'};
-                showToast(msgs[e.error] || 'خطأ: ' + e.error, false);
+            resetSilenceTimer();
+            for(let i = e.resultIndex; i < e.results.length; i++){
+                if(e.results[i].isFinal){
+                    const piece = e.results[i][0].transcript.trim();
+                    if(piece) finalText += (finalText ? ' ' : '') + piece;
+                }
             }
         };
-        rec.onend = function(){
+
+        rec.onerror = function(e){
             clearTimeout(_voiceTimeoutId);
-            btn.classList.remove('listening');
-            if(_activeVoiceBtn === btn) _activeVoiceBtn = null;
-            if(_activeRec === rec) _activeRec = null;
+            clearTimeout(_voiceHardStopId);
+            if(e.error === 'not-allowed'){
+                showToast('يجب منح إذن الميكروفون أولاً — افتح 🎤 العائمة واضغط زر التفعيل', false);
+            } else if(e.error === 'network'){
+                showToast('تعذّر الاتصال بخدمة التعرّف الصوتي عبر الإنترنت — تحقق من الاتصال' + (_isMobile ? ' (تتطلب بعض الأجهزة اتصالاً آمناً HTTPS)' : ''), false);
+            } else if(e.error === 'service-not-allowed'){
+                showToast('خدمة التعرّف الصوتي محجوبة على هذا الاتصال — جرّب فتح الملف من رابط https أو على الكمبيوتر', false);
+            } else if(e.error !== 'aborted'){
+                const msgs = {'no-speech':'لم يُكتشف صوت، تكلّم بصوت أعلى وأوضح','audio-capture':'تعذّر الوصول للميكروفون'};
+                showToast(msgs[e.error] || ('خطأ صوتي: ' + e.error), false);
+            }
         };
 
-        try{ rec.start(); }
+        rec.onend = function(){
+            clearTimeout(_voiceTimeoutId);
+            clearTimeout(_voiceHardStopId);
+            btn.classList.remove('listening');
+            btn.setAttribute('aria-pressed','false');
+            if(btn._prevAriaLabel) btn.setAttribute('aria-label', btn._prevAriaLabel);
+            if(_activeVoiceBtn === btn) _activeVoiceBtn = null;
+            if(_activeRec === rec) _activeRec = null;
+
+            const out = finalText.trim();
+            if(out){
+                fillFn(out);
+                showToast('✓ ' + out.substring(0,35) + (out.length>35?'…':''));
+            }
+        };
+
+        try{
+            if(_insecureMobileContext()){
+                showToast('تنبيه: الصفحة غير مفتوحة عبر اتصال آمن (https) — قد يتعذّر التعرّف على بعض أجهزة الجوال', false);
+            }
+            rec.start();
+        }
         catch(err){
             btn.classList.remove('listening');
-            _activeRec = null;
-            _activeVoiceBtn = null;
-            showToast('تعذّر تشغيل الميكروفون — حاول الضغط على زر التفعيل أولاً', false);
+            btn.setAttribute('aria-pressed','false');
+            if(btn._prevAriaLabel) btn.setAttribute('aria-label', btn._prevAriaLabel);
+            clearTimeout(_voiceTimeoutId); clearTimeout(_voiceHardStopId);
+            _activeRec = null; _activeVoiceBtn = null;
+            showToast('تعذّر تشغيل الميكروفون — جرّب زر التفعيل في نافذة 🎤 العائمة', false);
         }
     }
+
+    // دالة مساعدة: تعطيل بصري لأزرار صوت جديدة إذا كانت الميزة غير مدعومة
+    function _markVoiceUnsupported(container){
+        if(SpeechRec || !container) return;
+        container.querySelectorAll('.voice-btn').forEach(function(b){
+            b.classList.add('unsupported');
+            b.setAttribute('aria-disabled','true');
+            b.title = _isIOS ? 'غير مدعوم على iOS' : 'غير مدعوم في هذا المتصفح';
+        });
+    }
+
+    // مستمع عام لأزرار الصوت الديناميكية (تُضاف عبر "+ إضافة")
+    // كل زر بهذا الشكل: <button class="voice-btn dyn-voice-btn" ...></button> داخل .voice-field-wrap
+    document.addEventListener('click', function(e){
+        const btn = e.target.closest('.dyn-voice-btn');
+        if(!btn) return;
+        e.preventDefault();
+        if(btn.classList.contains('unsupported')) {
+            showToast(_isIOS ? 'الإدخال الصوتي غير مدعوم على iOS' : 'غير مدعوم في هذا المتصفح', false);
+            return;
+        }
+        if(btn.classList.contains('listening')){ _stopVoice(); return; }
+        const wrap = btn.closest('.voice-field-wrap');
+        if(!wrap) return;
+        const target = wrap.querySelector('input, textarea');
+        if(!target) return;
+        _doVoiceInput(btn, function(text){
+            target.value = text;
+            try {
+                target.dispatchEvent(new InputEvent('input', {bubbles:true, cancelable:true, data:text, inputType:'insertText'}));
+            } catch(_) {
+                target.dispatchEvent(new Event('input', {bubbles:true}));
+            }
+            target.dispatchEvent(new Event('change', {bubbles:true}));
+            setTimeout(function(){ render(); scheduleSave(); }, 80);
+        });
+    });
 
     // ربط أزرار الصوت - الحقول الثابتة
     document.addEventListener('click', function(e){
