@@ -1058,6 +1058,16 @@
                                         <button type="button" id="rosterImportBtn" class="opt-btn !text-[10px]">استيراد كشف</button>
                                         <input type="file" id="rosterImport" accept=".csv,text/csv" class="hidden" aria-hidden="true" tabindex="-1">
                                     </div>
+                                    <div class="border border-red-200 bg-red-50 rounded-md p-2 mt-1" role="note" aria-label="تعليمات استيراد كشف من إكسل">
+                                        <ol class="text-[10.5px] text-red-700 leading-relaxed list-decimal pr-4 space-y-0.5">
+                                            <li>افتح مستنداً جديداً في إكسل.</li>
+                                            <li>ضع اسماً لكل خانة (عمود) تريدها، بالعدد الذي تحتاجه.</li>
+                                            <li>قم بملء الخانات جميعها (ويمكنك إرساله عبر رابط درايف بحيث يملؤه مَن حضر المجلس).</li>
+                                            <li>احفظ الملف بأي اسم تفضله وفي أي مكان ترغبه، مع تغيير خانة «حفظ كنوع» أسفل نافذة الحفظ إلى النوع الذي امتداده csv [مفصول بفواصل].</li>
+                                            <li>ثم استورد الملف مباشرة دون أن تُعدِّل عدد الأعمدة ولا عدد الصفوف ولا أسماء الأعمدة.</li>
+                                            <li>ستلاحظ أن كل شيء جاء في مكانه، وتتعدّل تلقائياً أعداد الأعمدة والصفوف وأسماء الأعمدة بحسب ملف إكسل.</li>
+                                        </ol>
+                                    </div>
                                     <div class="border-t border-gray-100 pt-2 space-y-1">
                                         <div class="flex flex-wrap gap-2 items-center text-[10px] text-gray-600">
                                             <span>صفوف في كل صفحة:</span>
@@ -2574,13 +2584,45 @@
         const q=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"';
         let csv=names.map(q).join(',')+'\r\n';
         for(let r=0;r<rows;r++){ const line=[]; for(let c=0;c<cols;c++){ line.push(q((data[r]&&data[r][c])||'')); } csv+=line.join(',')+'\r\n'; }
-        return '\ufeff'+csv;
+        // "sep=," سطر توجيهي يقرؤه Excel ليُجبره على استخدام الفاصلة كفاصل أعمدة
+        // بصرف النظر عن إعدادات المنطقة في النظام (بعض الأنظمة العربية تتوقع فاصلة منقوطة ؛
+        // فيظهر الملف وكأن كل الأعمدة دُمجت في عمود واحد دون هذا السطر)
+        return '\ufeffsep=,\r\n'+csv;
     }
     function parseCSV(text){
-        text=text.replace(/^\ufeff/,''); const rows=[]; let row=[], cur='', inQ=false;
+        text=text.replace(/^\ufeff/,'');
+        // اكتشاف فاصل الأعمدة: إن وُجد سطر توجيهي "sep=X" استخدمه صراحةً،
+        // وإلا اكتشف تلقائياً الأكثر شيوعاً بين (فاصلة / فاصلة منقوطة / تبويب)
+        // في أول سطر — هذا يحل مشكلة ملفات Excel المُعاد حفظها بفاصل مختلف
+        // حسب إعدادات المنطقة في النظام (شائع في الأنظمة العربية: الفاصلة المنقوطة).
+        let sep = ',';
+        const sepMatch = text.match(/^sep=(.)\r?\n/);
+        if(sepMatch){
+            sep = sepMatch[1];
+            text = text.slice(sepMatch[0].length);
+        } else {
+            const firstLine = (text.split(/\r?\n/, 1)[0]) || '';
+            const countOutsideQuotes = function(str, ch){
+                let count = 0, q = false;
+                for(let i=0;i<str.length;i++){
+                    const c = str[i];
+                    if(c === '"') q = !q;
+                    else if(c === ch && !q) count++;
+                }
+                return count;
+            };
+            const candidates = [',', ';', '\t'];
+            let best = ',', bestCount = -1;
+            candidates.forEach(function(c){
+                const n = countOutsideQuotes(firstLine, c);
+                if(n > bestCount){ bestCount = n; best = c; }
+            });
+            if(bestCount > 0) sep = best;
+        }
+        const rows=[]; let row=[], cur='', inQ=false;
         for(let i=0;i<text.length;i++){ const ch=text[i];
             if(inQ){ if(ch==='"'){ if(text[i+1]==='"'){cur+='"';i++;} else inQ=false; } else cur+=ch; }
-            else { if(ch==='"') inQ=true; else if(ch===','){ row.push(cur); cur=''; } else if(ch==='\n'){ row.push(cur); rows.push(row); row=[]; cur=''; } else if(ch==='\r'){} else cur+=ch; }
+            else { if(ch==='"') inQ=true; else if(ch===sep){ row.push(cur); cur=''; } else if(ch==='\n'){ row.push(cur); rows.push(row); row=[]; cur=''; } else if(ch==='\r'){} else cur+=ch; }
         }
         if(cur!==''||row.length){ row.push(cur); rows.push(row); }
         return rows.filter(r=>r.some(c=>String(c).trim()!==''));
@@ -3745,19 +3787,34 @@
     });
     $('rosterImportBtn').addEventListener('click', ()=>$('rosterImport').click());
     $('rosterImport').addEventListener('change', (e)=>{
-        const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
-        rd.onload=()=>{ const rows=parseCSV(rd.result); if(!rows.length){ showToast('الملف فارغ'); return; }
-            const header=rows[0]; const dataRows=rows.slice(1);
-            $('rosterColNames').value=header.join('،');
-            $('rosterCols').value=Math.min(10, header.length);
-            $('rosterRows').value=Math.min(500, Math.max(1, dataRows.length));
-            buildRosterGrid(false);
-            const cells=$('rosterGrid').querySelectorAll('.r-row');
-            dataRows.forEach((dr,r)=>{ if(cells[r]){ const ins=cells[r].querySelectorAll('.r-cell'); dr.forEach((val,c)=>{ if(ins[c]) ins[c].value=val; }); } });
-            rosterPagination = [];
-            render(); scheduleSave(); showToast('تم استيراد الكشف وتنسيقه');
+        const f=e.target.files[0]; if(!f) return;
+        // فحص أولي سريع: هل الملف إكسل ثنائي (xlsx أو xls قديم) وليس CSV نصي؟
+        // قراءة CSV كنص على ملف ثنائي تُنتج محتوى غير مفهوم في عمود واحد فقط.
+        const probe = new FileReader();
+        probe.onload = function(){
+            const bytes = new Uint8Array(probe.result);
+            const isXlsxZip = bytes.length>=2 && bytes[0]===0x50 && bytes[1]===0x4B; // "PK" توقيع ملفات zip/xlsx
+            const isLegacyXls = bytes.length>=4 && bytes[0]===0xD0 && bytes[1]===0xCF && bytes[2]===0x11 && bytes[3]===0xE0; // توقيع xls القديم
+            if(isXlsxZip || isLegacyXls){
+                showToast('هذا ملف إكسل (xlsx/xls) وليس CSV — من إكسل اختر «حفظ باسم» ثم نوع الملف «CSV UTF-8»، ثم ارفع ذلك الملف هنا', false);
+                e.target.value='';
+                return;
+            }
+            const rd=new FileReader();
+            rd.onload=()=>{ const rows=parseCSV(rd.result); if(!rows.length){ showToast('الملف فارغ'); return; }
+                const header=rows[0]; const dataRows=rows.slice(1);
+                $('rosterColNames').value=header.join('،');
+                $('rosterCols').value=Math.min(10, header.length);
+                $('rosterRows').value=Math.min(500, Math.max(1, dataRows.length));
+                buildRosterGrid(false);
+                const cells=$('rosterGrid').querySelectorAll('.r-row');
+                dataRows.forEach((dr,r)=>{ if(cells[r]){ const ins=cells[r].querySelectorAll('.r-cell'); dr.forEach((val,c)=>{ if(ins[c]) ins[c].value=val; }); } });
+                rosterPagination = [];
+                render(); scheduleSave(); showToast('تم استيراد الكشف وتنسيقه');
+            };
+            rd.readAsText(f,'utf-8'); e.target.value='';
         };
-        rd.readAsText(f,'utf-8'); e.target.value='';
+        probe.readAsArrayBuffer(f.slice(0,4));
     });
 
     // ---- الطِباق ----
