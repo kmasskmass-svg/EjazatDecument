@@ -199,6 +199,8 @@
             background:rgba(0,0,0,.04);
             font-weight:bold;
             color:var(--accent-strong);
+            white-space: nowrap;   /* رؤوس الأعمدة كلمة واحدة قصيرة غالباً (مثل "الجنس") — لا يجوز كسرها منتصفها */
+            word-break: keep-all;
         }
         .doc-table.roster td { height:2.1rem; }
         .doc-table.no-border,
@@ -259,6 +261,7 @@
         .fab.alert{ background:#f59e0b; }
         .fab.thamarat{ background:#8b5cf6; }
         .fab.voice{ background:#dc2626; }
+        .fab.excel{ background:#15803d; }
         .voice-btn.unsupported {
             opacity:.4; cursor:not-allowed; border-color:#d1d5db!important; color:#9ca3af!important;
         }
@@ -279,6 +282,56 @@
         #voiceTipsModal .vt-device.ios{ background:#fef2f2; border-color:#fecaca; color:#991b1b; }
         #voiceTipsModal .vt-device.android{ background:#f0fdf4; border-color:#bbf7d0; color:#065f46; }
         #voiceTipsModal .vt-device h4{ font-weight:800; margin-bottom:.3rem; font-size:.85rem; }
+
+        /* ===== تنسيق نافذة ملاحظة استيراد إكسل ===== */
+        #excelNoteModal{ padding-top:1.1rem; }
+        #excelNoteModal .en-intro{
+            font-size:.78rem; color:#6b7280; margin:-.2rem 0 1rem; line-height:1.7;
+        }
+        #excelNoteModal .en-timeline{
+            position:relative; margin:0 0 1rem;
+        }
+        #excelNoteModal .en-timeline::before{
+            content:''; position:absolute; top:6px; bottom:6px; right:17px;
+            width:2px; background:linear-gradient(180deg,#15803d,#86efac);
+        }
+        #excelNoteModal .en-step{
+            position:relative; display:flex; align-items:flex-start; gap:.7rem;
+            padding:0 0 1.05rem 0; font-size:.84rem; color:#374151; line-height:1.7;
+        }
+        #excelNoteModal .en-step:last-child{ padding-bottom:0; }
+        #excelNoteModal .en-num{
+            position:relative; z-index:1; min-width:36px; height:36px; flex-shrink:0;
+            background:#15803d; color:#fff; border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            font-size:1.05rem; box-shadow:0 0 0 4px #fff, 0 2px 5px rgba(21,128,61,.35);
+        }
+        #excelNoteModal .en-step b{ color:#065f46; }
+        #excelNoteModal .en-step .en-label{
+            display:block; font-weight:800; color:#15803d; font-size:.72rem;
+            text-transform:uppercase; letter-spacing:.02em; margin-bottom:.15rem;
+        }
+        #excelNoteModal .en-callout{
+            margin:.3rem 0 1.1rem 0; background:#fffbeb; border:1px solid #fde68a;
+            border-radius:12px; padding:.8rem .95rem; font-size:.8rem; color:#78350f; line-height:1.75;
+        }
+        #excelNoteModal .en-callout h4{
+            display:flex; align-items:center; gap:.4rem; font-weight:800; color:#92400e;
+            margin-bottom:.4rem; font-size:.82rem;
+        }
+        #excelNoteModal .en-callout code{
+            background:#fef3c7; border:1px solid #fcd34d; border-radius:5px;
+            padding:.05rem .35rem; font-weight:700; color:#92400e; font-family:monospace;
+        }
+        #excelNoteModal .en-success{
+            display:flex; align-items:center; gap:.6rem; background:#ecfdf5; border:1px solid #6ee7b7;
+            border-radius:12px; padding:.75rem .9rem; font-size:.82rem; color:#065f46; line-height:1.7;
+            font-weight:600;
+        }
+        #excelNoteModal .en-success .en-check{
+            min-width:28px; height:28px; background:#15803d; color:#fff; border-radius:50%;
+            display:flex; align-items:center; justify-content:center; font-size:.95rem; flex-shrink:0;
+        }
 
         .thamarat-dropdown {
             position: fixed;
@@ -1012,23 +1065,69 @@
                                     إضافة طِباق المجالس (جدول: رقم المجلس، التاريخ، البداية، النهاية)
                                 </label>
                                 <div id="tabaqWrap" class="hidden space-y-2 pr-2">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-[10px] text-gray-600">عدد المجالس:</span>
-                                        <input type="number" id="tabaqRows" aria-label="عدد صفوف جدول الطِّباق" min="1" max="40" value="2" class="w-20 px-2 py-1 border border-gray-300 rounded-md text-xs">
+                                    <input type="hidden" id="tabaqInputMode" value="manual">
+                                    <div class="flex gap-1 flex-wrap mb-1" id="tabaqModeGroup" role="radiogroup" aria-label="طريقة إدخال الطِّباق">
+                                        <button type="button" class="tabaq-mode-btn opt-btn active !text-[10.5px]" data-tmode="manual" aria-pressed="true" aria-label="الطريقة الأولى: إدخال يدوي بحقول جاهزة">الطريقة الأولى (المعتادة)</button>
+                                        <button type="button" class="tabaq-mode-btn opt-btn !text-[10.5px]" data-tmode="grid" aria-pressed="false" aria-label="الطريقة الثانية: جدول حر مثل مسرد الحاضرين">الطريقة الثانية (جدول حر)</button>
                                     </div>
-                                    <div id="tabaqList" class="space-y-2"></div>
-                                    <!-- تقسيم الطباق لصفحات -->
-                                    <div class="border-t border-gray-100 pt-2 mt-1 space-y-1">
-                                        <label class="block text-[10px] font-bold text-emerald-800">خيارات الصفحات للطِّباق</label>
-                                        <div class="flex flex-wrap gap-2 items-center text-[10px] text-gray-600">
-                                            <span>صفوف في كل صفحة:</span>
-                                            <input type="number" id="tabaqRowsPerPage" aria-label="عدد صفوف الطباق في كل صفحة" min="1" max="40" value="10" class="w-16 px-1 py-1 border border-gray-300 rounded text-xs">
-                                            <button type="button" id="applyTabaqPagination" class="opt-btn !text-[10px]" aria-label="تطبيق تقسيم صفحات الطباق">تطبيق</button>
-                                            <button type="button" id="resetTabaqPagination" class="opt-btn !text-[10px] text-gray-500" aria-label="إلغاء تقسيم صفحات الطباق">إلغاء التقسيم</button>
+
+                                    <!-- الطريقة الأولى: المعتادة (دون أي تغيير) -->
+                                    <div id="tabaqManualPanel">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-[10px] text-gray-600">عدد المجالس:</span>
+                                            <input type="number" id="tabaqRows" aria-label="عدد صفوف جدول الطِّباق" min="1" max="40" value="2" class="w-20 px-2 py-1 border border-gray-300 rounded-md text-xs">
                                         </div>
-                                        <p class="text-[9px] text-gray-400">يُستخدم عند كثرة المجالس — يكرر عنوان الطباق في رأس كل صفحة</p>
+                                        <div id="tabaqList" class="space-y-2"></div>
+                                        <!-- تقسيم الطباق لصفحات -->
+                                        <div class="border-t border-gray-100 pt-2 mt-1 space-y-1">
+                                            <label class="block text-[10px] font-bold text-emerald-800">خيارات الصفحات للطِّباق</label>
+                                            <div class="flex flex-wrap gap-2 items-center text-[10px] text-gray-600">
+                                                <span>صفوف في كل صفحة:</span>
+                                                <input type="number" id="tabaqRowsPerPage" aria-label="عدد صفوف الطباق في كل صفحة" min="1" max="40" value="10" class="w-16 px-1 py-1 border border-gray-300 rounded text-xs">
+                                                <button type="button" id="applyTabaqPagination" class="opt-btn !text-[10px]" aria-label="تطبيق تقسيم صفحات الطباق">تطبيق</button>
+                                                <button type="button" id="resetTabaqPagination" class="opt-btn !text-[10px] text-gray-500" aria-label="إلغاء تقسيم صفحات الطباق">إلغاء التقسيم</button>
+                                            </div>
+                                            <p class="text-[9px] text-gray-400">يُستخدم عند كثرة المجالس — يكرر عنوان الطباق في رأس كل صفحة</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- الطريقة الثانية: جدول حر (نسخة مطابقة لخيار المسرد) -->
+                                    <div id="tabaqGridPanel" class="hidden space-y-2">
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <label class="block text-[10px] text-gray-500 mb-0.5">عدد الأعمدة</label>
+                                                <input type="number" id="tgCols" aria-label="عدد أعمدة طِباق المجالس" min="1" max="10" value="3" class="w-full px-2 py-1 border border-gray-300 rounded-md text-xs">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] text-gray-500 mb-0.5">عدد الصفوف</label>
+                                                <input type="number" id="tgRows" aria-label="عدد صفوف طِباق المجالس" min="1" max="500" value="10" class="w-full px-2 py-1 border border-gray-300 rounded-md text-xs">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] text-gray-500 mb-0.5">أسماء الأعمدة (افصل بفاصلة)</label>
+                                            <div class="voice-field-wrap"><input type="text" id="tgColNames" aria-label="عناوين أعمدة طِباق المجالس" class="w-full px-2 py-1 border border-gray-300 rounded-md text-xs" placeholder="م، المجلس، التاريخ، البداية، النهاية"><button type="button" class="voice-btn no-print" data-voice-target="tgColNames" title="إدخال صوتي" aria-label="إدخال صوتي لعناوين أعمدة الطباق">🎤</button></div>
+                                        </div>
+                                        <div class="flex flex-wrap gap-1.5">
+                                            <button type="button" id="tgBuild" class="opt-btn !text-[10px]">توليد حقول التعبئة</button>
+                                            <button type="button" id="tgImportBtn" class="opt-btn !text-[10px]">استيراد كشف</button>
+                                            <input type="file" id="tgImport" accept=".csv,text/csv" class="hidden" aria-hidden="true" tabindex="-1">
+                                        </div>
+                                        <p class="text-[9.5px] text-amber-700 no-print">📋 راجع ملاحظة استيراد إكسل (الكرة العائمة 📋 أسفل الشاشة) قبل الاستيراد.</p>
+                                        <div class="border-t border-gray-100 pt-2 space-y-1">
+                                            <div class="flex flex-wrap gap-2 items-center text-[10px] text-gray-600">
+                                                <span>صفوف في كل صفحة:</span>
+                                                <input type="number" id="tgRowsPerPage" aria-label="عدد الصفوف في كل صفحة" min="1" max="50" value="10" class="w-16 px-1 py-1 border border-gray-300 rounded text-xs">
+                                                <button type="button" id="applyTgPagination" class="opt-btn !text-[10px]" aria-label="تطبيق تقسيم صفحات الطباق">تطبيق</button>
+                                            </div>
+                                            <label class="flex items-center gap-1.5 cursor-pointer text-[10px] text-gray-700">
+                                                <input type="checkbox" id="tgNoBorder" aria-label="إزالة حدود جدول الطباق" class="w-3.5 h-3.5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                                إزالة حدود الجدول عند الطباعة
+                                            </label>
+                                        </div>
+                                        <div id="tgGridContainer" class="space-y-1 max-h-64 overflow-auto"></div>
                                     </div>
                                 </div>
+
                             </div>
 
                             <!-- المسرد الكامل -->
@@ -1054,20 +1153,10 @@
                                     </div>
                                     <div class="flex flex-wrap gap-1.5">
                                         <button type="button" id="rosterBuild" class="opt-btn !text-[10px]">توليد حقول التعبئة</button>
-                                        <button type="button" id="rosterExport" class="opt-btn !text-[10px]">تصدير CSV</button>
                                         <button type="button" id="rosterImportBtn" class="opt-btn !text-[10px]">استيراد كشف</button>
                                         <input type="file" id="rosterImport" accept=".csv,text/csv" class="hidden" aria-hidden="true" tabindex="-1">
                                     </div>
-                                    <div class="border border-red-200 bg-red-50 rounded-md p-2 mt-1" role="note" aria-label="تعليمات استيراد كشف من إكسل">
-                                        <ol class="text-[10.5px] text-red-700 leading-relaxed list-decimal pr-4 space-y-0.5">
-                                            <li>افتح مستنداً جديداً في إكسل.</li>
-                                            <li>ضع اسماً لكل خانة (عمود) تريدها، بالعدد الذي تحتاجه.</li>
-                                            <li>قم بملء الخانات جميعها (ويمكنك إرساله عبر رابط درايف بحيث يملؤه مَن حضر المجلس).</li>
-                                            <li>احفظ الملف بأي اسم تفضله وفي أي مكان ترغبه، مع تغيير خانة «حفظ كنوع» أسفل نافذة الحفظ إلى النوع الذي امتداده csv [مفصول بفواصل] وإذا كان ملف اكسل جاهزًا عندك فتأكد أن امتداده csv أو أعد حفظه بهذا الامتداد.</li>
-                                            <li>ثم استورد الملف مباشرة دون أن تُعدِّل عدد الأعمدة ولا عدد الصفوف ولا أسماء الأعمدة.</li>
-                                            <li>ستلاحظ أن كل شيء جاء في مكانه، وتتعدّل تلقائياً أعداد الأعمدة والصفوف وأسماء الأعمدة بحسب ملف إكسل.</li>
-                                        </ol>
-                                    </div>
+                                    <p class="text-[9.5px] text-amber-700 no-print">📋 راجع ملاحظة استيراد إكسل (الكرة العائمة 📋 أسفل الشاشة) قبل الاستيراد.</p>
                                     <div class="border-t border-gray-100 pt-2 space-y-1">
                                         <div class="flex flex-wrap gap-2 items-center text-[10px] text-gray-600">
                                             <span>صفوف في كل صفحة:</span>
@@ -1747,6 +1836,7 @@
     <button type="button" id="fabAlert" class="fab alert" title="تنبيهات مهمة" aria-label="فتح التنبيهات المهمة">⚠️</button>
     <button type="button" id="fabThamarat" class="fab thamarat" title="ثمرات" aria-label="فتح قائمة الثمرات" aria-haspopup="true" aria-expanded="false">🌿</button>
     <button type="button" id="fabVoiceTips" class="fab voice" title="تعليمات الإدخال الصوتي" aria-label="فتح تعليمات الإدخال الصوتي وتفعيل الميكروفون">🎤</button>
+    <button type="button" id="fabExcelNote" class="fab excel" title="ملاحظة لاستيراد إكسل" aria-label="فتح ملاحظة استيراد ملف إكسل CSV">📋</button>
 </div>
 
 <!-- قائمة الثمرات المنسدلة -->
@@ -2150,6 +2240,44 @@
         </div>
     </div>
 
+    <div id="excelNoteModal" class="modal no-print hidden" aria-labelledby="excelNoteModalTitle" aria-modal="true">
+        <h3 id="excelNoteModalTitle">📋 ملاحظة لاستيراد إكسل <button type="button" class="x" aria-label="إغلاق نافذة ملاحظة استيراد إكسل">✕</button></h3>
+        <p class="en-intro">اتّبع الخطوات التالية لتجهيز كشف بأي أعمدة تريدها في إكسل، ثم استيراده تلقائياً داخل التطبيق.</p>
+
+        <div class="en-timeline">
+            <div class="en-step">
+                <span class="en-num" aria-hidden="true">📂</span>
+                <span><span class="en-label">الخطوة الأولى</span>افتح مستنداً جديداً في إكسل.</span>
+            </div>
+            <div class="en-step">
+                <span class="en-num" aria-hidden="true">🏷️</span>
+                <span><span class="en-label">الخطوة الثانية</span>ضع اسماً لكل خانة (عمود) تريدها، بالعدد الذي تحتاجه.</span>
+            </div>
+            <div class="en-step">
+                <span class="en-num" aria-hidden="true">✍️</span>
+                <span><span class="en-label">الخطوة الثالثة</span>قم بملء الخانات جميعها (ويمكنك إرساله عبر رابط درايف بحيث يملؤه مَن حضر المجلس).</span>
+            </div>
+            <div class="en-step">
+                <span class="en-num" aria-hidden="true">💾</span>
+                <span><span class="en-label">الخطوة الرابعة</span>احفظ الملف بأي اسم تفضله وفي أي مكان ترغبه، مع تغيير خانة «حفظ كنوع» أسفل نافذة الحفظ إلى النوع الذي امتداده <b>csv</b> [مفصول بفواصل].</span>
+            </div>
+            <div class="en-step">
+                <span class="en-num" aria-hidden="true">📥</span>
+                <span><span class="en-label">الخطوة الخامسة</span>ثم استورد الملف مباشرة دون أن تُعدِّل عدد الأعمدة ولا عدد الصفوف ولا أسماء الأعمدة.</span>
+            </div>
+        </div>
+
+        <div class="en-callout">
+            <h4>📁 إن كان الملف جاهزاً عندك بالفعل بصيغة xlsx</h4>
+            يكفي تغيير امتداده إلى <code>csv</code>. إما بالضغط على اسم الملف بزر الفأرة الأيمن، فتظهر لك قائمة تختار منها «إعادة تسمية»، وسيُظلَّل الاسم دون الامتداد، فتُظلِّل أنت الامتداد وتُغيّره إلى <code>csv</code> — وتنبَّه للنقطة التي بين الاسم والامتداد. أو تفتح الملف ثم تُعيد حفظه باسم وتُبدِّل نوع الحفظ كما في الخطوة الرابعة.
+        </div>
+
+        <div class="en-success">
+            <span class="en-check" aria-hidden="true">✓</span>
+            <span>ستلاحظ أن كل شيء جاء في مكانه، وتُعدَّل تلقائياً أعداد الأعمدة والصفوف وأسماء الأعمدة بحسب ملف إكسل.</span>
+        </div>
+    </div>
+
     <div id="a11yModal" class="modal no-print hidden" aria-labelledby="a11yModalTitle" aria-modal="true">
         <h3 id="a11yModalTitle">♿ إمكانية الوصول <button type="button" class="x" aria-label="إغلاق نافذة إمكانية الوصول">✕</button></h3>
 
@@ -2232,6 +2360,8 @@
         splitPages:$('splitPages'), serialShow:$('serialShow'), serialNum:$('serialNum'),
         serialLabel:$('serialLabel'), serialPos:$('serialPos'),
         tabaqEnable:$('tabaqEnable'), tabaqRows:$('tabaqRows'), tabaqRowsPerPage:$('tabaqRowsPerPage'),
+        tabaqInputMode:$('tabaqInputMode'), tgCols:$('tgCols'), tgRows:$('tgRows'), tgColNames:$('tgColNames'),
+        tgRowsPerPage:$('tgRowsPerPage'), tgNoBorder:$('tgNoBorder'),
         rosterEnable:$('rosterEnable'), rosterCols:$('rosterCols'), rosterRows:$('rosterRows'), rosterColNames:$('rosterColNames'),
         startGregPicker:$('startGregPicker'), startHD:$('startHD'), startHM:$('startHM'), startHY:$('startHY'), startDay:$('startDay'), startTime:$('startTime'),
         endGregPicker:$('endGregPicker'), endHD:$('endHD'), endHM:$('endHM'), endHY:$('endHY'), endDay:$('endDay'), endTime:$('endTime'),
@@ -2285,6 +2415,7 @@
     let hidePages = [];
     let rosterPagination = [];
     let tabaqPagination = []; // صفحات الطِّباق المقسّمة
+    let tgPagination = []; // صفحات طِباق المجالس بطريقة الجدول الحر
     // ---- تواقيع المنظمين الإضافية ----
     let orgSignatures = []; // [{name, dataUrl}]
 
@@ -2456,8 +2587,12 @@
         render(); scheduleSave();
     }
 
-    function buildTabaqBlock(){
+    function buildTabaqBlock(v){
         if(!$('tabaqEnable').checked) return '';
+        // الطريقة الثانية: جدول حر مطابق للمسرد
+        if($('tabaqInputMode') && $('tabaqInputMode').value === 'grid'){
+            return buildTgBlock(v || readValues());
+        }
         const allRows = getTabaqRows();
         if(!allRows.length) return '';
         const header = '<thead><tr><th>المجلس</th><th>التاريخ الهجري</th><th>الميلادي</th><th>بداية المجلس</th><th>انتهاء المجلس</th></tr></thead>';
@@ -2501,6 +2636,18 @@
     function getRosterData(){
         return Array.from($('rosterGrid').querySelectorAll('.r-row')).map(r=>Array.from(r.querySelectorAll('.r-cell')).map(c=>c.value));
     }
+    // ---- نسخة الطباق بطريقة الجدول الحر (مطابقة لِما سبق، بأسماء منفصلة) ----
+    function tgCfg(){
+        const cols=Math.max(1, Math.min(10, parseInt($('tgCols').value,10)||3));
+        const rowsN=Math.max(1, Math.min(500, parseInt($('tgRows').value,10)||10));
+        let names=($('tgColNames').value||'').split(/[,،]/).map(s=>s.trim());
+        for(let c=0;c<cols;c++){ if(!names[c]) names[c]='عمود '+(c+1); }
+        names=names.slice(0,cols);
+        return {cols, rowsN, names};
+    }
+    function getTgData(){
+        return Array.from($('tgGridContainer').querySelectorAll('.tg-row')).map(r=>Array.from(r.querySelectorAll('.tg-cell')).map(c=>c.value));
+    }
     function buildRosterGrid(preserve){
         const {cols, rowsN, names}=rosterCfg();
         const grid=$('rosterGrid');
@@ -2509,6 +2656,18 @@
         for(let r=0;r<rowsN;r++){
             h+='<div class="r-row flex gap-1">';
             for(let c=0;c<cols;c++){ const val=(old[r]&&old[r][c])?old[r][c]:''; h+=`<input class="r-cell flex-1 px-1 py-1 border border-gray-300 rounded text-xs" value="${esc(val).replace(/"/g,'&quot;')}">`; }
+            h+='</div>';
+        }
+        grid.innerHTML=h;
+    }
+    function buildTgGrid(preserve){
+        const {cols, rowsN, names}=tgCfg();
+        const grid=$('tgGridContainer');
+        const old = preserve ? getTgData() : [];
+        let h='<div class="flex gap-1 text-[11px] font-bold text-emerald-800">'+names.map(n=>`<div class="flex-1 text-center">${esc(n)}</div>`).join('')+'</div>';
+        for(let r=0;r<rowsN;r++){
+            h+='<div class="tg-row flex gap-1">';
+            for(let c=0;c<cols;c++){ const val=(old[r]&&old[r][c])?old[r][c]:''; h+=`<input class="tg-cell flex-1 px-1 py-1 border border-gray-300 rounded text-xs" value="${esc(val).replace(/"/g,'&quot;')}">`; }
             h+='</div>';
         }
         grid.innerHTML=h;
@@ -2530,6 +2689,22 @@
         render();
         scheduleSave();
     }
+    function applyTgPagination() {
+        const rowsPerPage = parseInt($('tgRowsPerPage').value, 10) || 10;
+        const data = getTgData();
+        if (data.length === 0) {
+            showToast('لا توجد بيانات في الطباق لتقسيمها', false);
+            return;
+        }
+        const pages = [];
+        for (let i = 0; i < data.length; i += rowsPerPage) {
+            pages.push(data.slice(i, i + rowsPerPage));
+        }
+        tgPagination = pages;
+        showToast('تم تقسيم الطباق إلى ' + pages.length + ' صفحة');
+        render();
+        scheduleSave();
+    }
 
     function buildRosterBlock(v){
         if(!$('rosterEnable').checked) return '';
@@ -2543,7 +2718,6 @@
                 pages = rosterPagination;
             } else {
                 rosterPagination = [];
-        tabaqPagination  = [];
             }
         }
         if (pages.length === 0) {
@@ -2573,6 +2747,49 @@
             });
             body += '</tbody>';
             html += `<div class="appendix"${pageBreak}>${titleHtml}<table class="doc-table roster${noBorderClass}">${head}${body}</table></div>`;
+        });
+        return html;
+    }
+    function buildTgBlock(v){
+        if(!$('tabaqEnable').checked) return '';
+        const {cols, rowsN, names}=tgCfg();
+        let data = getTgData();
+        let pages = [];
+        if (tgPagination.length > 0) {
+            const totalRows = data.length;
+            const paginatedTotal = tgPagination.reduce((sum, p) => sum + p.length, 0);
+            if (paginatedTotal === totalRows) {
+                pages = tgPagination;
+            } else {
+                tgPagination = [];
+            }
+        }
+        if (pages.length === 0) {
+            pages = [data];
+        }
+        const noBorderClass = v.tgNoBorder ? ' no-border' : '';
+        const multiPage = pages.length > 1;
+        let html = '';
+        pages.forEach((pageData, pageIndex) => {
+            const isFirst = pageIndex === 0;
+            const titleHtml = (multiPage || isFirst)
+                ? `<h3 class="appendix-h">طِباقُ المجالس${multiPage ? ` (${pageIndex+1}/${pages.length})` : ''}</h3>`
+                : '';
+            const pageBreak = !isFirst ? ' style="break-before:page"' : '';
+            let head = '<thead><tr>';
+            for(let c=0;c<cols;c++){ head+=`<th>${esc(names[c])}</th>`; }
+            head+='</tr></thead>';
+            let body = '<tbody>';
+            pageData.forEach(row => {
+                body += '<tr>';
+                for(let c=0;c<cols;c++){
+                    const val = (row && row[c] !== undefined) ? row[c] : '&nbsp;';
+                    body += `<td>${esc(val)}</td>`;
+                }
+                body += '</tr>';
+            });
+            body += '</tbody>';
+            html += `<div class="appendix"${pageBreak}>${titleHtml}<table class="doc-table${noBorderClass}">${head}${body}</table></div>`;
         });
         return html;
     }
@@ -3077,7 +3294,7 @@
             // إلحاق الطباق والمسرد إن كانا مفعّلَين في الإجازة الحرة
             let freeAppx = '';
             if (fields.freeEnableTabaq.checked) {
-                const tb = buildTabaqBlock();
+                const tb = buildTabaqBlock(v);
                 if (tb) {
                     const newPage = v.splitPages;
                     freeAppx += newPage
@@ -3296,7 +3513,7 @@
         const closingText = v.closingCustom ? v.closingCustom : 'واللهُ خيرُ الشاهدين.';
         const closeP = `<p class="closing text-center font-bold mt-8 text-2xl">${esc(closingText)}</p>`;
 
-        const tabaqBlock = buildTabaqBlock();
+        const tabaqBlock = buildTabaqBlock(v);
         const rosterBlock = buildRosterBlock(v);
 
         const inlineIsnad = (!perMode && isnadItems.length && !v.onePageText && !v.splitPages) ? isnadItems[0] : '';
@@ -3392,6 +3609,18 @@
             }
         }
         if(fields.rosterEnable.checked && !$('rosterGrid').children.length) buildRosterGrid(false);
+        // مزامنة عرض لوحتَي الطباق (يدوي/جدول حر) مع القيمة الفعلية — يعمل عند النقر وعند استعادة حفظ سابق
+        if($('tabaqManualPanel') && $('tabaqGridPanel')){
+            const _tMode = fields.tabaqInputMode.value === 'grid' ? 'grid' : 'manual';
+            $('tabaqManualPanel').classList.toggle('hidden', _tMode!=='manual');
+            $('tabaqGridPanel').classList.toggle('hidden', _tMode!=='grid');
+            document.querySelectorAll('.tabaq-mode-btn').forEach(function(b){
+                const match = b.dataset.tmode === _tMode;
+                b.classList.toggle('active', match);
+                b.setAttribute('aria-pressed', match ? 'true' : 'false');
+            });
+        }
+        if(fields.tabaqEnable.checked && fields.tabaqInputMode.value==='grid' && !$('tgGridContainer').children.length) buildTgGrid(false);
         if(fields.tabaqEnable.checked) buildTabaqRows();
         // toggle serialWrap
         $('serialWrap') && $('serialWrap').classList.toggle('hidden', !fields.serialShow.checked);
@@ -3711,7 +3940,7 @@
     function resetForm(){
         form.reset(); Object.values(fields).forEach(el=>{ if(el) el.classList.remove('field-error'); });
         errorMsg.classList.add('hidden'); signatureDataUrl=null; stampDataUrl=null; clearPad();
-        $('tabaqList').innerHTML=''; studentList.innerHTML=''; bookList.innerHTML=''; $('rosterGrid').innerHTML='';
+        $('tabaqList').innerHTML=''; studentList.innerHTML=''; bookList.innerHTML=''; $('rosterGrid').innerHTML=''; if($('tgGridContainer')) $('tgGridContainer').innerHTML='';
         sheikhList.innerHTML=''; addSheikhRow();
         orgList.innerHTML=''; addOrgRow();
         orgSignatures = [];
@@ -3726,6 +3955,8 @@
         if(typeof extraPagesContainer !== 'undefined' && extraPagesContainer) extraPagesContainer.innerHTML = '';
         if(typeof updateHidePagesFromRows === 'function') updateHidePagesFromRows();
         rosterPagination = [];
+        tgPagination = [];
+        if($('tabaqInputMode')) $('tabaqInputMode').value = 'manual';
         // مسح النص الحر
         fields.freeIjazaText.value = '';
         // مسح بيانات الإجازة الحرة
@@ -3779,12 +4010,6 @@
 
     // ---- المسرد ----
     $('rosterBuild').addEventListener('click', ()=>{ buildRosterGrid(true); render(); scheduleSave(); });
-    $('rosterExport').addEventListener('click', ()=>{
-        const blob=new Blob([rosterToCSV()], {type:'text/csv;charset=utf-8;'});
-        const url=URL.createObjectURL(blob); const a=document.createElement('a');
-        a.href=url; a.download='كشف_الحضور.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-        showToast('تم تصدير الكشف');
-    });
     $('rosterImportBtn').addEventListener('click', ()=>$('rosterImport').click());
     $('rosterImport').addEventListener('change', (e)=>{
         const f=e.target.files[0]; if(!f) return;
@@ -3815,6 +4040,53 @@
             rd.readAsText(f,'utf-8'); e.target.value='';
         };
         probe.readAsArrayBuffer(f.slice(0,4));
+    });
+
+    // ---- الطباق: الطريقة الثانية (جدول حر) ----
+    $('tgBuild') && $('tgBuild').addEventListener('click', ()=>{ buildTgGrid(true); render(); scheduleSave(); });
+    $('tgImportBtn') && $('tgImportBtn').addEventListener('click', ()=>$('tgImport').click());
+    $('tgImport') && $('tgImport').addEventListener('change', (e)=>{
+        const f=e.target.files[0]; if(!f) return;
+        const probe2 = new FileReader();
+        probe2.onload = function(){
+            const bytes = new Uint8Array(probe2.result);
+            const isXlsxZip = bytes.length>=2 && bytes[0]===0x50 && bytes[1]===0x4B;
+            const isLegacyXls = bytes.length>=4 && bytes[0]===0xD0 && bytes[1]===0xCF && bytes[2]===0x11 && bytes[3]===0xE0;
+            if(isXlsxZip || isLegacyXls){
+                showToast('هذا ملف إكسل (xlsx/xls) وليس CSV — من إكسل اختر «حفظ باسم» ثم نوع الملف «CSV UTF-8»، ثم ارفع ذلك الملف هنا', false);
+                e.target.value='';
+                return;
+            }
+            const rd2=new FileReader();
+            rd2.onload=()=>{ const rows=parseCSV(rd2.result); if(!rows.length){ showToast('الملف فارغ'); return; }
+                const header=rows[0]; const dataRows=rows.slice(1);
+                $('tgColNames').value=header.join('،');
+                $('tgCols').value=Math.min(10, header.length);
+                $('tgRows').value=Math.min(500, Math.max(1, dataRows.length));
+                buildTgGrid(false);
+                const cells=$('tgGridContainer').querySelectorAll('.tg-row');
+                dataRows.forEach((dr,r)=>{ if(cells[r]){ const ins=cells[r].querySelectorAll('.tg-cell'); dr.forEach((val,c)=>{ if(ins[c]) ins[c].value=val; }); } });
+                tgPagination = [];
+                render(); scheduleSave(); showToast('تم استيراد الكشف وتنسيقه');
+            };
+            rd2.readAsText(f,'utf-8'); e.target.value='';
+        };
+        probe2.readAsArrayBuffer(f.slice(0,4));
+    });
+    $('applyTgPagination') && $('applyTgPagination').addEventListener('click', applyTgPagination);
+
+    // ---- تبديل طريقة إدخال الطباق (يدوي / جدول حر) ----
+    document.querySelectorAll('.tabaq-mode-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            document.querySelectorAll('.tabaq-mode-btn').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+            btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
+            const mode = btn.dataset.tmode;
+            $('tabaqInputMode').value = mode;
+            $('tabaqManualPanel').classList.toggle('hidden', mode!=='manual');
+            $('tabaqGridPanel').classList.toggle('hidden', mode!=='grid');
+            if(mode==='grid' && !$('tgGridContainer').children.length) buildTgGrid(false);
+            render(); scheduleSave();
+        });
     });
 
     // ---- الطِباق ----
@@ -4153,6 +4425,7 @@
     $('fabContact').addEventListener('click', ()=>openModal('contactModal'));
     $('fabAlert').addEventListener('click', ()=>openModal('alertModal'));
     $('fabVoiceTips') && $('fabVoiceTips').addEventListener('click', ()=>openModal('voiceTipsModal'));
+    $('fabExcelNote') && $('fabExcelNote').addEventListener('click', ()=>openModal('excelNoteModal'));
     modalOverlay.addEventListener('click', e=>{ if(e.target===modalOverlay) closeModal(); });
     document.querySelectorAll('#modalOverlay .x').forEach(b=>b.addEventListener('click', closeModal));
     document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
@@ -4832,8 +5105,8 @@
         const orgsData = getOrgs();
         return { 
             v, sheikhs, app, sig:signatureDataUrl, stamp:stampDataUrl, 
-            tabaq:getTabaqRows(), extraStudents, extraBooks, mainBookType, rosterData:getRosterData(), 
-            auto:$('autoSave').checked, hidePages, rosterPagination, tabaqPagination, orgsData:orgsData,
+            tabaq:getTabaqRows(), extraStudents, extraBooks, mainBookType, rosterData:getRosterData(), tgData:getTgData(),
+            auto:$('autoSave').checked, hidePages, rosterPagination, tabaqPagination, tgPagination, orgsData:orgsData,
             orgSigs: orgSigs,
             freeText: fields.freeIjazaText.value,
             freeMujizName: fields.freeMujizName.value,
@@ -4907,6 +5180,7 @@
             }
         }
         if(Array.isArray(data.rosterData) && data.rosterData.length){ buildRosterGrid(false); const rws=$('rosterGrid').querySelectorAll('.r-row'); data.rosterData.forEach((dr,r)=>{ if(rws[r]){ const ins=rws[r].querySelectorAll('.r-cell'); dr.forEach((val,c)=>{ if(ins[c]) ins[c].value=val; }); } }); }
+        if(Array.isArray(data.tgData) && data.tgData.length){ buildTgGrid(false); const tws=$('tgGridContainer').querySelectorAll('.tg-row'); data.tgData.forEach((dr,r)=>{ if(tws[r]){ const ins=tws[r].querySelectorAll('.tg-cell'); dr.forEach((val,c)=>{ if(ins[c]) ins[c].value=val; }); } }); }
         if(Array.isArray(data.tabaq) && data.tabaq.length){
             $('tabaqRows').value=data.tabaq.length; buildTabaqRows();
             const rows=$('tabaqList').querySelectorAll('.tab-row');
@@ -4924,6 +5198,7 @@
         }
         if(Array.isArray(data.rosterPagination)) rosterPagination = data.rosterPagination;
         if(Array.isArray(data.tabaqPagination))  tabaqPagination  = data.tabaqPagination;
+        if(Array.isArray(data.tgPagination))      tgPagination     = data.tgPagination;
         if (Array.isArray(data.orgSigs)) {
             orgSignatures = data.orgSigs;
             document.getElementById('orgSigList').innerHTML = '';
