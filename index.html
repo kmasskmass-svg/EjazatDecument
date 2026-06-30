@@ -911,15 +911,15 @@
                         <span class="text-[11px] text-amber-700">ضع المؤشّر في حقل الاسم ثم اضغط الحركة</span>
                     </div>
                     <div class="flex flex-wrap gap-1.5" id="tashkeelBtns">
-                        <button type="button" class="hbtn" data-h="fatha" title="فتحة">ـَ</button>
-                        <button type="button" class="hbtn" data-h="damma" title="ضمة">ـُ</button>
-                        <button type="button" class="hbtn" data-h="kasra" title="كسرة">ـِ</button>
-                        <button type="button" class="hbtn" data-h="sukun" title="سكون">ـْ</button>
-                        <button type="button" class="hbtn" data-h="shadda" title="شدّة">ـّ</button>
-                        <button type="button" class="hbtn" data-h="tanfath" title="تنوين فتح">ـً</button>
-                        <button type="button" class="hbtn" data-h="tandam" title="تنوين ضم">ـٌ</button>
-                        <button type="button" class="hbtn" data-h="tankas" title="تنوين كسر">ـٍ</button>
-                        <button type="button" class="hbtn" data-h="dagger" title="ألف خنجرية">ـٰ</button>
+                        <button type="button" class="hbtn" data-h="fatha" title="فتحة" aria-label="إدراج تشكيل فتحة">ـَ</button>
+                        <button type="button" class="hbtn" data-h="damma" title="ضمة" aria-label="إدراج تشكيل ضمة">ـُ</button>
+                        <button type="button" class="hbtn" data-h="kasra" title="كسرة" aria-label="إدراج تشكيل كسرة">ـِ</button>
+                        <button type="button" class="hbtn" data-h="sukun" title="سكون" aria-label="إدراج تشكيل سكون">ـْ</button>
+                        <button type="button" class="hbtn" data-h="shadda" title="شدّة" aria-label="إدراج تشكيل شدة">ـّ</button>
+                        <button type="button" class="hbtn" data-h="tanfath" title="تنوين فتح" aria-label="إدراج تنوين فتح">ـً</button>
+                        <button type="button" class="hbtn" data-h="tandam" title="تنوين ضم" aria-label="إدراج تنوين ضم">ـٌ</button>
+                        <button type="button" class="hbtn" data-h="tankas" title="تنوين كسر" aria-label="إدراج تنوين كسر">ـٍ</button>
+                        <button type="button" class="hbtn" data-h="dagger" title="ألف خنجرية" aria-label="إدراج ألف خنجرية">ـٰ</button>
                         <button type="button" class="hbtn" data-act="del" title="حذف ما قبل المؤشّر">⌫ حذف</button>
                         <button type="button" class="hbtn" data-act="strip" title="إزالة كل التشكيل">مسح التشكيل</button>
                     </div>
@@ -938,10 +938,10 @@
                         <div class="fmt-group">
                             <span class="fmt-label">محاذاة</span>
                             <div class="flex gap-1">
-                                <button type="button" class="fmt-btn" id="fmtRight" title="محاذاة لليمين">⇒</button>
-                                <button type="button" class="fmt-btn" id="fmtCenter" title="توسيط">⊜</button>
-                                <button type="button" class="fmt-btn" id="fmtLeft" title="محاذاة لليسار">⇐</button>
-                                <button type="button" class="fmt-btn" id="fmtJustify" title="ضبط">⇔</button>
+                                <button type="button" class="fmt-btn" id="fmtRight" title="محاذاة لليمين" aria-label="محاذاة النص لليمين">⇒</button>
+                                <button type="button" class="fmt-btn" id="fmtCenter" title="توسيط" aria-label="توسيط النص">⊜</button>
+                                <button type="button" class="fmt-btn" id="fmtLeft" title="محاذاة لليسار" aria-label="محاذاة النص لليسار">⇐</button>
+                                <button type="button" class="fmt-btn" id="fmtJustify" title="ضبط" aria-label="ضبط النص (محاذاة الطرفين)">⇔</button>
                             </div>
                         </div>
                         <div class="fmt-sep"></div>
@@ -2243,6 +2243,9 @@
     <div id="excelNoteModal" class="modal no-print hidden" aria-labelledby="excelNoteModalTitle" aria-modal="true">
         <h3 id="excelNoteModalTitle">📋 ملاحظة لاستيراد إكسل <button type="button" class="x" aria-label="إغلاق نافذة ملاحظة استيراد إكسل">✕</button></h3>
         <p class="en-intro">اتّبع الخطوات التالية لتجهيز كشف بأي أعمدة تريدها في إكسل، ثم استيراده تلقائياً داخل التطبيق.</p>
+        <p class="en-intro" style="margin-top:-.6rem;">
+            <a href="https://youtu.be/NcIyLJkEJ7M?si=-WsPEAZyjTGKKOiA" target="_blank" rel="noopener noreferrer" aria-label="فتح فيديو شرح استيراد إكسل على يوتيوب في نافذة جديدة">🎬 شاهد فيديو شرح الخطوات على يوتيوب</a>
+        </p>
 
         <div class="en-timeline">
             <div class="en-step">
@@ -3032,7 +3035,7 @@
                         <button type="button" class="org-sigpadclear opt-btn mt-2 !text-[10px]">مسح اللوحة</button>
                     </div>
                 </div>
-                <button type="button" class="org-del opt-btn !text-red-500 border-red-200 hover:bg-red-50" title="حذف هذه الجهة">✕</button>
+                <button type="button" class="org-del opt-btn !text-red-500 border-red-200 hover:bg-red-50" title="حذف هذه الجهة" aria-label="حذف هذه الجهة المنظمة">✕</button>
             </div>
         `;
         
@@ -3163,9 +3166,9 @@
         });
         return list;
     }
-    function addStudentRow(d){ d=d||{}; const row=document.createElement('div'); row.className='student-row flex gap-2 items-center'; row.innerHTML='<div class="voice-field-wrap flex-1"><input type="text" class="tash student-name w-full px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الطالب" placeholder="اسم الطالب / الطالبة"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لاسم الطالب">🎤</button></div><select class="student-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="student-del opt-btn" title="حذف">✕</button>'; row.querySelector('.student-name').value=d.name||''; row.querySelector('.student-gender').value=d.gender||'male'; studentList.appendChild(row); _markVoiceUnsupported(row); }
+    function addStudentRow(d){ d=d||{}; const row=document.createElement('div'); row.className='student-row flex gap-2 items-center'; row.innerHTML='<div class="voice-field-wrap flex-1"><input type="text" class="tash student-name w-full px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الطالب" placeholder="اسم الطالب / الطالبة"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لاسم الطالب">🎤</button></div><select class="student-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="student-del opt-btn" title="حذف" aria-label="حذف هذا الطالب">✕</button>'; row.querySelector('.student-name').value=d.name||''; row.querySelector('.student-gender').value=d.gender||'male'; studentList.appendChild(row); _markVoiceUnsupported(row); }
     function getStudents(){ const list=[]; const n=fields.studentName.value.trim(); if(n) list.push({name:n, gender:fields.studentGender.value}); Array.from(studentList.querySelectorAll('.student-row')).forEach(r=>{ const nm=r.querySelector('.student-name').value.trim(); if(nm) list.push({name:nm, gender:r.querySelector('.student-gender').value}); }); return list; }
-    function addSheikhRow(d){ d=d||{}; const row=document.createElement('div'); row.className='sheikh-row border border-gray-200 rounded-md p-2.5 space-y-2 bg-white'; row.innerHTML='<div class="flex gap-2 items-center"><div class="voice-field-wrap flex-1"><input type="text" class="tash sheikh-name w-full px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الشيخ" placeholder="اسم الشيخ / الشيخة"><button type="button" class="voice-btn no-print sheikh-voice-btn" title="إدخال صوتي لاسم الشيخ" aria-label="إدخال صوتي">🎤</button></div><select class="sheikh-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="sheikh-del opt-btn" title="حذف هذا الشيخ">✕</button></div><div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-700 pr-1"><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-khassa" checked> إجازة خاصة (بالكتاب)</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-amma" checked> إجازة عامة</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-family"> الأزواج والذرية</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-works" checked> بمؤلفاته خاصة</label></div><div class="voice-field-wrap"><input type="text" class="sh-custom w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="إضافة حرّة لإجازة هذا الشيخ (اختياري)"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لإضافة حرة لإجازة الشيخ">🎤</button></div><div class="voice-field-wrap sh-isnad-wrap hidden"><textarea class="sh-isnad w-full px-3 py-2 border border-gray-300 rounded-md text-sm leading-relaxed" rows="2" placeholder="سند هذا الشيخ (اختياري)..."></textarea><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لسند الشيخ">🎤</button></div><div class="flex flex-wrap gap-2 items-center text-[11px] text-gray-600"><button type="button" class="sh-sigbtn opt-btn">توقيع الشيخ</button><span class="sh-sigok"></span><button type="button" class="sh-stampbtn opt-btn">ختم الشيخ</button><span class="sh-stampok"></span><button type="button" class="sh-imgclear opt-btn">مسح التوقيع/الختم</button><input type="file" class="sh-sigfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"><input type="file" class="sh-stampfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"></div>'; row.querySelector('.sheikh-name').value=d.name||''; row.querySelector('.sheikh-gender').value=d.gender||'male'; if(d.khassa===false) row.querySelector('.sh-khassa').checked=false; if(d.amma===false) row.querySelector('.sh-amma').checked=false; if(d.family===true) row.querySelector('.sh-family').checked=true; if(d.works===false) row.querySelector('.sh-works').checked=false; row.querySelector('.sh-custom').value=d.custom||''; row.querySelector('.sh-isnad').value=d.isnad||''; row.querySelector('.sh-isnad-wrap').classList.toggle('hidden', fields.isnadMode.value!=='per'); row._sig=d.sig||null; row._stamp=d.stamp||null; if(row._sig) row.querySelector('.sh-sigok').textContent='✓'; if(row._stamp) row.querySelector('.sh-stampok').textContent='✓'; sheikhList.appendChild(row); _markVoiceUnsupported(row); }
+    function addSheikhRow(d){ d=d||{}; const row=document.createElement('div'); row.className='sheikh-row border border-gray-200 rounded-md p-2.5 space-y-2 bg-white'; row.innerHTML='<div class="flex gap-2 items-center"><div class="voice-field-wrap flex-1"><input type="text" class="tash sheikh-name w-full px-3 py-2 border border-gray-300 rounded-md text-sm" data-tash-label="الشيخ" placeholder="اسم الشيخ / الشيخة"><button type="button" class="voice-btn no-print sheikh-voice-btn" title="إدخال صوتي لاسم الشيخ" aria-label="إدخال صوتي">🎤</button></div><select class="sheikh-gender px-2 py-2 border border-gray-300 rounded-md text-sm"><option value="male">ذكر</option><option value="female">أنثى</option></select><button type="button" class="sheikh-del opt-btn" title="حذف هذا الشيخ" aria-label="حذف بيانات هذا الشيخ">✕</button></div><div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-700 pr-1"><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-khassa" checked> إجازة خاصة (بالكتاب)</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-amma" checked> إجازة عامة</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-family"> الأزواج والذرية</label><label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="sh-works" checked> بمؤلفاته خاصة</label></div><div class="voice-field-wrap"><input type="text" class="sh-custom w-full px-3 py-2 border border-gray-300 rounded-md text-sm" placeholder="إضافة حرّة لإجازة هذا الشيخ (اختياري)"><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لإضافة حرة لإجازة الشيخ">🎤</button></div><div class="voice-field-wrap sh-isnad-wrap hidden"><textarea class="sh-isnad w-full px-3 py-2 border border-gray-300 rounded-md text-sm leading-relaxed" rows="2" placeholder="سند هذا الشيخ (اختياري)..."></textarea><button type="button" class="voice-btn dyn-voice-btn no-print" title="إدخال صوتي" aria-label="إدخال صوتي لسند الشيخ">🎤</button></div><div class="flex flex-wrap gap-2 items-center text-[11px] text-gray-600"><button type="button" class="sh-sigbtn opt-btn">توقيع الشيخ</button><span class="sh-sigok"></span><button type="button" class="sh-stampbtn opt-btn">ختم الشيخ</button><span class="sh-stampok"></span><button type="button" class="sh-imgclear opt-btn">مسح التوقيع/الختم</button><input type="file" class="sh-sigfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"><input type="file" class="sh-stampfile hidden" accept="image/*" aria-hidden="true" tabindex="-1"></div>'; row.querySelector('.sheikh-name').value=d.name||''; row.querySelector('.sheikh-gender').value=d.gender||'male'; if(d.khassa===false) row.querySelector('.sh-khassa').checked=false; if(d.amma===false) row.querySelector('.sh-amma').checked=false; if(d.family===true) row.querySelector('.sh-family').checked=true; if(d.works===false) row.querySelector('.sh-works').checked=false; row.querySelector('.sh-custom').value=d.custom||''; row.querySelector('.sh-isnad').value=d.isnad||''; row.querySelector('.sh-isnad-wrap').classList.toggle('hidden', fields.isnadMode.value!=='per'); row._sig=d.sig||null; row._stamp=d.stamp||null; if(row._sig) row.querySelector('.sh-sigok').textContent='✓'; if(row._stamp) row.querySelector('.sh-stampok').textContent='✓'; sheikhList.appendChild(row); _markVoiceUnsupported(row); }
     function getSheikhs(){ return Array.from(sheikhList.querySelectorAll('.sheikh-row')).map(r=>({ name:r.querySelector('.sheikh-name').value.trim(), gender:r.querySelector('.sheikh-gender').value, khassa:r.querySelector('.sh-khassa').checked, amma:r.querySelector('.sh-amma').checked, family:r.querySelector('.sh-family').checked, works:r.querySelector('.sh-works').checked, custom:r.querySelector('.sh-custom').value.trim(), isnad:r.querySelector('.sh-isnad').value.trim(), sig:r._sig||null, stamp:r._stamp||null })).filter(s=>s.name); }
     function sheikhForms(sheikhs){ const n=sheikhs.length; const allF = n>0 && sheikhs.every(s=>s.gender==='female'); const ajazaV = allF?'أجازت':'أجاز'; const akhbaraV = allF?'أخبرت':'أخبر'; if(n>=3){ return { hu:allF?'هنّ':'هم', noun:allF?'الشيخاتُ':'المشايخُ', honor:allF?'فضيلة الشيخات /':'فضيلة المشايخ /', ajazaV, akhbaraV, ajaza:allF?'أجازْنَ':'أجازوا', qaala:allF?'فقُلن':'فقالوا', mujiz:allF?'المجيزات':'المجيزون', musammi:allF?'الشيخات المُسمِّعات':'المشايخ المُسمِّعون' }; } if(n===2){ return { hu:'هما', noun:allF?'الشيختان':'الشيخان', honor:allF?'فضيلتي الشيختين /':'فضيلتي الشيخين /', ajazaV, akhbaraV, ajaza:allF?'أجازتا':'أجازا', qaala:allF?'فقالتا':'فقالا', mujiz:allF?'المجيزتان':'المجيزان', musammi:allF?'الشيختان المُسمِّعتان':'الشيخان المُسمِّعان' }; } const F=allF; return { hu:F?'ها':'ه', noun:F?'الشيخةُ':'الشيخُ', honor:F?'فضيلة الشيخة /':'فضيلة الشيخ /', ajazaV, akhbaraV, ajaza:F?'أجازت':'أجاز', qaala:F?'فقالت':'فقال', mujiz:F?'المجيزة':'المجيز', musammi:F?'الشيخة المُسمِّعة':'الشيخ المُسمِّع' }; }
 
@@ -3199,7 +3202,7 @@
                 <button type="button" class="org-sig-upload opt-btn !text-[10px]">رفع توقيع</button>
                 <button type="button" class="org-sig-draw opt-btn !text-[10px]">رسم توقيع</button>
                 <span class="org-sig-ok text-[10px] text-emerald-600 font-bold hidden">✓</span>
-                <button type="button" class="org-sig-del opt-btn !text-red-500 border-red-200" title="حذف">✕</button>
+                <button type="button" class="org-sig-del opt-btn !text-red-500 border-red-200" title="حذف" aria-label="حذف اسم المنظم هذا">✕</button>
                 <input type="file" class="org-sig-file hidden" accept="image/*" aria-hidden="true" tabindex="-1">
             </div>
             <div class="org-sig-padwrap hidden">
@@ -3253,10 +3256,10 @@
             if (showLabels || freeMujizSigData || freeMujizStampData) {
                 sigHtml += '<div class="ss-row" style="display:flex;gap:2.4rem;justify-content:center;align-items:flex-start;margin-top:.3rem;flex-wrap:wrap;">';
                 if (showLabels || freeMujizSigData) {
-                    sigHtml += `<div class="sigstamp">${showLabels?'<span class="ss-label">التوقيع</span>':''}${freeMujizSigData ? `<img class="mujiz-sig" src="${freeMujizSigData}" style="max-height:52px;margin:.15rem 0;display:block;">` : '<span class="ss-blank tall"></span>'}</div>`;
+                    sigHtml += `<div class="sigstamp">${showLabels?'<span class="ss-label">التوقيع</span>':''}${freeMujizSigData ? `<img class="mujiz-sig" src="${freeMujizSigData}" alt="توقيع المجيز" style="max-height:52px;margin:.15rem 0;display:block;">` : '<span class="ss-blank tall"></span>'}</div>`;
                 }
                 if (showLabels || freeMujizStampData) {
-                    sigHtml += `<div class="sigstamp">${showLabels?'<span class="ss-label">الختم</span>':''}${freeMujizStampData ? `<img class="mujiz-stamp" src="${freeMujizStampData}" style="max-height:66px;margin:.5rem 0 0;display:block;">` : '<span class="ss-blank tall"></span>'}</div>`;
+                    sigHtml += `<div class="sigstamp">${showLabels?'<span class="ss-label">الختم</span>':''}${freeMujizStampData ? `<img class="mujiz-stamp" src="${freeMujizStampData}" alt="ختم المجيز" style="max-height:66px;margin:.5rem 0 0;display:block;">` : '<span class="ss-blank tall"></span>'}</div>`;
                 }
                 sigHtml += '</div>';
             }
@@ -3280,10 +3283,10 @@
             if (showWroteLabels || freeWroteSigData || freeWroteStampData) {
                 sigHtml += '<div class="ss-row" style="display:flex;gap:2.4rem;justify-content:center;align-items:flex-start;margin-top:.3rem;flex-wrap:wrap;">';
                 if (showWroteLabels || freeWroteSigData) {
-                    sigHtml += `<div class="sigstamp">${showWroteLabels?'<span class="ss-label">التوقيع</span>':''}${freeWroteSigData ? `<img class="mujiz-sig" src="${freeWroteSigData}" style="max-height:52px;margin:.15rem 0;display:block;">` : '<span class="ss-blank tall"></span>'}</div>`;
+                    sigHtml += `<div class="sigstamp">${showWroteLabels?'<span class="ss-label">التوقيع</span>':''}${freeWroteSigData ? `<img class="mujiz-sig" src="${freeWroteSigData}" alt="توقيع كاتب الإجازة" style="max-height:52px;margin:.15rem 0;display:block;">` : '<span class="ss-blank tall"></span>'}</div>`;
                 }
                 if (showWroteLabels || freeWroteStampData) {
-                    sigHtml += `<div class="sigstamp">${showWroteLabels?'<span class="ss-label">الختم</span>':''}${freeWroteStampData ? `<img class="mujiz-stamp" src="${freeWroteStampData}" style="max-height:66px;margin:.5rem 0 0;display:block;">` : '<span class="ss-blank tall"></span>'}</div>`;
+                    sigHtml += `<div class="sigstamp">${showWroteLabels?'<span class="ss-label">الختم</span>':''}${freeWroteStampData ? `<img class="mujiz-stamp" src="${freeWroteStampData}" alt="ختم كاتب الإجازة" style="max-height:66px;margin:.5rem 0 0;display:block;">` : '<span class="ss-blank tall"></span>'}</div>`;
                 }
                 sigHtml += '</div>';
             }
@@ -3664,7 +3667,7 @@
             line.style.justifyContent = 'center';
             let inlineLogo = '';
             if(org.logo && (org.pos1 === 'center' || org.pos2 === 'center')) {
-                inlineLogo = `<img src="${org.logo}" style="max-height:${org.logoSize}px; max-width:130px; object-fit:contain; margin: 0 8px;">`;
+                inlineLogo = `<img src="${org.logo}" alt="شعار ${esc(org.name||'الجهة المنظمة')}" style="max-height:${org.logoSize}px; max-width:130px; object-fit:contain; margin: 0 8px;">`;
             }
             const cStyle = org.autoColor ? '' : `color:${org.color};`;
             const fStyle = org.font ? `font-family:${org.font};` : '';
@@ -3718,8 +3721,8 @@
         // توزيع الشعارات (كما هي)
         orgs.forEach(org => {
             if(org.logo) {
-                const img = `<img src="${org.logo}" style="max-height:${org.logoSize}px; max-width:180px; object-fit:contain;">`;
-                const everyImg = `<img src="${org.logo}" class="logo-everypage" style="max-height:${org.logoSize}px; max-width:180px;">`;
+                const img = `<img src="${org.logo}" alt="شعار ${esc(org.name||'الجهة المنظمة')}" style="max-height:${org.logoSize}px; max-width:180px; object-fit:contain;">`;
+                const everyImg = `<img src="${org.logo}" class="logo-everypage" alt="شعار ${esc(org.name||'الجهة المنظمة')}" style="max-height:${org.logoSize}px; max-width:180px;">`;
                 const p = [org.pos1, org.pos2];
                 if(p.includes('right')){ cRight.innerHTML += img; cRight.classList.remove('hidden'); }
                 if(p.includes('left')){ cLeft.innerHTML += img; cLeft.classList.remove('hidden'); }
@@ -4174,7 +4177,7 @@
                         '<body style="margin:0;background:#111;text-align:center">' +
                         '<p style="color:#fff;font-family:sans-serif;padding:14px;font-size:1rem;margin:0">' +
                         '📥 اضغط مطوّلاً على الصورة ← «حفظ في الصور»</p>' +
-                        '<img src="'+reader.result+'" style="max-width:100%;display:block;margin:0 auto">' +
+                        '<img src="'+reader.result+'" alt="صورة وثيقة إثبات سماع جاهزة للحفظ" style="max-width:100%;display:block;margin:0 auto">' +
                         '</body></html>'
                     );
                     win.document.close();
@@ -4906,6 +4909,7 @@
         _activeRec = rec;
 
         let finalText = '';
+        let lastInterim = ''; // آخر جزء لم يُحسَم بعدُ نهائياً — يُستخدم عند الإيقاف اليدوي حتى لا يضيع آخر ما قيل
         const SILENCE_MS = 5000;  // مهلة صمت قبل إنهاء الاستماع تلقائياً
         const MAX_MS     = 45000; // سقف زمني أقصى للجلسة الواحدة
 
@@ -4923,13 +4927,17 @@
             // نهائية سبق إرسالها، فيتكرر النص لو اعتمدنا على الإضافة التراكمية فقط.
             // إعادة البناء الكامل من e.results يضمن نتيجة صحيحة دائماً مهما تكرر الحدث.
             let combined = '';
+            let interim = '';
             for(let i = 0; i < e.results.length; i++){
                 if(e.results[i].isFinal){
                     const piece = e.results[i][0].transcript.trim();
                     if(piece) combined += (combined ? ' ' : '') + piece;
+                } else {
+                    interim += e.results[i][0].transcript;
                 }
             }
             finalText = combined;
+            lastInterim = interim.trim();
         };
 
         rec.onerror = function(e){
@@ -4958,7 +4966,8 @@
 
             // إزالة النقطة (وعلامات وقف مشابهة) التي تُضيفها بعض متصفحات الجوال
             // تلقائياً في نهاية الجملة المُتعرَّف عليها صوتياً
-            let out = finalText.trim();
+            // عند الإيقاف اليدوي قد يتبقّى جزء لم يُحسَم نهائياً بعدُ — نُضيفه حتى لا يضيع آخر ما قيل
+            let out = (finalText + (lastInterim ? (finalText ? ' ' : '') + lastInterim : '')).trim();
             out = out.replace(/[.。\s]+$/u, '').trim();
             if(out){
                 fillFn(out);
