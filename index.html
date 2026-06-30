@@ -3295,6 +3295,34 @@
         return fullHtml;
     }
 
+    // ---- مساعدات إمكانية الوصول لظهور الحقول الشرطية (إضافة جديدة، لا تُغيّر شيئاً قائماً) ----
+    let _a11yRevealReady = false; // يُفعَّل فقط بعد انتهاء التحميل الأولي/استعادة الحفظ، لمنع سرقة التركيز عند فتح الصفحة
+    function _srSayField(msg){
+        let el = document.getElementById('sr-announce');
+        if(!el){
+            el = document.createElement('div');
+            el.id = 'sr-announce';
+            el.setAttribute('role','status');
+            el.setAttribute('aria-live','polite');
+            el.setAttribute('aria-atomic','true');
+            el.style.cssText = 'position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;';
+            document.body.appendChild(el);
+        }
+        el.textContent = '';
+        setTimeout(function(){ el.textContent = msg; }, 50);
+    }
+    function _revealIfNewlyShown(wrapEl, focusSelector, announceMsg){
+        if(!wrapEl) return;
+        const isHiddenNow = wrapEl.classList.contains('hidden');
+        const wasHidden = wrapEl.dataset._wasHidden !== 'false';
+        if(_a11yRevealReady && wasHidden && !isHiddenNow){
+            const target = focusSelector ? wrapEl.querySelector(focusSelector) : wrapEl;
+            if(target && typeof target.focus === 'function'){ target.focus(); }
+            if(announceMsg) _srSayField(announceMsg);
+        }
+        wrapEl.dataset._wasHidden = isHiddenNow ? 'true' : 'false';
+    }
+
     // ---- دالة العرض الرئيسية ----
     function render(){
         signatureArea.style.display = 'none';
@@ -3303,7 +3331,9 @@
         endGroup.classList.toggle('hidden', sessions<=1);
         startTitle.textContent = sessions>1 ? 'تاريخ بداية المجالس' : 'تاريخ المجلس';
         (document.getElementById('sessionNumWrap')||fields.sessionNum).classList.toggle('hidden', fields.sessionMode.value!=='many');
+        _revealIfNewlyShown(document.getElementById('sessionNumWrap'), 'input,textarea', 'ظهر حقل عدد المجالس، يمكنك تعبئته الآن');
         (document.getElementById('uptoTextWrap')||fields.uptoText).classList.toggle('hidden', fields.completeness.value!=='upto');
+        _revealIfNewlyShown(document.getElementById('uptoTextWrap'), 'input,textarea', 'ظهر حقل موضع الانتهاء، يمكنك تعبئته الآن');
         $('fawtRangeWrap').classList.toggle('hidden', fields.completeness.value!=='fawt_range');
         $('actionSub').classList.toggle('hidden', !(fields.actionType.value==='حضر عندي'||fields.actionType.value==='اتصل بي'));
         fields.attendedNum.classList.toggle('hidden', !fields.attendedSome.checked);
@@ -3762,14 +3792,20 @@
     $('ornamentShape').addEventListener('change', ()=>{ render(); scheduleSave(); });
     applyType();
 
-    function updateIsnadMode(){
+    function updateIsnadMode(fromUserAction){
         const per=fields.isnadMode.value==='per';
         $('sharedIsnadWrap').classList.toggle('hidden', per);
         $('perIsnadHint').classList.toggle('hidden', !per);
+        const _wasIsnadHidden = sheikhList.querySelector('.sh-isnad-wrap') ? sheikhList.querySelector('.sh-isnad-wrap').classList.contains('hidden') : null;
         sheikhList.querySelectorAll('.sh-isnad-wrap').forEach(t=>t.classList.toggle('hidden', !per));
+        if(_a11yRevealReady && fromUserAction === true && _wasIsnadHidden === true && per){
+            _srSayField('ظهرت حقول سند كل شيخ على حِدة، يمكنك تعبئتها الآن');
+            const firstIsnad = sheikhList.querySelector('.sh-isnad-wrap textarea');
+            if(firstIsnad) firstIsnad.focus();
+        }
         render();
     }
-    fields.isnadMode.addEventListener('change', updateIsnadMode);
+    fields.isnadMode.addEventListener('change', function(){ updateIsnadMode(true); });
 
     // ---- معاينة بملء الشاشة ----
     const mainGrid=$('mainGrid'), fullBtn=$('fullPreviewBtn');
@@ -4922,6 +4958,7 @@
     updateIsnadMode();
     updateMethodLabel();
     render();
+    _a11yRevealReady = true; // من الآن فقط: تغييرات المستخدم الحقيقية تُفعِّل التركيز والإعلان
 
     document.addEventListener('input', scheduleSave);
     document.addEventListener('change', scheduleSave);
